@@ -1,0 +1,4 @@
+Bundle-Name: uploadDoc
+Bundle-SymbolicName: uploadDoc
+Bundle-Version: 1.0.0
+Export-Package: uploadDoc.constants

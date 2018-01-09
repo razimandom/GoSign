@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="false" default-lazy="false">
+	<import class="DocRegistration.model.Document" />
+	<class name="DocRegistration.model.impl.DocumentImpl" table="document_data">
+		<id name="docId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="fileId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="req_name" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="req_email" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="sign_email" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="doc_type" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="doc_status" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="doc_deadline" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="doc_description" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="file_name" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="file_type" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<one-to-one access="com.liferay.portal.dao.orm.hibernate.PrivatePropertyAccessor" cascade="save-update" class="DocRegistration.model.DocumentFile_blobBlobModel" constrained="true" name="file_blobBlobModel" outer-join="false" />
+		<property name="file_md5" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="req_dateCreated" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="req_dateModified" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+	</class>
+	<class lazy="true" name="DocRegistration.model.DocumentFile_blobBlobModel" table="document_data">
+		<id column="docId" name="docId">
+			<generator class="foreign">
+				<param name="property">DocRegistration.model.impl.DocumentImpl</param>
+			</generator>
+		</id>
+		<property column="file_blob" name="file_blobBlob" type="blob" />
+	</class>
+</hibernate-mapping>

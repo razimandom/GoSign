@@ -1,0 +1,9 @@
+Bundle-Name: DocRegistration-api
+Bundle-SymbolicName: DocRegistration.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	DocRegistration.exception,\
+	DocRegistration.model,\
+	DocRegistration.service,\
+	DocRegistration.service.persistence
+-includeresource: META-INF/service.xml=../DocRegistration-service/service.xml

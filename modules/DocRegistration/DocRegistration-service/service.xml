@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.0.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_0_0.dtd">
+
+<service-builder package-path="DocRegistration">
+	<namespace>Document</namespace>
+	<!--<entity data-source="sampleDataSource" local-service="true" name="Foo" remote-service="false" session-factory="sampleSessionFactory" table="foo" tx-manager="sampleTransactionManager uuid="true"">-->
+    <entity name="Document" local-service="true" table="document_data">
+        <column name="docId" primary="true" type="long"></column>
+        <column name="userId" type="long"></column>
+        <column name="fileId" type="long"></column>
+        <column name="req_name" type="String"></column>
+        <column name="req_email" type="String"></column>
+		<column name="sign_email" type="String"></column>
+		<column name="doc_type" type="String"></column>
+		<column name="doc_status" type="String"></column>
+		<column name="doc_deadline" type="String"></column>
+		<column name="doc_description" type="String"></column>
+        <column name="file_name" type="String"></column>
+        <column name="file_type" type="String"></column>
+        <column name="file_blob" type="Blob"></column>
+        <column name="file_md5" type="String"></column>
+        <column name="req_dateCreated" type="String"></column>
+        <column name="req_dateModified" type="String"></column>
+    </entity>
+</service-builder>

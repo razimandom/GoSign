@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="DocRegistration.model.Document">
+		<field name="docId" type="long" />
+		<field name="userId" type="long" />
+		<field name="fileId" type="long" />
+		<field name="req_name" type="String" />
+		<field name="req_email" type="String" />
+		<field name="sign_email" type="String" />
+		<field name="doc_type" type="String" />
+		<field name="doc_status" type="String" />
+		<field name="doc_deadline" type="String" />
+		<field name="doc_description" type="String" />
+		<field name="file_name" type="String" />
+		<field name="file_type" type="String" />
+		<field name="file_blob" type="Blob" />
+		<field name="file_md5" type="String" />
+		<field name="req_dateCreated" type="String" />
+		<field name="req_dateModified" type="String" />
+	</model>
+</model-hints>
