@@ -129,14 +129,5 @@ public class ViewDocPortlet extends MVCPortlet {
         }
     }
 	
-	public void doView(ActionRequest actionRequest, ActionResponse actionResponse) throws IOException, PortletException {	
-	}
-	
-	public void docSearchContainer(RenderRequest renderRequest, RenderResponse renderResponse) throws IOException, PortletException {
-	
-		
-	}
-	
-	
 	
 }

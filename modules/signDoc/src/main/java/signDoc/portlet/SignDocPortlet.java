@@ -13,6 +13,8 @@ import DocRegistration.model.Document;
 import DocRegistration.service.DocumentLocalServiceUtil;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.sql.Blob;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -20,6 +22,8 @@ import javax.portlet.Portlet;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -145,5 +149,36 @@ public class SignDocPortlet extends MVCPortlet {
 		System.out.println("============End doReqJustification==========");
 		
 	}
+	
+	/**
+     * Here serveResource method is used for displaying blob data
+     */
+    @Override
+    public void serveResource(ResourceRequest resourceRequest,
+            ResourceResponse resourceResponse) throws IOException,
+            PortletException {
+ 
+        try {
+            long dataId = ParamUtil.getLong(resourceRequest, "dataId");
+            
+            Document doc = DocumentLocalServiceUtil.getDocument(dataId);
+
+            if (doc != null) {
+                Blob blob = doc.getFile_blob();
+                byte[] binaryData = blob.getBytes(1, (int) blob.length());
+                // resourceResponse.setContentType(blobDemo.getMimeType());
+                resourceResponse.setContentType("application/application-download");
+                resourceResponse.setProperty("Content-disposition","attachement; filename=" + doc.getFile_name());
+                OutputStream o = resourceResponse.getPortletOutputStream();
+                o.write(binaryData);
+                o.flush();
+                o.close();
+                resourceResponse.flushBuffer();
+            }
+ 
+        } catch (Exception e) {
+ 
+        }
+    }
 	
 }

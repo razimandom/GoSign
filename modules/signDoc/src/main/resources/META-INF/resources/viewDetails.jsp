@@ -18,10 +18,17 @@ request.setAttribute("document", document);
 String redirect = ParamUtil.getString(request, "backURL");
 %>
 
-<script src="https://cdn.alloyui.com/3.0.1/aui/aui-min.js"></script>
-<link href="https://cdn.alloyui.com/3.0.1/aui-css/css/bootstrap.min.css"></link>
+<!--  
 
-<!-- This style need to put in css file later -->
+<script src="https://cdn.alloyui.com/3.0.1/aui/aui-min.js"></script>
+<link href="https://cdn.alloyui.com/3.0.1/aui-css/css/bootstrap.min.css"></link>-->
+
+		<portlet:resourceURL var="viewURL">
+            <portlet:param name="dataId"
+                value="<%=String.valueOf(document.getDocId())%>" />
+        </portlet:resourceURL>
+
+<!-- This style need to put in css file later 
 
 <script type="text/javascript">
 
@@ -40,7 +47,7 @@ YUI().use(
   }
 );
 
-</script>
+</script>-->
 
 <!-- This table style need to be add in CSS file later -->
 
@@ -73,11 +80,11 @@ td{
 
 </style>
 
-<h2>Document Details</h2>
+<h3>Request Details</h3>
 
 <table>
 <tr>
-	<td>Document ID:</td>
+	<td>Request ID:</td>
 	<td>${document.docId}</td>
 </tr>
 <tr>
@@ -101,15 +108,29 @@ td{
 	<td>${document.doc_status}</td>
 </tr>
 <tr>
+	<td>Date Created:</td>
+	<td>${document.req_dateCreated}</td>
+</tr>
+<tr>
 	<td>Deadline:</td>
 	<td>${document.doc_deadline}</td>
+</tr>
+<tr>
+	<td>File Name:</td>
+	<td>${document.file_name}</td>
+</tr>
+<tr>
+	<td>Download:</td>
+	<td><aui:form action="<%=viewURL.toString() %>" method="post" name="name">
+	<button name="delDocument" type="submit">Download File</button>
+	</aui:form></td>
+	
 </tr>
 <tr>
 	<td>Description/Justification:</td>
 	<td>${document.doc_description}</td>
 </tr>
 </table>
-<br>
 
 <portlet:renderURL var="updateDocURL">
 <portlet:param name="docId" value="${document.docId}" />

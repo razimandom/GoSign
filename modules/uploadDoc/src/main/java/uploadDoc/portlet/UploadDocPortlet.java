@@ -87,17 +87,13 @@ public class UploadDocPortlet extends MVCPortlet {
 		
 		//LocalDate localDate = LocalDate.now();
 		//LocalTime localTime = LocalTime.now();
-		LocalDateTime localDateTime = LocalDateTime.now();
-		
-		System.out.println(localDateTime);
-			
 	    //Month month = localDateTime.getMonth();
 	    //int day = localDateTime.getDayOfMonth();
 	    //int seconds = localDateTime.getSecond();
-	    
 	    //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+		
+		LocalDateTime localDateTime = LocalDateTime.now();
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-	    
         String formatDateTime = localDateTime.format(formatter);
 		
 		renderRequest.setAttribute("currentUserId", currentUser.getUserId());

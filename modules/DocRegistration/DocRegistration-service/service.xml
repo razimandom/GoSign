@@ -22,4 +22,4 @@
         <column name="req_dateCreated" type="String"></column>
         <column name="req_dateModified" type="String"></column>
     </entity>
-</service-builder>
+</service-builder> 

@@ -11,7 +11,7 @@
 <%@taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
 
-<!-- Start - This script and script for toggler button -->
+<!-- Start - This script and script for toggler button 
 
 <script src="https://cdn.alloyui.com/3.0.1/aui/aui-min.js"></script>
 <link href="https://cdn.alloyui.com/3.0.1/aui-css/css/bootstrap.min.css"></link>
@@ -33,11 +33,12 @@ YUI().use(
   }
 );
 
-</script>
+
+</script>-->
 
 <!-- End - This script and script for toggler button -->
 
-<!-- Start - Button styles -->
+<!-- Start - Button styles  -->
 
 <style>
 td{
@@ -81,7 +82,7 @@ String redirect = ParamUtil.getString(request, "backURL");
                 value="<%=String.valueOf(document.getDocId())%>" />
         </portlet:resourceURL>
 
-<h2>Request Details</h2>
+<h3>Request Details: </h3>
 
 <table>
 <tr>
@@ -121,6 +122,16 @@ String redirect = ParamUtil.getString(request, "backURL");
 	<td>${document.file_name}</td>
 </tr>
 <tr>
+	
+ 
+	<td>Download:</td>
+	<td><aui:form action="<%=viewURL.toString() %>" method="post" name="name">
+	<button name="delDocument" type="submit">Download File</button>
+	</aui:form></td>
+
+	
+</tr>
+<tr>
 	<td>Description/Justification:</td>
 	<td>${document.doc_description}</td>
 </tr>
@@ -146,11 +157,15 @@ String redirect = ParamUtil.getString(request, "backURL");
 <td>
 	<button class="header btn btn-primary toggler-header-collapsed" >Change Deadline</button>
 </td>
+
+ <!--  
 <td>
 	<aui:form action="<%=viewURL.toString() %>" method="post" name="name">
 	<aui:button cssClass="btngreen" name="delDocument" type="submit" value="Download File" last="true" />
 	</aui:form>
 </td>
+-->
+
 </tr>
 </table>
 
@@ -163,8 +178,6 @@ String redirect = ParamUtil.getString(request, "backURL");
 <aui:form action="<%=updateDoc%>" method="post" name="name">
 	<aui:input label="Doc Id: " name="docId" type="hidden" value="${document.docId}" readOnly="true"/>
 	<aui:input label="Deadline: " name="doc_deadline" type="type" value="${document.doc_deadline}" />
-	<aui:input label="Upload File: " type="file" name="file" value="${document.file_name}" />
-	<aui:input label="Description/Justification: " type="textarea" name="doc_description"/>
 	<aui:button name="update" type="submit" value="Update" last="true" />
 
 </aui:form>

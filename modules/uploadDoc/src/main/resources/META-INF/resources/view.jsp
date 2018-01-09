@@ -16,11 +16,9 @@
 <%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %>
 <portlet:defineObjects />
 
-<!--
+<!--  
 <link href="http://cdn.alloyui.com/2.5.0/aui-css/css/bootstrap.min.css"></link>
 <script src="http://cdn.alloyui.com/2.5.0/aui/aui-min.js"></script>
-
- THis is YUI script. need further research where to place it 
 
             <script>
             YUI().use(
@@ -28,8 +26,8 @@
             		  function(Y) {
             		    var datepicker = new Y.DatePicker(
             		      {
-            		        trigger: 'input',
-            		        mask: '%d/%m/%y',
+            		        trigger: '#<portlet:namespace />calendarDate',
+            		        mask: '%d-%m-%Y',
             		        popover: {
             		          toolbars: {
             		            header: [[
@@ -62,7 +60,20 @@
             		);
             </script>
                  
-                 -->
+<style>
+<!--
+
+
+
+.deadlineTxt{
+	font-size:14px;
+	color:#869cad;
+}
+
+
+</style>
+
+-->
 
 <portlet:actionURL name="addDoc" var="addDoc" />
 
@@ -71,13 +82,18 @@
 	<aui:input label="User ID: " name="currentUserId" type="hidden" value="<%=request.getAttribute("currentUserId") %>" readonly="true" />
 	<aui:input label="Requestor Name: " name="req_name" type="hidden" value="<%=request.getAttribute("currentFirstName") %>" readonly="true" />
 	<aui:input label="Requestor Email: " name="req_email" type="hidden" value="<%=request.getAttribute("currentEmail") %>" readonly="true" />
-	<aui:input label="Date Created: " name="req_dateCreated" type="type" value="<%=request.getAttribute("currentDateTime") %>" readonly="true" />
+	<aui:input label="Date Created: " name="req_dateCreated" type="hidden" value="<%=request.getAttribute("currentDateTime") %>" readonly="true" />
 	<aui:input label="Signer Email: " name="sign_email" type="type" />	
 	<aui:input label="Upload File: " type="file" name="file" />
 	<aui:input label="Document Description/Justification" type="textarea" name="doc_description" />
 	
-	<aui:input label="Deadline" name="doc_deadline" type="text" value="Click to select date"/>
-	<!-- <aui:input class="form-control" label="Deadline" name="doc_deadline" type="text" value="Click to select date"/> -->
+	<aui:input label="Deadline" name="doc_deadline" type="text" value="<%=request.getAttribute("currentDateTime") %>"/>
+	<!-- <aui:input id="<portlet:namespace />calendarDate" class="form-control" label="Deadline" name="doc_deadline" type="text" value="Click to select date"/> -->
+	
+	<!-- Below input using different input tag (not aui:input tag) to implement alloyui date picker trigger
+	<p class="deadlineTxt">Deadline:</p> 
+	<input name="doc_deadline" id="<portlet:namespace />calendarDate" class="form-control date" type="text" placeholder="dd-mm-yyyy" value="<%=request.getAttribute("currentDateTime") %>">
+	<br>-->
 	
 	<aui:select name="doc_type" label="Document Type: " inlineLabel="true">
 	<aui:option label="Offer Letter" value="Offer Letter" selected="true"></aui:option>
