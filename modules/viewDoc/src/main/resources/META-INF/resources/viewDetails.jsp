@@ -154,9 +154,11 @@ String redirect = ParamUtil.getString(request, "backURL");
 	<aui:button cssClass="btnred" name="delDocument" type="submit" value="Delete" last="true" />
 	</aui:form>
 </td>
+<!-- 
 <td>
 	<button class="header btn btn-primary toggler-header-collapsed" >Change Deadline</button>
 </td>
+ -->
 
  <!--  
 <td>
@@ -171,13 +173,13 @@ String redirect = ParamUtil.getString(request, "backURL");
 
 <div class="content toggler-content-collapsed" id="myToggler">
 
-<h3>Update Request:</h3>
+<h3>Change Deadline:</h3>
 
 <portlet:actionURL name="updateDoc" var="updateDoc" />
 
 <aui:form action="<%=updateDoc%>" method="post" name="name">
 	<aui:input label="Doc Id: " name="docId" type="hidden" value="${document.docId}" readOnly="true"/>
-	<aui:input label="Deadline: " name="doc_deadline" type="type" value="${document.doc_deadline}" />
+	<aui:input label="New Deadline Date: " name="doc_deadline" type="type" value="${document.doc_deadline}" />
 	<aui:button name="update" type="submit" value="Update" last="true" />
 
 </aui:form>

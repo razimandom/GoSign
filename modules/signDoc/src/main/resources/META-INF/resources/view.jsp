@@ -81,18 +81,17 @@
     <portlet:param name="mvcPath" value="/viewDetails.jsp" />
     
     </portlet:renderURL>
-			
+		<liferay-ui:search-container-column-text value="<%=String.valueOf(row.getPos() + 1)%>" name="No" />
+		<liferay-ui:search-container-column-text name="Req ID" property="docId">
+		</liferay-ui:search-container-column-text>
 		<liferay-ui:search-container-column-user userId="${document.userId}" showDetails="false" name="User"></liferay-ui:search-container-column-user>
-		<liferay-ui:search-container-column-text name="Doc ID" property="docId">
+		<liferay-ui:search-container-column-text name="Requested By" property="req_name">
 		</liferay-ui:search-container-column-text>
-		<liferay-ui:search-container-column-text name="Requestor Name" property="req_name">
+		<liferay-ui:search-container-column-text name="Request Type" property="doc_type">
 		</liferay-ui:search-container-column-text>
-		
-		<liferay-ui:search-container-column-text name="Requestor Email" property="req_email">
+		<liferay-ui:search-container-column-text name="Document Name" property="file_name">
 		</liferay-ui:search-container-column-text>
-		<liferay-ui:search-container-column-text name="Signer Email" property="sign_email">
-		</liferay-ui:search-container-column-text>
-		<liferay-ui:search-container-column-text name="Type" property="doc_type">
+		<liferay-ui:search-container-column-text name="Created On" property="req_dateCreated">
 		</liferay-ui:search-container-column-text>
 		<liferay-ui:search-container-column-text name="Deadline" property="doc_deadline">
 		</liferay-ui:search-container-column-text>
@@ -117,7 +116,7 @@
          </c:choose>
 		
 		
-		<liferay-ui:search-container-column-text name="Details" href="${viewDocURL}" value="View">
+		<liferay-ui:search-container-column-text name="Action" href="${viewDocURL}" value="View">
 		</liferay-ui:search-container-column-text>
 
 	
