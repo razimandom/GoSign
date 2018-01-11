@@ -16,7 +16,9 @@ import com.liferay.portal.kernel.upload.UploadRequest;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
+//import com.liferay.content.util.ContentUtil;
 
 import DocRegistration.model.Document;
 import DocRegistration.service.DocumentLocalServiceUtil;
@@ -33,6 +35,7 @@ import java.util.Properties;
 //import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.portlet.ActionRequest;
@@ -203,42 +206,97 @@ public class UploadDocPortlet extends MVCPortlet {
 			System.out.println("======================== End ======================");
 
 		}
-
+		
+		/*
+		 * Function to send email for requestor
+		 */
+	
+		try {
+			
+			InternetAddress fromAddress = null;
+			InternetAddress toAddress = null;
+			
+			String req_emailMail = ParamUtil.getString(actionRequest, "req_email");
+			
+			fromAddress = new InternetAddress("noreply@42penguins.com");
+			toAddress = new InternetAddress(req_emailMail);
+			MailMessage mailMessage = new MailMessage();
+			
+			mailMessage.setTo(toAddress);
+			mailMessage.setFrom(fromAddress);
+			mailMessage.setSubject("Signature Request Successfully Submitted.");
+			mailMessage.setBody("<h3><font color = RED>This Mail Comes From Liferay Is Easy</font></h3>");
+			mailMessage.setHTMLFormat(true);
+			MailServiceUtil.sendEmail(mailMessage);
+			System.out.println("Send mail with HTML Format");
+		} catch (AddressException e) {
+			e.printStackTrace();
+		}
+		
+		/*
+		 * Function to send email for signer
+		 */
+	
+		try {
+			
+			InternetAddress fromAddress = null;
+			InternetAddress toAddress = null;
+			
+			String sign_emailMail = ParamUtil.getString(actionRequest, "sign_email");
+			
+			fromAddress = new InternetAddress("noreply@42penguins.com");
+			toAddress = new InternetAddress(sign_emailMail);
+			MailMessage mailMessage = new MailMessage();
+			
+			mailMessage.setTo(toAddress);
+			mailMessage.setFrom(fromAddress);
+			mailMessage.setSubject("New Request for Signature");
+			mailMessage.setBody(""
+					+ "<p>Dear Signer,</p> " 
+					+ "<p>You have received a request from " + req_name +" to sign a document.&nbsp;Please login to view and sign the document before&nbsp;</p>"
+					+ "<p><strong>Request Details:</strong></p>"
+					+ "<ul>"
+					+ "<li>Requested Title: " + req_name + "</li>"
+					+ "<li>Requested By: " + req_name + "</li>"
+					+ "<li>Document Name: " + req_name + "</li>"
+					+ "<li>Request Type: " + doc_type + "</li>"
+					+ "<li>Deadline: " + doc_deadline + "</li>"
+					+ "</ul>"
+					+ "<p>&nbsp;</p>"
+					+ "<p>GoSign Team</p>"
+					);
+			mailMessage.setHTMLFormat(true);
+			MailServiceUtil.sendEmail(mailMessage);
+			System.out.println("Send mail with HTML Format");
+		} catch (AddressException e) {
+			e.printStackTrace();
+		}
+		
+		/*
+		 * Another email function
+		 
+		
+		InternetAddress fromAddress = null;
+		InternetAddress toAddress = null;
+		
+		String body = ContentUtil.get(null, "/mail/reqsign.tmpl", true);
+		body = StringUtil.replace(body, new String[] { "[$NAME$]","[$RESULT$]","[$PERCENTAGE$]","[$EXAM$]" }, new String[] { "Ravi", "CONGRATULATION" ,"80%" , "CCLP"});
+		try {
+			fromAddress = new InternetAddress("aa665845@gmail.com");
+			toAddress = new InternetAddress("adit2787@gmail.com");
+			MailMessage mailMessage = new MailMessage();
+			mailMessage.setTo(toAddress);
+			mailMessage.setFrom(fromAddress);
+			mailMessage.setSubject("Send mail by Using Tempelate");
+			mailMessage.setBody(body);
+			mailMessage.setHTMLFormat(true);
+			MailServiceUtil.sendEmail(mailMessage);
+			System.out.println("Send mail by Using Tempelate");
+		} catch (AddressException e) {
+			e.printStackTrace();
+		}
+		*/
 	}
-
-	/**
-	 * Here serveResource method is used for displaying blob data
-	 */
-
-	/**
-	 * Commented. This function is to view uploaded file. This function already
-	 * added to view portlet.
-	 * 
-	 * @Override public void serveResource(ResourceRequest resourceRequest,
-	 *           ResourceResponse resourceResponse) throws IOException,
-	 *           PortletException {
-	 * 
-	 *           try { long dataId = ParamUtil.getLong(resourceRequest,
-	 *           "dataId");
-	 * 
-	 *           Document doc = DocumentLocalServiceUtil.getDocument(dataId);
-	 *           //BlobDemo blobDemo =
-	 *           BlobDemoLocalServiceUtil.getBlobDemo(dataId); if (doc != null)
-	 *           { Blob blob = doc.getFile_blob(); byte[] binaryData =
-	 *           blob.getBytes(1, (int) blob.length()); //
-	 *           resourceResponse.setContentType(blobDemo.getMimeType());
-	 * 
-	 *           resourceResponse.setContentType("application/application-download");
-	 *           resourceResponse.setProperty("Content-disposition","attachement;
-	 *           filename=" + doc.getFile_name()); OutputStream o =
-	 *           resourceResponse.getPortletOutputStream(); o.write(binaryData);
-	 *           o.flush(); o.close(); resourceResponse.flushBuffer(); }
-	 * 
-	 *           } catch (Exception e) {
-	 * 
-	 *           } }
-	 * 
-	 */
 
 	@ProcessAction(name = "updateDoc")
 	public void updateDoc(ActionRequest actionRequest, ActionResponse actionResponse)

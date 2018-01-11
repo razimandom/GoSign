@@ -7,5 +7,5 @@ dependencies {
 	compileOnly group: "org.osgi", name: "osgi.cmpn", version: "6.0.0"
 	compileOnly project (":modules:DocRegistration:DocRegistration-api")
 	compile group: 'commons-io', name: 'commons-io', version: '2.6'
-	compile group: 'javax.mail', name: 'javax.mail-api', version: '1.6.0'
+	compile group: 'javax.mail', name: 'mail', version: '1.4'
 }
