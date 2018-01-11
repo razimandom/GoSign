@@ -3,8 +3,9 @@
 <model-hints>
 	<model name="DocRegistration.model.Document">
 		<field name="docId" type="long" />
-		<field name="userId" type="long" />
 		<field name="fileId" type="long" />
+		<field name="userId" type="long" />
+		<field name="signId" type="long" />
 		<field name="req_name" type="String" />
 		<field name="req_email" type="String" />
 		<field name="sign_email" type="String" />
@@ -18,5 +19,13 @@
 		<field name="file_md5" type="String" />
 		<field name="req_dateCreated" type="String" />
 		<field name="req_dateModified" type="String" />
+	</model>
+	<model name="DocRegistration.model.GenKey">
+		<field name="genkeyId" type="long" />
+		<field name="userId" type="long" />
+		<field name="privatekey_File" type="Blob" />
+		<field name="publickey_File" type="Blob" />
+		<field name="publickey_Text" type="String" />
+		<field name="key_dateCreated" type="String" />
 	</model>
 </model-hints>

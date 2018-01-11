@@ -74,8 +74,9 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 	public static final String TABLE_NAME = "document_data";
 	public static final Object[][] TABLE_COLUMNS = {
 			{ "docId", Types.BIGINT },
-			{ "userId", Types.BIGINT },
 			{ "fileId", Types.BIGINT },
+			{ "userId", Types.BIGINT },
+			{ "signId", Types.BIGINT },
 			{ "req_name", Types.VARCHAR },
 			{ "req_email", Types.VARCHAR },
 			{ "sign_email", Types.VARCHAR },
@@ -94,8 +95,9 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 
 	static {
 		TABLE_COLUMNS_MAP.put("docId", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("userId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("fileId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("userId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("signId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("req_name", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("req_email", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("sign_email", Types.VARCHAR);
@@ -111,7 +113,7 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 		TABLE_COLUMNS_MAP.put("req_dateModified", Types.VARCHAR);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table document_data (docId LONG not null primary key,userId LONG,fileId LONG,req_name VARCHAR(75) null,req_email VARCHAR(75) null,sign_email VARCHAR(75) null,doc_type VARCHAR(75) null,doc_status VARCHAR(75) null,doc_deadline VARCHAR(75) null,doc_description VARCHAR(75) null,file_name VARCHAR(75) null,file_type VARCHAR(75) null,file_blob BLOB,file_md5 VARCHAR(75) null,req_dateCreated VARCHAR(75) null,req_dateModified VARCHAR(75) null)";
+	public static final String TABLE_SQL_CREATE = "create table document_data (docId LONG not null primary key,fileId LONG,userId LONG,signId LONG,req_name VARCHAR(75) null,req_email VARCHAR(75) null,sign_email VARCHAR(75) null,doc_type VARCHAR(75) null,doc_status VARCHAR(75) null,doc_deadline VARCHAR(75) null,doc_description VARCHAR(75) null,file_name VARCHAR(75) null,file_type VARCHAR(75) null,file_blob BLOB,file_md5 VARCHAR(75) null,req_dateCreated VARCHAR(75) null,req_dateModified VARCHAR(75) null)";
 	public static final String TABLE_SQL_DROP = "drop table document_data";
 	public static final String ORDER_BY_JPQL = " ORDER BY document.docId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY document_data.docId ASC";
@@ -124,7 +126,12 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 	public static final boolean FINDER_CACHE_ENABLED = GetterUtil.getBoolean(DocRegistration.service.util.ServiceProps.get(
 				"value.object.finder.cache.enabled.DocRegistration.model.Document"),
 			true);
-	public static final boolean COLUMN_BITMASK_ENABLED = false;
+	public static final boolean COLUMN_BITMASK_ENABLED = GetterUtil.getBoolean(DocRegistration.service.util.ServiceProps.get(
+				"value.object.column.bitmask.enabled.DocRegistration.model.Document"),
+			true);
+	public static final long SIGNID_COLUMN_BITMASK = 1L;
+	public static final long USERID_COLUMN_BITMASK = 2L;
+	public static final long DOCID_COLUMN_BITMASK = 4L;
 
 	/**
 	 * Converts the soap model instance into a normal model instance.
@@ -140,8 +147,9 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 		Document model = new DocumentImpl();
 
 		model.setDocId(soapModel.getDocId());
-		model.setUserId(soapModel.getUserId());
 		model.setFileId(soapModel.getFileId());
+		model.setUserId(soapModel.getUserId());
+		model.setSignId(soapModel.getSignId());
 		model.setReq_name(soapModel.getReq_name());
 		model.setReq_email(soapModel.getReq_email());
 		model.setSign_email(soapModel.getSign_email());
@@ -220,8 +228,9 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 		Map<String, Object> attributes = new HashMap<String, Object>();
 
 		attributes.put("docId", getDocId());
-		attributes.put("userId", getUserId());
 		attributes.put("fileId", getFileId());
+		attributes.put("userId", getUserId());
+		attributes.put("signId", getSignId());
 		attributes.put("req_name", getReq_name());
 		attributes.put("req_email", getReq_email());
 		attributes.put("sign_email", getSign_email());
@@ -250,16 +259,22 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 			setDocId(docId);
 		}
 
+		Long fileId = (Long)attributes.get("fileId");
+
+		if (fileId != null) {
+			setFileId(fileId);
+		}
+
 		Long userId = (Long)attributes.get("userId");
 
 		if (userId != null) {
 			setUserId(userId);
 		}
 
-		Long fileId = (Long)attributes.get("fileId");
+		Long signId = (Long)attributes.get("signId");
 
-		if (fileId != null) {
-			setFileId(fileId);
+		if (signId != null) {
+			setSignId(signId);
 		}
 
 		String req_name = (String)attributes.get("req_name");
@@ -354,12 +369,31 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 
 	@JSON
 	@Override
+	public long getFileId() {
+		return _fileId;
+	}
+
+	@Override
+	public void setFileId(long fileId) {
+		_fileId = fileId;
+	}
+
+	@JSON
+	@Override
 	public long getUserId() {
 		return _userId;
 	}
 
 	@Override
 	public void setUserId(long userId) {
+		_columnBitmask |= USERID_COLUMN_BITMASK;
+
+		if (!_setOriginalUserId) {
+			_setOriginalUserId = true;
+
+			_originalUserId = _userId;
+		}
+
 		_userId = userId;
 	}
 
@@ -379,15 +413,31 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 	public void setUserUuid(String userUuid) {
 	}
 
+	public long getOriginalUserId() {
+		return _originalUserId;
+	}
+
 	@JSON
 	@Override
-	public long getFileId() {
-		return _fileId;
+	public long getSignId() {
+		return _signId;
 	}
 
 	@Override
-	public void setFileId(long fileId) {
-		_fileId = fileId;
+	public void setSignId(long signId) {
+		_columnBitmask |= SIGNID_COLUMN_BITMASK;
+
+		if (!_setOriginalSignId) {
+			_setOriginalSignId = true;
+
+			_originalSignId = _signId;
+		}
+
+		_signId = signId;
+	}
+
+	public long getOriginalSignId() {
+		return _originalSignId;
 	}
 
 	@JSON
@@ -613,6 +663,10 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 		_req_dateModified = req_dateModified;
 	}
 
+	public long getColumnBitmask() {
+		return _columnBitmask;
+	}
+
 	@Override
 	public ExpandoBridge getExpandoBridge() {
 		return ExpandoBridgeFactoryUtil.getExpandoBridge(0,
@@ -641,8 +695,9 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 		DocumentImpl documentImpl = new DocumentImpl();
 
 		documentImpl.setDocId(getDocId());
-		documentImpl.setUserId(getUserId());
 		documentImpl.setFileId(getFileId());
+		documentImpl.setUserId(getUserId());
+		documentImpl.setSignId(getSignId());
 		documentImpl.setReq_name(getReq_name());
 		documentImpl.setReq_email(getReq_email());
 		documentImpl.setSign_email(getSign_email());
@@ -717,7 +772,17 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 	public void resetOriginalValues() {
 		DocumentModelImpl documentModelImpl = this;
 
+		documentModelImpl._originalUserId = documentModelImpl._userId;
+
+		documentModelImpl._setOriginalUserId = false;
+
+		documentModelImpl._originalSignId = documentModelImpl._signId;
+
+		documentModelImpl._setOriginalSignId = false;
+
 		documentModelImpl._file_blobBlobModel = null;
+
+		documentModelImpl._columnBitmask = 0;
 	}
 
 	@Override
@@ -726,9 +791,11 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 
 		documentCacheModel.docId = getDocId();
 
+		documentCacheModel.fileId = getFileId();
+
 		documentCacheModel.userId = getUserId();
 
-		documentCacheModel.fileId = getFileId();
+		documentCacheModel.signId = getSignId();
 
 		documentCacheModel.req_name = getReq_name();
 
@@ -831,14 +898,16 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(33);
+		StringBundler sb = new StringBundler(35);
 
 		sb.append("{docId=");
 		sb.append(getDocId());
-		sb.append(", userId=");
-		sb.append(getUserId());
 		sb.append(", fileId=");
 		sb.append(getFileId());
+		sb.append(", userId=");
+		sb.append(getUserId());
+		sb.append(", signId=");
+		sb.append(getSignId());
 		sb.append(", req_name=");
 		sb.append(getReq_name());
 		sb.append(", req_email=");
@@ -870,7 +939,7 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(52);
+		StringBundler sb = new StringBundler(55);
 
 		sb.append("<model><model-name>");
 		sb.append("DocRegistration.model.Document");
@@ -881,12 +950,16 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 		sb.append(getDocId());
 		sb.append("]]></column-value></column>");
 		sb.append(
+			"<column><column-name>fileId</column-name><column-value><![CDATA[");
+		sb.append(getFileId());
+		sb.append("]]></column-value></column>");
+		sb.append(
 			"<column><column-name>userId</column-name><column-value><![CDATA[");
 		sb.append(getUserId());
 		sb.append("]]></column-value></column>");
 		sb.append(
-			"<column><column-name>fileId</column-name><column-value><![CDATA[");
-		sb.append(getFileId());
+			"<column><column-name>signId</column-name><column-value><![CDATA[");
+		sb.append(getSignId());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>req_name</column-name><column-value><![CDATA[");
@@ -947,8 +1020,13 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 			Document.class
 		};
 	private long _docId;
-	private long _userId;
 	private long _fileId;
+	private long _userId;
+	private long _originalUserId;
+	private boolean _setOriginalUserId;
+	private long _signId;
+	private long _originalSignId;
+	private boolean _setOriginalSignId;
 	private String _req_name;
 	private String _req_email;
 	private String _sign_email;
@@ -962,5 +1040,6 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 	private String _file_md5;
 	private String _req_dateCreated;
 	private String _req_dateModified;
+	private long _columnBitmask;
 	private Document _escapedModel;
 }

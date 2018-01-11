@@ -3,12 +3,14 @@
 
 <hibernate-mapping auto-import="false" default-lazy="false">
 	<import class="DocRegistration.model.Document" />
+	<import class="DocRegistration.model.GenKey" />
 	<class name="DocRegistration.model.impl.DocumentImpl" table="document_data">
 		<id name="docId" type="long">
 			<generator class="assigned" />
 		</id>
-		<property name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="fileId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="signId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="req_name" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="req_email" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="sign_email" type="com.liferay.portal.dao.orm.hibernate.StringType" />
@@ -30,5 +32,31 @@
 			</generator>
 		</id>
 		<property column="file_blob" name="file_blobBlob" type="blob" />
+	</class>
+	<class name="DocRegistration.model.impl.GenKeyImpl" table="genkey_data">
+		<id name="genkeyId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<one-to-one access="com.liferay.portal.dao.orm.hibernate.PrivatePropertyAccessor" cascade="save-update" class="DocRegistration.model.GenKeyPrivatekey_FileBlobModel" constrained="true" name="privatekey_FileBlobModel" outer-join="false" />
+		<one-to-one access="com.liferay.portal.dao.orm.hibernate.PrivatePropertyAccessor" cascade="save-update" class="DocRegistration.model.GenKeyPublickey_FileBlobModel" constrained="true" name="publickey_FileBlobModel" outer-join="false" />
+		<property name="publickey_Text" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="key_dateCreated" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+	</class>
+	<class lazy="true" name="DocRegistration.model.GenKeyPrivatekey_FileBlobModel" table="genkey_data">
+		<id column="genkeyId" name="genkeyId">
+			<generator class="foreign">
+				<param name="property">DocRegistration.model.impl.GenKeyImpl</param>
+			</generator>
+		</id>
+		<property column="privatekey_File" name="privatekey_FileBlob" type="blob" />
+	</class>
+	<class lazy="true" name="DocRegistration.model.GenKeyPublickey_FileBlobModel" table="genkey_data">
+		<id column="genkeyId" name="genkeyId">
+			<generator class="foreign">
+				<param name="property">DocRegistration.model.impl.GenKeyImpl</param>
+			</generator>
+		</id>
+		<property column="publickey_File" name="publickey_FileBlob" type="blob" />
 	</class>
 </hibernate-mapping>

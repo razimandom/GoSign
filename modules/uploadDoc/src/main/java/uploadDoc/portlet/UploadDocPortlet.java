@@ -6,22 +6,16 @@ import uploadDoc.constants.UploadDocPortletKeys;
 
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.mail.kernel.model.MailMessage;
+import com.liferay.mail.kernel.service.MailServiceUtil;
 import com.liferay.portal.kernel.dao.jdbc.OutputBlob;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.io.ByteArrayFileInputStream;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
-import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.upload.UploadRequest;
-import com.liferay.portal.kernel.util.FileUtil;
-import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.StreamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import DocRegistration.model.Document;
@@ -31,27 +25,23 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.sql.Blob;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.util.Properties;
 
+//import javax.mail.Message;
+//import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
-import javax.portlet.PortletURL;
 import javax.portlet.ProcessAction;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-import javax.portlet.ResourceRequest;
-import javax.portlet.ResourceResponse;
-
-import org.apache.commons.io.FileUtils;
 import org.osgi.service.component.annotations.Component;
 
 /**
@@ -83,19 +73,20 @@ public class UploadDocPortlet extends MVCPortlet {
 		/*
 		 * Function to fetch current date and time
 		 *
-		*/
-		
-		//LocalDate localDate = LocalDate.now();
-		//LocalTime localTime = LocalTime.now();
-	    //Month month = localDateTime.getMonth();
-	    //int day = localDateTime.getDayOfMonth();
-	    //int seconds = localDateTime.getSecond();
-	    //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-		
+		 */
+
+		// LocalDate localDate = LocalDate.now();
+		// LocalTime localTime = LocalTime.now();
+		// Month month = localDateTime.getMonth();
+		// int day = localDateTime.getDayOfMonth();
+		// int seconds = localDateTime.getSecond();
+		// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy
+		// HH:mm:ss");
+
 		LocalDateTime localDateTime = LocalDateTime.now();
-	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        String formatDateTime = localDateTime.format(formatter);
-		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		String formatDateTime = localDateTime.format(formatter);
+
 		renderRequest.setAttribute("currentUserId", currentUser.getUserId());
 		renderRequest.setAttribute("currentFirstName", currentUser.getFirstName());
 		renderRequest.setAttribute("currentEmail", currentUser.getEmailAddress());
@@ -142,47 +133,45 @@ public class UploadDocPortlet extends MVCPortlet {
 		System.out.println("Document Type: " + doc_type);
 		System.out.println("...");
 		System.out.println("...");
-		
+
 		/*
 		 * Function to upload
 		 * 
 		 */
-		
-		  
-	 
-	        /**
-	         * Create and set the primary key
-	         */
-	        //long id = CounterLocalServiceUtil.increment(BlobDemo.class.getName());
-	        //BlobDemo blobDemo = BlobDemoLocalServiceUtil.createBlobDemo(id);
-	 
-	        //blobDemo.setName(uploadedFileName);
-	        //blobDemo.setBlobData(blobData);
-	        //blobDemo.setMimeType(MimeTypesUtil.getContentType(file));
-	        //BlobDemoLocalServiceUtil.addBlobDemo(blobDemo);
-	    
+
+		/**
+		 * Create and set the primary key
+		 */
+		// long id =
+		// CounterLocalServiceUtil.increment(BlobDemo.class.getName());
+		// BlobDemo blobDemo = BlobDemoLocalServiceUtil.createBlobDemo(id);
+
+		// blobDemo.setName(uploadedFileName);
+		// blobDemo.setBlobData(blobData);
+		// blobDemo.setMimeType(MimeTypesUtil.getContentType(file));
+		// BlobDemoLocalServiceUtil.addBlobDemo(blobDemo);
 
 		/*
 		 * Function to add data to database
 		 */
 
 		try {
-			
+
 			UploadRequest uploadRequest = PortalUtil.getUploadPortletRequest(actionRequest);
-	         
-	        /**
-	         * Get the uploaded file name with extension
-	         */
-	         
-	        String uploadedFileName = uploadRequest.getFileName("file");
-	         
-	        File file = uploadRequest.getFile("file");
-	         
-	        InputStream inputStream = new FileInputStream(file);
-	        /**
-	         * Below is the actual blob data
-	         */
-	        OutputBlob blobData = new OutputBlob(inputStream, file.length());
+
+			/**
+			 * Get the uploaded file name with extension
+			 */
+
+			String uploadedFileName = uploadRequest.getFileName("file");
+
+			File file = uploadRequest.getFile("file");
+
+			InputStream inputStream = new FileInputStream(file);
+			/**
+			 * Below is the actual blob data
+			 */
+			OutputBlob blobData = new OutputBlob(inputStream, file.length());
 
 			System.out.println("Adding data to database...");
 
@@ -200,7 +189,7 @@ public class UploadDocPortlet extends MVCPortlet {
 			doc.setFile_name(uploadedFileName);
 			doc.setFile_blob(blobData);
 			doc.setFile_type(MimeTypesUtil.getContentType(file));
-			
+
 			doc = DocumentLocalServiceUtil.addDocument(doc);
 
 			System.out.println("Data added to database");
@@ -216,45 +205,40 @@ public class UploadDocPortlet extends MVCPortlet {
 		}
 
 	}
-	
-    /**
-     * Here serveResource method is used for displaying blob data
-     */
-	
+
 	/**
-	 *  Commented. This function is to view uploaded file. 
-	 *  This function already added to view portlet.
-	
-    @Override
-    public void serveResource(ResourceRequest resourceRequest,
-            ResourceResponse resourceResponse) throws IOException,
-            PortletException {
- 
-        try {
-            long dataId = ParamUtil.getLong(resourceRequest, "dataId");
-            
-            Document doc = DocumentLocalServiceUtil.getDocument(dataId);
-            //BlobDemo blobDemo = BlobDemoLocalServiceUtil.getBlobDemo(dataId);
-            if (doc != null) {
-                Blob blob = doc.getFile_blob();
-                byte[] binaryData = blob.getBytes(1, (int) blob.length());
-                // resourceResponse.setContentType(blobDemo.getMimeType());
- 
-                resourceResponse.setContentType("application/application-download");
-                resourceResponse.setProperty("Content-disposition","attachement; filename=" + doc.getFile_name());
-                OutputStream o = resourceResponse.getPortletOutputStream();
-                o.write(binaryData);
-                o.flush();
-                o.close();
-                resourceResponse.flushBuffer();
-            }
- 
-        } catch (Exception e) {
- 
-        }
-    }
-    
-    */
+	 * Here serveResource method is used for displaying blob data
+	 */
+
+	/**
+	 * Commented. This function is to view uploaded file. This function already
+	 * added to view portlet.
+	 * 
+	 * @Override public void serveResource(ResourceRequest resourceRequest,
+	 *           ResourceResponse resourceResponse) throws IOException,
+	 *           PortletException {
+	 * 
+	 *           try { long dataId = ParamUtil.getLong(resourceRequest,
+	 *           "dataId");
+	 * 
+	 *           Document doc = DocumentLocalServiceUtil.getDocument(dataId);
+	 *           //BlobDemo blobDemo =
+	 *           BlobDemoLocalServiceUtil.getBlobDemo(dataId); if (doc != null)
+	 *           { Blob blob = doc.getFile_blob(); byte[] binaryData =
+	 *           blob.getBytes(1, (int) blob.length()); //
+	 *           resourceResponse.setContentType(blobDemo.getMimeType());
+	 * 
+	 *           resourceResponse.setContentType("application/application-download");
+	 *           resourceResponse.setProperty("Content-disposition","attachement;
+	 *           filename=" + doc.getFile_name()); OutputStream o =
+	 *           resourceResponse.getPortletOutputStream(); o.write(binaryData);
+	 *           o.flush(); o.close(); resourceResponse.flushBuffer(); }
+	 * 
+	 *           } catch (Exception e) {
+	 * 
+	 *           } }
+	 * 
+	 */
 
 	@ProcessAction(name = "updateDoc")
 	public void updateDoc(ActionRequest actionRequest, ActionResponse actionResponse)
@@ -311,6 +295,68 @@ public class UploadDocPortlet extends MVCPortlet {
 
 		}
 
+	}
+	
+	
+
+	public void sendMailMessage (ActionRequest actionRequest, ActionResponse actionResponse)
+				throws IOException, PortletException {
+		
+		//InternetAddress recipient = new InternetAddress()
+		
+		//InternetAddress toAddress = InternetAddress.toString(addresses)
+        //InternetAddress fromAddress = InternetAddress.getLocalAddress(session);
+		
+		/*
+		String to = "razimandom@gmail.com";//change accordingly  
+	      String from = "razimandom@gmail.com";//change accordingly  
+	      String host = "localhost";//or IP address  
+	  
+	     //Get the session object  
+	      Properties properties = System.getProperties();  
+	      properties.setProperty("mail.smtp.host", host);  
+	      Session session = Session.getDefaultInstance(properties);  
+	  
+	     //compose the message  
+	      try{  
+	         MimeMessage message = new MimeMessage(session);  
+	         message.setFrom(new InternetAddress(from));  
+	         message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));  
+	         message.setSubject("Ping");  
+	         message.setText("Hello, this is example of sending email  ");  
+	  
+	         // Send message  
+	         Transport.send(message);  
+	         System.out.println("message sent successfully....");  
+	  
+	      }catch (MessagingException mex) {mex.printStackTrace();}  
+	   }  
+					*/
+		
+		/*
+					System.out.println("====sendMailMessage===");
+					//String mailSubject=ParamUtil.getString(actionRequest,"mailSubject");
+					//String mailBody=ParamUtil.getString(actionRequest,"editor");
+					//String senderMailAddress=ParamUtil.getString(actionRequest,"senderEmailAddess");
+					//String receiverMailAddress=ParamUtil.getString(actionRequest,"receiverEmailAddess");
+					String mailSubject="mailSubject";
+					String mailBody="mailbody";
+					String senderMailAddress="razimandom@gmail.com";
+					String receiverMailAddress="razimandom@gmail.com";
+					
+					System.out.println("1111"+mailBody);
+		try {
+		            MailMessage mailMessage=new MailMessage();
+					mailMessage.setBody(mailBody);
+					mailMessage.setSubject(mailSubject);
+					mailMessage.setFrom(new InternetAddress(senderMailAddress));
+					mailMessage.setTo(new InternetAddress(receiverMailAddress));
+					MailServiceUtil.sendEmail(mailMessage);
+					//SessionMessages.add((HttpServletRequest) actionRequest.getPortletSession(),"mail-send-success");
+		}
+	catch (Exception e) {
+	    e.printStackTrace();
+	}*/
 	}
 
 }

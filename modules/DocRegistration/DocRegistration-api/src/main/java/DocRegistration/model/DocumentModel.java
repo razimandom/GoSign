@@ -77,6 +77,20 @@ public interface DocumentModel extends BaseModel<Document> {
 	public void setDocId(long docId);
 
 	/**
+	 * Returns the file ID of this document.
+	 *
+	 * @return the file ID of this document
+	 */
+	public long getFileId();
+
+	/**
+	 * Sets the file ID of this document.
+	 *
+	 * @param fileId the file ID of this document
+	 */
+	public void setFileId(long fileId);
+
+	/**
 	 * Returns the user ID of this document.
 	 *
 	 * @return the user ID of this document
@@ -105,18 +119,18 @@ public interface DocumentModel extends BaseModel<Document> {
 	public void setUserUuid(String userUuid);
 
 	/**
-	 * Returns the file ID of this document.
+	 * Returns the sign ID of this document.
 	 *
-	 * @return the file ID of this document
+	 * @return the sign ID of this document
 	 */
-	public long getFileId();
+	public long getSignId();
 
 	/**
-	 * Sets the file ID of this document.
+	 * Sets the sign ID of this document.
 	 *
-	 * @param fileId the file ID of this document
+	 * @param signId the sign ID of this document
 	 */
-	public void setFileId(long fileId);
+	public void setSignId(long signId);
 
 	/**
 	 * Returns the req_name of this document.

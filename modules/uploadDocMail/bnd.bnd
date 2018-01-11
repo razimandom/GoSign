@@ -1,0 +1,4 @@
+Bundle-Name: uploadDocMail
+Bundle-SymbolicName: uploadDocMail
+Bundle-Version: 1.0.0
+Export-Package: uploadDocMail.constants

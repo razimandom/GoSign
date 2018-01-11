@@ -3,11 +3,11 @@
 
 <service-builder package-path="DocRegistration">
 	<namespace>Document</namespace>
-	<!--<entity data-source="sampleDataSource" local-service="true" name="Foo" remote-service="false" session-factory="sampleSessionFactory" table="foo" tx-manager="sampleTransactionManager uuid="true"">-->
     <entity name="Document" local-service="true" table="document_data">
         <column name="docId" primary="true" type="long"></column>
-        <column name="userId" type="long"></column>
         <column name="fileId" type="long"></column>
+        <column name="userId" type="long"></column>
+        <column name="signId" type="long"></column>
         <column name="req_name" type="String"></column>
         <column name="req_email" type="String"></column>
 		<column name="sign_email" type="String"></column>
@@ -21,5 +21,22 @@
         <column name="file_md5" type="String"></column>
         <column name="req_dateCreated" type="String"></column>
         <column name="req_dateModified" type="String"></column>
+        
+        <!-- Finder methods -->
+        <finder name="UserId" return-type="Collection">
+		<finder-column name="userId"/>
+		</finder>
+		<finder name="SignId" return-type="Collection">
+		<finder-column name="signId"/>
+		</finder>
+
+    </entity>
+    <entity name="GenKey" local-service="true" table="genkey_data">
+        <column name="genkeyId" primary="true" type="long"></column>
+        <column name="userId" type="long"></column>
+        <column name="privatekey_File" type="Blob"></column>
+        <column name="publickey_File" type="Blob"></column>
+        <column name="publickey_Text" type="String"></column>
+        <column name="key_dateCreated" type="String"></column>
     </entity>
 </service-builder> 

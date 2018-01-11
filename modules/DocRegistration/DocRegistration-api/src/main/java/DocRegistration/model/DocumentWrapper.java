@@ -59,8 +59,9 @@ public class DocumentWrapper implements Document, ModelWrapper<Document> {
 		Map<String, Object> attributes = new HashMap<String, Object>();
 
 		attributes.put("docId", getDocId());
-		attributes.put("userId", getUserId());
 		attributes.put("fileId", getFileId());
+		attributes.put("userId", getUserId());
+		attributes.put("signId", getSignId());
 		attributes.put("req_name", getReq_name());
 		attributes.put("req_email", getReq_email());
 		attributes.put("sign_email", getSign_email());
@@ -86,16 +87,22 @@ public class DocumentWrapper implements Document, ModelWrapper<Document> {
 			setDocId(docId);
 		}
 
+		Long fileId = (Long)attributes.get("fileId");
+
+		if (fileId != null) {
+			setFileId(fileId);
+		}
+
 		Long userId = (Long)attributes.get("userId");
 
 		if (userId != null) {
 			setUserId(userId);
 		}
 
-		Long fileId = (Long)attributes.get("fileId");
+		Long signId = (Long)attributes.get("signId");
 
-		if (fileId != null) {
-			setFileId(fileId);
+		if (signId != null) {
+			setSignId(signId);
 		}
 
 		String req_name = (String)attributes.get("req_name");
@@ -413,6 +420,16 @@ public class DocumentWrapper implements Document, ModelWrapper<Document> {
 	}
 
 	/**
+	* Returns the sign ID of this document.
+	*
+	* @return the sign ID of this document
+	*/
+	@Override
+	public long getSignId() {
+		return _document.getSignId();
+	}
+
+	/**
 	* Returns the user ID of this document.
 	*
 	* @return the user ID of this document
@@ -606,6 +623,16 @@ public class DocumentWrapper implements Document, ModelWrapper<Document> {
 	@Override
 	public void setReq_name(java.lang.String req_name) {
 		_document.setReq_name(req_name);
+	}
+
+	/**
+	* Sets the sign ID of this document.
+	*
+	* @param signId the sign ID of this document
+	*/
+	@Override
+	public void setSignId(long signId) {
+		_document.setSignId(signId);
 	}
 
 	/**

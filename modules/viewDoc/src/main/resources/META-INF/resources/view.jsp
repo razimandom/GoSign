@@ -50,6 +50,8 @@
 	<liferay-ui:search-container-results>
 
 		<%
+					//List<Document> docList2 =DocumentLocalServiceUtil.findByUserId(1, -1, -1);
+			
 					List<Document> docList = DocumentLocalServiceUtil.getDocuments(-1, -1);
 					results = ListUtil.subList(docList, searchContainer.getStart(), searchContainer.getEnd());
 					//results = UserLocalServiceUtil.getUsers(searchContainer.getStart(), searchContainer.getEnd());

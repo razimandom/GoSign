@@ -63,14 +63,16 @@ public class DocumentCacheModel implements CacheModel<Document>, Externalizable 
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(31);
+		StringBundler sb = new StringBundler(33);
 
 		sb.append("{docId=");
 		sb.append(docId);
-		sb.append(", userId=");
-		sb.append(userId);
 		sb.append(", fileId=");
 		sb.append(fileId);
+		sb.append(", userId=");
+		sb.append(userId);
+		sb.append(", signId=");
+		sb.append(signId);
 		sb.append(", req_name=");
 		sb.append(req_name);
 		sb.append(", req_email=");
@@ -105,8 +107,9 @@ public class DocumentCacheModel implements CacheModel<Document>, Externalizable 
 		DocumentImpl documentImpl = new DocumentImpl();
 
 		documentImpl.setDocId(docId);
-		documentImpl.setUserId(userId);
 		documentImpl.setFileId(fileId);
+		documentImpl.setUserId(userId);
+		documentImpl.setSignId(signId);
 
 		if (req_name == null) {
 			documentImpl.setReq_name(StringPool.BLANK);
@@ -201,9 +204,11 @@ public class DocumentCacheModel implements CacheModel<Document>, Externalizable 
 	public void readExternal(ObjectInput objectInput) throws IOException {
 		docId = objectInput.readLong();
 
+		fileId = objectInput.readLong();
+
 		userId = objectInput.readLong();
 
-		fileId = objectInput.readLong();
+		signId = objectInput.readLong();
 		req_name = objectInput.readUTF();
 		req_email = objectInput.readUTF();
 		sign_email = objectInput.readUTF();
@@ -223,9 +228,11 @@ public class DocumentCacheModel implements CacheModel<Document>, Externalizable 
 		throws IOException {
 		objectOutput.writeLong(docId);
 
+		objectOutput.writeLong(fileId);
+
 		objectOutput.writeLong(userId);
 
-		objectOutput.writeLong(fileId);
+		objectOutput.writeLong(signId);
 
 		if (req_name == null) {
 			objectOutput.writeUTF(StringPool.BLANK);
@@ -313,8 +320,9 @@ public class DocumentCacheModel implements CacheModel<Document>, Externalizable 
 	}
 
 	public long docId;
-	public long userId;
 	public long fileId;
+	public long userId;
+	public long signId;
 	public String req_name;
 	public String req_email;
 	public String sign_email;
