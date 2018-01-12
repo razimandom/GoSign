@@ -198,6 +198,12 @@ public interface DocumentLocalService extends BaseLocalService,
 	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery, int start,
 		int end, OrderByComparator<T> orderByComparator);
 
+	public List<Document> findBySignId(long signId, int start, int end)
+		throws SystemException;
+
+	public List<Document> findByUserId(long userId, int start, int end)
+		throws SystemException;
+
 	/**
 	* Returns a range of all the documents.
 	*

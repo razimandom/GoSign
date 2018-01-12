@@ -52,17 +52,19 @@
 	
 	<liferay-ui:search-container-results>
 	
-	<%
-	
-	//String currentURL = PortalUtil.getCurrentURL(request);
-
-	List<Document> docList = DocumentLocalServiceUtil.getDocuments(-1, -1);
-	results = ListUtil.subList(docList, searchContainer.getStart(), searchContainer.getEnd());
-	searchContainer.setTotal(docList.size());
-	searchContainer.setResults(results);
-	
-	
-	%>
+		<%					
+					String remoteUserId = request.getRemoteUser();
+					long userId = Long.valueOf(remoteUserId);
+					System.out.println(userId);
+					//long currentUserId = request.getAttribute("currentUserId");
+					List<Document> docList = DocumentLocalServiceUtil.findBySignId(11111, -1, -1);
+			
+					//List<Document> docList = DocumentLocalServiceUtil.getDocuments(-1, -1);
+					results = ListUtil.subList(docList, searchContainer.getStart(), searchContainer.getEnd());
+					//results = UserLocalServiceUtil.getUsers(searchContainer.getStart(), searchContainer.getEnd());
+					searchContainer.setTotal(docList.size());
+					searchContainer.setResults(results);
+		%>
 	
 
  	</liferay-ui:search-container-results>

@@ -222,6 +222,20 @@ public class DocumentLocalServiceWrapper implements DocumentLocalService,
 			orderByComparator);
 	}
 
+	@Override
+	public java.util.List<DocRegistration.model.Document> findBySignId(
+		long signId, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _documentLocalService.findBySignId(signId, start, end);
+	}
+
+	@Override
+	public java.util.List<DocRegistration.model.Document> findByUserId(
+		long userId, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _documentLocalService.findByUserId(userId, start, end);
+	}
+
 	/**
 	* Returns a range of all the documents.
 	*

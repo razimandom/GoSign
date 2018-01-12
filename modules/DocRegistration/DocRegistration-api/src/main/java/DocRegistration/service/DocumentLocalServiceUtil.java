@@ -213,6 +213,18 @@ public class DocumentLocalServiceUtil {
 				   .dynamicQuery(dynamicQuery, start, end, orderByComparator);
 	}
 
+	public static java.util.List<DocRegistration.model.Document> findBySignId(
+		long signId, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().findBySignId(signId, start, end);
+	}
+
+	public static java.util.List<DocRegistration.model.Document> findByUserId(
+		long userId, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().findByUserId(userId, start, end);
+	}
+
 	/**
 	* Returns a range of all the documents.
 	*

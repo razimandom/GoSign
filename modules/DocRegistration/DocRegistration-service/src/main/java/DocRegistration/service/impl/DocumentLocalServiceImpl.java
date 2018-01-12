@@ -14,6 +14,11 @@
 
 package DocRegistration.service.impl;
 
+import java.util.List;
+
+import com.liferay.portal.kernel.exception.SystemException;
+
+import DocRegistration.model.Document;
 import DocRegistration.service.base.DocumentLocalServiceBaseImpl;
 
 /**
@@ -36,4 +41,12 @@ public class DocumentLocalServiceImpl extends DocumentLocalServiceBaseImpl {
 	 *
 	 * Never reference this class directly. Always use {@link DocRegistration.service.DocumentLocalServiceUtil} to access the document local service.
 	 */
+	
+	public List<Document> findByUserId(long userId, int start, int end) throws SystemException{
+		return this.documentPersistence.findByUserId(userId, start, end);
+	}
+	
+	public List<Document> findBySignId(long signId, int start, int end) throws SystemException{
+		return this.documentPersistence.findBySignId(signId, start, end);
+	}
 }
