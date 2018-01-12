@@ -225,10 +225,23 @@ public class UploadDocPortlet extends MVCPortlet {
 			mailMessage.setTo(toAddress);
 			mailMessage.setFrom(fromAddress);
 			mailMessage.setSubject("Signature Request Successfully Submitted.");
-			mailMessage.setBody("<h3><font color = RED>This Mail Comes From Liferay Is Easy</font></h3>");
+			mailMessage.setBody(""
+					+ "<p>Dear "+ req_name +",</p> " 
+					+ "<p>You request has been succesfully submitted.</p>"
+					+ "<p><strong>Request Details:</strong></p>"
+					+ "<ul>"
+					+ "<li>Requested Title: " + req_name + "</li>"
+					+ "<li>Requested By: " + req_name + "</li>"
+					+ "<li>Document Name: " + req_name + "</li>"
+					+ "<li>Request Type: " + doc_type + "</li>"
+					+ "<li>Deadline: " + doc_deadline + "</li>"
+					+ "</ul>"
+					+ "<p>&nbsp;</p>"
+					+ "<p>GoSign Team</p>"
+					);
 			mailMessage.setHTMLFormat(true);
 			MailServiceUtil.sendEmail(mailMessage);
-			System.out.println("Send mail with HTML Format");
+			System.out.println("Email has been sent to requestor!");
 		} catch (AddressException e) {
 			e.printStackTrace();
 		}
@@ -251,8 +264,7 @@ public class UploadDocPortlet extends MVCPortlet {
 			mailMessage.setTo(toAddress);
 			mailMessage.setFrom(fromAddress);
 			mailMessage.setSubject("New Request for Signature");
-			mailMessage.setBody(""
-					+ "<p>Dear Signer,</p> " 
+			mailMessage.setBody("" 
 					+ "<p>You have received a request from " + req_name +" to sign a document.&nbsp;Please login to view and sign the document before&nbsp;</p>"
 					+ "<p><strong>Request Details:</strong></p>"
 					+ "<ul>"
@@ -267,7 +279,7 @@ public class UploadDocPortlet extends MVCPortlet {
 					);
 			mailMessage.setHTMLFormat(true);
 			MailServiceUtil.sendEmail(mailMessage);
-			System.out.println("Send mail with HTML Format");
+			System.out.println("Email has been sent to signer!");
 		} catch (AddressException e) {
 			e.printStackTrace();
 		}

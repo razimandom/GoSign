@@ -1,0 +1,4 @@
+Bundle-Name: AutoComplete
+Bundle-SymbolicName: AutoComplete
+Bundle-Version: 1.0.0
+Export-Package: AutoComplete.constants
