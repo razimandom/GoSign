@@ -1,5 +1,6 @@
 <%@page import="com.liferay.portal.kernel.service.persistence.UserUtil"%>
 <%@page import="com.liferay.portal.kernel.service.UserLocalServiceUtil"%>
+<%@page import="com.liferay.portal.kernel.util.Constants"%>
 
 <%@page import="javax.portlet.PortletException"%>
 <%@page import="com.liferay.portal.kernel.model.User"%>
@@ -74,6 +75,53 @@
 </style>
 
 -->
+<portlet:resourceURL var="getUsers">
+	<portlet:param name="<%=Constants.CMD%>" value="get_users" />
+</portlet:resourceURL>
+
+<aui:script>
+	AUI()
+			.use(
+					'autocomplete-list',
+					'aui-base',
+					'aui-io-request',
+					'autocomplete-filters','autocomplete-highlighters',function (A) {var testData;new A.AutoCompleteList({
+																allowBrowserAutocomplete : 'true',
+									activateFirstItem : 'true',
+									inputNode : '#<portlet:namespace />myInputNode',
+									resultTextLocator : 'email',
+									render : 'true',
+									resultHighlighter : 'phraseMatch',
+									resultFilters : [ 'phraseMatch' ],
+									source : function() {
+										var inputValue = A
+												.one(
+														"#<portlet:namespace />myInputNode")
+												.get('value');
+										var myAjaxRequest=A.io.request('<%=getUsers.toString()%>',{
+															dataType : 'json',
+															method : 'POST',
+															data : {
+																<portlet:namespace />userEmail : inputValue,
+															},
+															autoLoad : false,
+															sync : false,
+															on : {
+																success : function() {
+																	var data = this
+																			.get('responseData');
+																	testData = data;
+																}
+															}
+														});
+										myAjaxRequest.start();
+										return testData;
+									},
+								});
+					});
+
+	
+</aui:script>
 
 <portlet:actionURL name="addDoc" var="addDoc" />
 
@@ -82,8 +130,9 @@
 	<aui:input label="User ID: " name="currentUserId" type="hidden" value="<%=request.getAttribute("currentUserId") %>" readonly="true" />
 	<aui:input label="Requestor Name: " name="req_name" type="hidden" value="<%=request.getAttribute("currentFirstName") %>" readonly="true" />
 	<aui:input label="Requestor Email: " name="req_email" type="hidden" value="<%=request.getAttribute("currentEmail") %>" readonly="true" />
+	<aui:input id="myInputNode" name="sign_email" label="Signer Email: " helpMessage="Email of the user that will sign this document" />
 	<aui:input label="Date Created: " name="req_dateCreated" type="hidden" value="<%=request.getAttribute("currentDateTime") %>" readonly="true" />
-	<aui:input label="Signer Email: " name="sign_email" type="type" />	
+	<!--  <aui:input label="Signer Email: " name="sign_email" type="type" />	-->
 	<aui:input label="Upload File: " type="file" name="file" />
 	<aui:input label="Document Description/Justification" type="textarea" name="doc_description" />
 	

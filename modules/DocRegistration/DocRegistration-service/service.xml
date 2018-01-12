@@ -3,7 +3,7 @@
 
 <service-builder package-path="DocRegistration">
 	<namespace>Document</namespace>
-    <entity name="Document" local-service="true" table="document_data">
+    <entity name="Document" local-service="true" table="document_data" json-enabled="true">
         <column name="docId" primary="true" type="long"></column>
         <column name="fileId" type="long"></column>
         <column name="userId" type="long"></column>

@@ -77,9 +77,9 @@ public class AutoCompletePortlet extends MVCPortlet {
                 System.out.println("Found word in DB? 0:NO 1:YES ===> " + userList.size());
                 for (User user: userList) {
                     userJSON = JSONFactoryUtil.createJSONObject();
-                    userJSON.put("userId", user.getUserId());
+                    userJSON.put("signId", user.getUserId());
                     userJSON.put("email", user.getEmailAddress());
-                    userJSON.put("firstName", user.getFirstName());
+                    //userJSON.put("firstName", user.getFirstName());
                     usersJSONArray.put(userJSON);
                     
                     System.out.println(userJSON);

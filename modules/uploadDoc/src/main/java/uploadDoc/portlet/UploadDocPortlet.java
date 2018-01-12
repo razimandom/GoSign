@@ -8,14 +8,25 @@ import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.mail.kernel.model.MailMessage;
 import com.liferay.mail.kernel.service.MailServiceUtil;
 import com.liferay.portal.kernel.dao.jdbc.OutputBlob;
+import com.liferay.portal.kernel.dao.orm.Criterion;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.upload.UploadRequest;
+import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 //import com.liferay.content.util.ContentUtil;
@@ -27,8 +38,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Properties;
 
 //import javax.mail.Message;
@@ -45,6 +58,9 @@ import javax.portlet.PortletException;
 import javax.portlet.ProcessAction;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
+
 import org.osgi.service.component.annotations.Component;
 
 /**
@@ -97,6 +113,54 @@ public class UploadDocPortlet extends MVCPortlet {
 
 		super.doView(renderRequest, renderResponse);
 	}
+	
+	/*
+	 * Function to for email autocomplete form
+	 */
+	
+    @Override
+    public void serveResource(ResourceRequest resourceRequest,
+            ResourceResponse resourceResponse) throws IOException, PortletException {
+            String cmd = ParamUtil.getString(resourceRequest, Constants.CMD);
+            System.out.println("Constants.CMD: " + cmd);
+            if (cmd.equals("get_users")) {
+                getUsers(resourceRequest, resourceResponse);
+            }
+        }
+	
+    public void getUsers(ResourceRequest resourceRequest, ResourceResponse resourceResponse) throws IOException, PortletException {
+        JSONArray usersJSONArray = JSONFactoryUtil.createJSONArray();
+        ThemeDisplay themeDisplay = (ThemeDisplay) resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
+        
+        System.out.println("=====Retrieving value from text field=====");
+        String userEmail = ParamUtil.getString(resourceRequest, "userEmail");
+        System.out.println("User entered keyword: ===> " + userEmail);
+        
+        DynamicQuery userQuery = DynamicQueryFactoryUtil.forClass(User.class, PortalClassLoaderUtil.getClassLoader());
+        Criterion criterion = RestrictionsFactoryUtil.like("emailAddress",  StringPool.PERCENT + userEmail + StringPool.PERCENT);
+        userQuery.add(criterion);
+        JSONObject userJSON = null;
+        System.out.println("User query string: ===> " + userQuery.toString());
+        
+        try {
+            List < User > userList = UserLocalServiceUtil.dynamicQuery(userQuery);
+            System.out.println("Found word in DB? 0:NO 1:YES ===> " + userList.size());
+            for (User user: userList) {
+                userJSON = JSONFactoryUtil.createJSONObject();
+                userJSON.put("signId", user.getUserId());
+                userJSON.put("email", user.getEmailAddress());
+                userJSON.put("firstName", user.getFirstName());
+                usersJSONArray.put(userJSON);
+                System.out.println("Fetch data from signer email: ");
+                System.out.println(userJSON);
+                
+            }
+        } catch (Exception e) {}
+        PrintWriter out = resourceResponse.getWriter();
+        out.println(usersJSONArray.toString());
+    }
+    
+    
 
 	/*
 	 * addDoc method to retrieve data from the form then set the data to db
