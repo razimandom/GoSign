@@ -264,156 +264,164 @@ public class DocumentUtil {
 	}
 
 	/**
-	* Returns all the documents where signId = &#63;.
+	* Returns all the documents where sign_email = &#63;.
 	*
-	* @param signId the sign ID
+	* @param sign_email the sign_email
 	* @return the matching documents
 	*/
-	public static List<Document> findBySignId(long signId) {
-		return getPersistence().findBySignId(signId);
+	public static List<Document> findBySignEmail(java.lang.String sign_email) {
+		return getPersistence().findBySignEmail(sign_email);
 	}
 
 	/**
-	* Returns a range of all the documents where signId = &#63;.
+	* Returns a range of all the documents where sign_email = &#63;.
 	*
 	* <p>
 	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DocumentModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	* </p>
 	*
-	* @param signId the sign ID
+	* @param sign_email the sign_email
 	* @param start the lower bound of the range of documents
 	* @param end the upper bound of the range of documents (not inclusive)
 	* @return the range of matching documents
 	*/
-	public static List<Document> findBySignId(long signId, int start, int end) {
-		return getPersistence().findBySignId(signId, start, end);
+	public static List<Document> findBySignEmail(java.lang.String sign_email,
+		int start, int end) {
+		return getPersistence().findBySignEmail(sign_email, start, end);
 	}
 
 	/**
-	* Returns an ordered range of all the documents where signId = &#63;.
+	* Returns an ordered range of all the documents where sign_email = &#63;.
 	*
 	* <p>
 	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DocumentModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	* </p>
 	*
-	* @param signId the sign ID
+	* @param sign_email the sign_email
 	* @param start the lower bound of the range of documents
 	* @param end the upper bound of the range of documents (not inclusive)
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching documents
 	*/
-	public static List<Document> findBySignId(long signId, int start, int end,
-		OrderByComparator<Document> orderByComparator) {
+	public static List<Document> findBySignEmail(java.lang.String sign_email,
+		int start, int end, OrderByComparator<Document> orderByComparator) {
 		return getPersistence()
-				   .findBySignId(signId, start, end, orderByComparator);
+				   .findBySignEmail(sign_email, start, end, orderByComparator);
 	}
 
 	/**
-	* Returns an ordered range of all the documents where signId = &#63;.
+	* Returns an ordered range of all the documents where sign_email = &#63;.
 	*
 	* <p>
 	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DocumentModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	* </p>
 	*
-	* @param signId the sign ID
+	* @param sign_email the sign_email
 	* @param start the lower bound of the range of documents
 	* @param end the upper bound of the range of documents (not inclusive)
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the ordered range of matching documents
 	*/
-	public static List<Document> findBySignId(long signId, int start, int end,
-		OrderByComparator<Document> orderByComparator, boolean retrieveFromCache) {
+	public static List<Document> findBySignEmail(java.lang.String sign_email,
+		int start, int end, OrderByComparator<Document> orderByComparator,
+		boolean retrieveFromCache) {
 		return getPersistence()
-				   .findBySignId(signId, start, end, orderByComparator,
+				   .findBySignEmail(sign_email, start, end, orderByComparator,
 			retrieveFromCache);
 	}
 
 	/**
-	* Returns the first document in the ordered set where signId = &#63;.
+	* Returns the first document in the ordered set where sign_email = &#63;.
 	*
-	* @param signId the sign ID
+	* @param sign_email the sign_email
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the first matching document
 	* @throws NoSuchDocumentException if a matching document could not be found
 	*/
-	public static Document findBySignId_First(long signId,
+	public static Document findBySignEmail_First(java.lang.String sign_email,
 		OrderByComparator<Document> orderByComparator)
 		throws DocRegistration.exception.NoSuchDocumentException {
-		return getPersistence().findBySignId_First(signId, orderByComparator);
+		return getPersistence()
+				   .findBySignEmail_First(sign_email, orderByComparator);
 	}
 
 	/**
-	* Returns the first document in the ordered set where signId = &#63;.
+	* Returns the first document in the ordered set where sign_email = &#63;.
 	*
-	* @param signId the sign ID
+	* @param sign_email the sign_email
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the first matching document, or <code>null</code> if a matching document could not be found
 	*/
-	public static Document fetchBySignId_First(long signId,
+	public static Document fetchBySignEmail_First(java.lang.String sign_email,
 		OrderByComparator<Document> orderByComparator) {
-		return getPersistence().fetchBySignId_First(signId, orderByComparator);
+		return getPersistence()
+				   .fetchBySignEmail_First(sign_email, orderByComparator);
 	}
 
 	/**
-	* Returns the last document in the ordered set where signId = &#63;.
+	* Returns the last document in the ordered set where sign_email = &#63;.
 	*
-	* @param signId the sign ID
+	* @param sign_email the sign_email
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the last matching document
 	* @throws NoSuchDocumentException if a matching document could not be found
 	*/
-	public static Document findBySignId_Last(long signId,
+	public static Document findBySignEmail_Last(java.lang.String sign_email,
 		OrderByComparator<Document> orderByComparator)
 		throws DocRegistration.exception.NoSuchDocumentException {
-		return getPersistence().findBySignId_Last(signId, orderByComparator);
+		return getPersistence()
+				   .findBySignEmail_Last(sign_email, orderByComparator);
 	}
 
 	/**
-	* Returns the last document in the ordered set where signId = &#63;.
+	* Returns the last document in the ordered set where sign_email = &#63;.
 	*
-	* @param signId the sign ID
+	* @param sign_email the sign_email
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the last matching document, or <code>null</code> if a matching document could not be found
 	*/
-	public static Document fetchBySignId_Last(long signId,
+	public static Document fetchBySignEmail_Last(java.lang.String sign_email,
 		OrderByComparator<Document> orderByComparator) {
-		return getPersistence().fetchBySignId_Last(signId, orderByComparator);
+		return getPersistence()
+				   .fetchBySignEmail_Last(sign_email, orderByComparator);
 	}
 
 	/**
-	* Returns the documents before and after the current document in the ordered set where signId = &#63;.
+	* Returns the documents before and after the current document in the ordered set where sign_email = &#63;.
 	*
 	* @param docId the primary key of the current document
-	* @param signId the sign ID
+	* @param sign_email the sign_email
 	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	* @return the previous, current, and next document
 	* @throws NoSuchDocumentException if a document with the primary key could not be found
 	*/
-	public static Document[] findBySignId_PrevAndNext(long docId, long signId,
+	public static Document[] findBySignEmail_PrevAndNext(long docId,
+		java.lang.String sign_email,
 		OrderByComparator<Document> orderByComparator)
 		throws DocRegistration.exception.NoSuchDocumentException {
 		return getPersistence()
-				   .findBySignId_PrevAndNext(docId, signId, orderByComparator);
+				   .findBySignEmail_PrevAndNext(docId, sign_email,
+			orderByComparator);
 	}
 
 	/**
-	* Removes all the documents where signId = &#63; from the database.
+	* Removes all the documents where sign_email = &#63; from the database.
 	*
-	* @param signId the sign ID
+	* @param sign_email the sign_email
 	*/
-	public static void removeBySignId(long signId) {
-		getPersistence().removeBySignId(signId);
+	public static void removeBySignEmail(java.lang.String sign_email) {
+		getPersistence().removeBySignEmail(sign_email);
 	}
 
 	/**
-	* Returns the number of documents where signId = &#63;.
+	* Returns the number of documents where sign_email = &#63;.
 	*
-	* @param signId the sign ID
+	* @param sign_email the sign_email
 	* @return the number of matching documents
 	*/
-	public static int countBySignId(long signId) {
-		return getPersistence().countBySignId(signId);
+	public static int countBySignEmail(java.lang.String sign_email) {
+		return getPersistence().countBySignEmail(sign_email);
 	}
 
 	/**

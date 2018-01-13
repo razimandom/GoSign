@@ -46,7 +46,7 @@ public class DocumentLocalServiceImpl extends DocumentLocalServiceBaseImpl {
 		return this.documentPersistence.findByUserId(userId, start, end);
 	}
 	
-	public List<Document> findBySignId(long signId, int start, int end) throws SystemException{
-		return this.documentPersistence.findBySignId(signId, start, end);
+	public List<Document> findBySignEmail(String sign_email, int start, int end) throws SystemException{
+		return this.documentPersistence.findBySignEmail(sign_email, start, end);
 	}
 }

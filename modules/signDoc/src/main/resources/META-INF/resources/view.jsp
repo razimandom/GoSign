@@ -13,7 +13,8 @@
 <%@page import="com.liferay.portal.kernel.util.ListUtil" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
 <%@taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet" %>
-
+<%@page import="com.liferay.portal.kernel.util.WebKeys"%>
+<%@page import="com.liferay.portal.kernel.theme.ThemeDisplay"%>
 <!-- Start - CSS Styles for text in table -->
 
 <style>
@@ -53,11 +54,25 @@
 	<liferay-ui:search-container-results>
 	
 		<%					
-					String remoteUserId = request.getRemoteUser();
-					long userId = Long.valueOf(remoteUserId);
-					System.out.println(userId);
+		
+					//ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+
+					//String signEmail = themeDisplay.getUser().getDisplayEmailAddress();
+					//System.out.println(signEmail);
+		
+					//String remoteUserId = request.getRemoteUser();
+					//long userId = Long.valueOf(remoteUserId);
+					//System.out.println(userId);
+					
+					//User userEmail = (User) request.getAttribute(currentEmail);
+					//System.out.println(userEmail);
+					
+					String currentUserEmail = (String) request.getAttribute("currentEmail");
+					
+					//String email = user.getEmailAddress
 					//long currentUserId = request.getAttribute("currentUserId");
-					List<Document> docList = DocumentLocalServiceUtil.findBySignId(11111, -1, -1);
+					List<Document> docList = DocumentLocalServiceUtil.findBySignEmail(currentUserEmail, -1, -1);
+					//List<Document> docList = DocumentLocalServiceUtil.findBySignId(currentUserId, -1, -1);
 			
 					//List<Document> docList = DocumentLocalServiceUtil.getDocuments(-1, -1);
 					results = ListUtil.subList(docList, searchContainer.getStart(), searchContainer.getEnd());

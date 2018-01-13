@@ -119,20 +119,6 @@ public interface DocumentModel extends BaseModel<Document> {
 	public void setUserUuid(String userUuid);
 
 	/**
-	 * Returns the sign ID of this document.
-	 *
-	 * @return the sign ID of this document
-	 */
-	public long getSignId();
-
-	/**
-	 * Sets the sign ID of this document.
-	 *
-	 * @param signId the sign ID of this document
-	 */
-	public void setSignId(long signId);
-
-	/**
 	 * Returns the req_name of this document.
 	 *
 	 * @return the req_name of this document

@@ -2,7 +2,6 @@ create table document_data (
 	docId LONG not null primary key,
 	fileId LONG,
 	userId LONG,
-	signId LONG,
 	req_name VARCHAR(75) null,
 	req_email VARCHAR(75) null,
 	sign_email VARCHAR(75) null,

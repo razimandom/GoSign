@@ -178,6 +178,7 @@ public class UploadDocPortlet extends MVCPortlet {
 
 		long docId = CounterLocalServiceUtil.increment();
 		long currentUserId = ParamUtil.getLong(actionRequest, "currentUserId");
+		long signId = ParamUtil.getLong(actionRequest, "signId");
 		long fileId = CounterLocalServiceUtil.increment();
 		String req_name = ParamUtil.getString(actionRequest, "req_name");
 		String req_email = ParamUtil.getString(actionRequest, "req_email");
@@ -190,6 +191,7 @@ public class UploadDocPortlet extends MVCPortlet {
 		System.out.println("Retrieved data:");
 		System.out.println("Document ID: " + docId);
 		System.out.println("Requestor ID: " + currentUserId);
+		System.out.println("Signer ID: " + signId);
 		System.out.println("File ID: " + fileId);
 		System.out.println("Requestor Name: " + req_name);
 		System.out.println("Requestor Email: " + req_email);
@@ -200,6 +202,7 @@ public class UploadDocPortlet extends MVCPortlet {
 		System.out.println("Document Type: " + doc_type);
 		System.out.println("...");
 		System.out.println("...");
+		
 
 		/*
 		 * Function to upload
@@ -245,6 +248,7 @@ public class UploadDocPortlet extends MVCPortlet {
 			Document doc = DocumentLocalServiceUtil.createDocument(docId);
 			doc.setReq_name(req_name);
 			doc.setReq_email(req_email);
+			//doc.setSignId(signId);
 			doc.setSign_email(sign_email);
 			doc.setReq_dateCreated(req_dateCreated);
 			doc.setDoc_deadline(doc_deadline);

@@ -223,10 +223,10 @@ public class DocumentLocalServiceWrapper implements DocumentLocalService,
 	}
 
 	@Override
-	public java.util.List<DocRegistration.model.Document> findBySignId(
-		long signId, int start, int end)
+	public java.util.List<DocRegistration.model.Document> findBySignEmail(
+		java.lang.String sign_email, int start, int end)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		return _documentLocalService.findBySignId(signId, start, end);
+		return _documentLocalService.findBySignEmail(sign_email, start, end);
 	}
 
 	@Override

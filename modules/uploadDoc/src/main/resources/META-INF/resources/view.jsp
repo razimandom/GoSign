@@ -127,16 +127,25 @@
 
 <aui:form action="<%=addDoc.toString()%>" method="post" name="name" enctype="multipart/form-data">
 	
+	
+	<!-- All these 3 inpus are hidden -->
 	<aui:input label="User ID: " name="currentUserId" type="hidden" value="<%=request.getAttribute("currentUserId") %>" readonly="true" />
 	<aui:input label="Requestor Name: " name="req_name" type="hidden" value="<%=request.getAttribute("currentFirstName") %>" readonly="true" />
 	<aui:input label="Requestor Email: " name="req_email" type="hidden" value="<%=request.getAttribute("currentEmail") %>" readonly="true" />
-	<aui:input id="myInputNode" name="sign_email" label="Signer Email: " helpMessage="Email of the user that will sign this document" />
-	<aui:input label="Date Created: " name="req_dateCreated" type="hidden" value="<%=request.getAttribute("currentDateTime") %>" readonly="true" />
-	<!--  <aui:input label="Signer Email: " name="sign_email" type="type" />	-->
-	<aui:input label="Upload File: " type="file" name="file" />
-	<aui:input label="Document Description/Justification" type="textarea" name="doc_description" />
 	
-	<aui:input label="Deadline" name="doc_deadline" type="text" value="<%=request.getAttribute("currentDateTime") %>"/>
+	
+	<aui:input id="myInputNode" name="sign_email" label="Signer Email: " helpMessage="Email of the user that will sign this document">
+	<aui:validator name="required"/>
+	<aui:validator name="email"/>
+	</aui:input>
+	
+	<aui:input label="Date Created: " name="req_dateCreated" type="hidden" value="<%=request.getAttribute("currentDateTime") %>" readonly="true" />
+	<aui:input label="Upload File: " type="file" name="file" helpMessage="Upload document that need to be sign digitally"/>
+	<aui:input label="Description: " type="textarea" name="doc_description" helpMessage="Justification or description of signature request"/>
+	
+	<aui:input label="Deadline: " name="doc_deadline" type="text" value="<%=request.getAttribute("currentDateTime") %>">
+	<aui:validator name="required"/>
+	</aui:input>
 	<!-- <aui:input id="<portlet:namespace />calendarDate" class="form-control" label="Deadline" name="doc_deadline" type="text" value="Click to select date"/> -->
 	
 	<!-- Below input using different input tag (not aui:input tag) to implement alloyui date picker trigger

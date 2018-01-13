@@ -38,7 +38,6 @@ public class DocumentSoap implements Serializable {
 		soapModel.setDocId(model.getDocId());
 		soapModel.setFileId(model.getFileId());
 		soapModel.setUserId(model.getUserId());
-		soapModel.setSignId(model.getSignId());
 		soapModel.setReq_name(model.getReq_name());
 		soapModel.setReq_email(model.getReq_email());
 		soapModel.setSign_email(model.getSign_email());
@@ -126,14 +125,6 @@ public class DocumentSoap implements Serializable {
 
 	public void setUserId(long userId) {
 		_userId = userId;
-	}
-
-	public long getSignId() {
-		return _signId;
-	}
-
-	public void setSignId(long signId) {
-		_signId = signId;
 	}
 
 	public String getReq_name() {
@@ -243,7 +234,6 @@ public class DocumentSoap implements Serializable {
 	private long _docId;
 	private long _fileId;
 	private long _userId;
-	private long _signId;
 	private String _req_name;
 	private String _req_email;
 	private String _sign_email;

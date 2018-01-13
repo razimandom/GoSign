@@ -48,6 +48,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -583,81 +584,83 @@ public class DocumentPersistenceImpl extends BasePersistenceImpl<Document>
 	}
 
 	private static final String _FINDER_COLUMN_USERID_USERID_2 = "document.userId = ?";
-	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_SIGNID = new FinderPath(DocumentModelImpl.ENTITY_CACHE_ENABLED,
+	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_SIGNEMAIL =
+		new FinderPath(DocumentModelImpl.ENTITY_CACHE_ENABLED,
 			DocumentModelImpl.FINDER_CACHE_ENABLED, DocumentImpl.class,
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findBySignId",
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findBySignEmail",
 			new String[] {
-				Long.class.getName(),
+				String.class.getName(),
 				
 			Integer.class.getName(), Integer.class.getName(),
 				OrderByComparator.class.getName()
 			});
-	public static final FinderPath FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SIGNID =
+	public static final FinderPath FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SIGNEMAIL =
 		new FinderPath(DocumentModelImpl.ENTITY_CACHE_ENABLED,
 			DocumentModelImpl.FINDER_CACHE_ENABLED, DocumentImpl.class,
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findBySignId",
-			new String[] { Long.class.getName() },
-			DocumentModelImpl.SIGNID_COLUMN_BITMASK);
-	public static final FinderPath FINDER_PATH_COUNT_BY_SIGNID = new FinderPath(DocumentModelImpl.ENTITY_CACHE_ENABLED,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findBySignEmail",
+			new String[] { String.class.getName() },
+			DocumentModelImpl.SIGN_EMAIL_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_SIGNEMAIL = new FinderPath(DocumentModelImpl.ENTITY_CACHE_ENABLED,
 			DocumentModelImpl.FINDER_CACHE_ENABLED, Long.class,
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countBySignId",
-			new String[] { Long.class.getName() });
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countBySignEmail",
+			new String[] { String.class.getName() });
 
 	/**
-	 * Returns all the documents where signId = &#63;.
+	 * Returns all the documents where sign_email = &#63;.
 	 *
-	 * @param signId the sign ID
+	 * @param sign_email the sign_email
 	 * @return the matching documents
 	 */
 	@Override
-	public List<Document> findBySignId(long signId) {
-		return findBySignId(signId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	public List<Document> findBySignEmail(String sign_email) {
+		return findBySignEmail(sign_email, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
 	}
 
 	/**
-	 * Returns a range of all the documents where signId = &#63;.
+	 * Returns a range of all the documents where sign_email = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DocumentModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
-	 * @param signId the sign ID
+	 * @param sign_email the sign_email
 	 * @param start the lower bound of the range of documents
 	 * @param end the upper bound of the range of documents (not inclusive)
 	 * @return the range of matching documents
 	 */
 	@Override
-	public List<Document> findBySignId(long signId, int start, int end) {
-		return findBySignId(signId, start, end, null);
+	public List<Document> findBySignEmail(String sign_email, int start, int end) {
+		return findBySignEmail(sign_email, start, end, null);
 	}
 
 	/**
-	 * Returns an ordered range of all the documents where signId = &#63;.
+	 * Returns an ordered range of all the documents where sign_email = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DocumentModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
-	 * @param signId the sign ID
+	 * @param sign_email the sign_email
 	 * @param start the lower bound of the range of documents
 	 * @param end the upper bound of the range of documents (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @return the ordered range of matching documents
 	 */
 	@Override
-	public List<Document> findBySignId(long signId, int start, int end,
-		OrderByComparator<Document> orderByComparator) {
-		return findBySignId(signId, start, end, orderByComparator, true);
+	public List<Document> findBySignEmail(String sign_email, int start,
+		int end, OrderByComparator<Document> orderByComparator) {
+		return findBySignEmail(sign_email, start, end, orderByComparator, true);
 	}
 
 	/**
-	 * Returns an ordered range of all the documents where signId = &#63;.
+	 * Returns an ordered range of all the documents where sign_email = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DocumentModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
-	 * @param signId the sign ID
+	 * @param sign_email the sign_email
 	 * @param start the lower bound of the range of documents
 	 * @param end the upper bound of the range of documents (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -665,8 +668,9 @@ public class DocumentPersistenceImpl extends BasePersistenceImpl<Document>
 	 * @return the ordered range of matching documents
 	 */
 	@Override
-	public List<Document> findBySignId(long signId, int start, int end,
-		OrderByComparator<Document> orderByComparator, boolean retrieveFromCache) {
+	public List<Document> findBySignEmail(String sign_email, int start,
+		int end, OrderByComparator<Document> orderByComparator,
+		boolean retrieveFromCache) {
 		boolean pagination = true;
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
@@ -674,12 +678,12 @@ public class DocumentPersistenceImpl extends BasePersistenceImpl<Document>
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
-			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SIGNID;
-			finderArgs = new Object[] { signId };
+			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SIGNEMAIL;
+			finderArgs = new Object[] { sign_email };
 		}
 		else {
-			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_SIGNID;
-			finderArgs = new Object[] { signId, start, end, orderByComparator };
+			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_SIGNEMAIL;
+			finderArgs = new Object[] { sign_email, start, end, orderByComparator };
 		}
 
 		List<Document> list = null;
@@ -690,7 +694,7 @@ public class DocumentPersistenceImpl extends BasePersistenceImpl<Document>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Document document : list) {
-					if ((signId != document.getSignId())) {
+					if (!Objects.equals(sign_email, document.getSign_email())) {
 						list = null;
 
 						break;
@@ -712,7 +716,19 @@ public class DocumentPersistenceImpl extends BasePersistenceImpl<Document>
 
 			query.append(_SQL_SELECT_DOCUMENT_WHERE);
 
-			query.append(_FINDER_COLUMN_SIGNID_SIGNID_2);
+			boolean bindSign_email = false;
+
+			if (sign_email == null) {
+				query.append(_FINDER_COLUMN_SIGNEMAIL_SIGN_EMAIL_1);
+			}
+			else if (sign_email.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_SIGNEMAIL_SIGN_EMAIL_3);
+			}
+			else {
+				bindSign_email = true;
+
+				query.append(_FINDER_COLUMN_SIGNEMAIL_SIGN_EMAIL_2);
+			}
 
 			if (orderByComparator != null) {
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
@@ -734,7 +750,9 @@ public class DocumentPersistenceImpl extends BasePersistenceImpl<Document>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				qPos.add(signId);
+				if (bindSign_email) {
+					qPos.add(sign_email);
+				}
 
 				if (!pagination) {
 					list = (List<Document>)QueryUtil.list(q, getDialect(),
@@ -767,18 +785,18 @@ public class DocumentPersistenceImpl extends BasePersistenceImpl<Document>
 	}
 
 	/**
-	 * Returns the first document in the ordered set where signId = &#63;.
+	 * Returns the first document in the ordered set where sign_email = &#63;.
 	 *
-	 * @param signId the sign ID
+	 * @param sign_email the sign_email
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching document
 	 * @throws NoSuchDocumentException if a matching document could not be found
 	 */
 	@Override
-	public Document findBySignId_First(long signId,
+	public Document findBySignEmail_First(String sign_email,
 		OrderByComparator<Document> orderByComparator)
 		throws NoSuchDocumentException {
-		Document document = fetchBySignId_First(signId, orderByComparator);
+		Document document = fetchBySignEmail_First(sign_email, orderByComparator);
 
 		if (document != null) {
 			return document;
@@ -788,8 +806,8 @@ public class DocumentPersistenceImpl extends BasePersistenceImpl<Document>
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("signId=");
-		msg.append(signId);
+		msg.append("sign_email=");
+		msg.append(sign_email);
 
 		msg.append(StringPool.CLOSE_CURLY_BRACE);
 
@@ -797,71 +815,16 @@ public class DocumentPersistenceImpl extends BasePersistenceImpl<Document>
 	}
 
 	/**
-	 * Returns the first document in the ordered set where signId = &#63;.
+	 * Returns the first document in the ordered set where sign_email = &#63;.
 	 *
-	 * @param signId the sign ID
+	 * @param sign_email the sign_email
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching document, or <code>null</code> if a matching document could not be found
 	 */
 	@Override
-	public Document fetchBySignId_First(long signId,
+	public Document fetchBySignEmail_First(String sign_email,
 		OrderByComparator<Document> orderByComparator) {
-		List<Document> list = findBySignId(signId, 0, 1, orderByComparator);
-
-		if (!list.isEmpty()) {
-			return list.get(0);
-		}
-
-		return null;
-	}
-
-	/**
-	 * Returns the last document in the ordered set where signId = &#63;.
-	 *
-	 * @param signId the sign ID
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching document
-	 * @throws NoSuchDocumentException if a matching document could not be found
-	 */
-	@Override
-	public Document findBySignId_Last(long signId,
-		OrderByComparator<Document> orderByComparator)
-		throws NoSuchDocumentException {
-		Document document = fetchBySignId_Last(signId, orderByComparator);
-
-		if (document != null) {
-			return document;
-		}
-
-		StringBundler msg = new StringBundler(4);
-
-		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-
-		msg.append("signId=");
-		msg.append(signId);
-
-		msg.append(StringPool.CLOSE_CURLY_BRACE);
-
-		throw new NoSuchDocumentException(msg.toString());
-	}
-
-	/**
-	 * Returns the last document in the ordered set where signId = &#63;.
-	 *
-	 * @param signId the sign ID
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching document, or <code>null</code> if a matching document could not be found
-	 */
-	@Override
-	public Document fetchBySignId_Last(long signId,
-		OrderByComparator<Document> orderByComparator) {
-		int count = countBySignId(signId);
-
-		if (count == 0) {
-			return null;
-		}
-
-		List<Document> list = findBySignId(signId, count - 1, count,
+		List<Document> list = findBySignEmail(sign_email, 0, 1,
 				orderByComparator);
 
 		if (!list.isEmpty()) {
@@ -872,17 +835,73 @@ public class DocumentPersistenceImpl extends BasePersistenceImpl<Document>
 	}
 
 	/**
-	 * Returns the documents before and after the current document in the ordered set where signId = &#63;.
+	 * Returns the last document in the ordered set where sign_email = &#63;.
+	 *
+	 * @param sign_email the sign_email
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching document
+	 * @throws NoSuchDocumentException if a matching document could not be found
+	 */
+	@Override
+	public Document findBySignEmail_Last(String sign_email,
+		OrderByComparator<Document> orderByComparator)
+		throws NoSuchDocumentException {
+		Document document = fetchBySignEmail_Last(sign_email, orderByComparator);
+
+		if (document != null) {
+			return document;
+		}
+
+		StringBundler msg = new StringBundler(4);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("sign_email=");
+		msg.append(sign_email);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchDocumentException(msg.toString());
+	}
+
+	/**
+	 * Returns the last document in the ordered set where sign_email = &#63;.
+	 *
+	 * @param sign_email the sign_email
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching document, or <code>null</code> if a matching document could not be found
+	 */
+	@Override
+	public Document fetchBySignEmail_Last(String sign_email,
+		OrderByComparator<Document> orderByComparator) {
+		int count = countBySignEmail(sign_email);
+
+		if (count == 0) {
+			return null;
+		}
+
+		List<Document> list = findBySignEmail(sign_email, count - 1, count,
+				orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the documents before and after the current document in the ordered set where sign_email = &#63;.
 	 *
 	 * @param docId the primary key of the current document
-	 * @param signId the sign ID
+	 * @param sign_email the sign_email
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next document
 	 * @throws NoSuchDocumentException if a document with the primary key could not be found
 	 */
 	@Override
-	public Document[] findBySignId_PrevAndNext(long docId, long signId,
-		OrderByComparator<Document> orderByComparator)
+	public Document[] findBySignEmail_PrevAndNext(long docId,
+		String sign_email, OrderByComparator<Document> orderByComparator)
 		throws NoSuchDocumentException {
 		Document document = findByPrimaryKey(docId);
 
@@ -893,13 +912,13 @@ public class DocumentPersistenceImpl extends BasePersistenceImpl<Document>
 
 			Document[] array = new DocumentImpl[3];
 
-			array[0] = getBySignId_PrevAndNext(session, document, signId,
-					orderByComparator, true);
+			array[0] = getBySignEmail_PrevAndNext(session, document,
+					sign_email, orderByComparator, true);
 
 			array[1] = document;
 
-			array[2] = getBySignId_PrevAndNext(session, document, signId,
-					orderByComparator, false);
+			array[2] = getBySignEmail_PrevAndNext(session, document,
+					sign_email, orderByComparator, false);
 
 			return array;
 		}
@@ -911,8 +930,8 @@ public class DocumentPersistenceImpl extends BasePersistenceImpl<Document>
 		}
 	}
 
-	protected Document getBySignId_PrevAndNext(Session session,
-		Document document, long signId,
+	protected Document getBySignEmail_PrevAndNext(Session session,
+		Document document, String sign_email,
 		OrderByComparator<Document> orderByComparator, boolean previous) {
 		StringBundler query = null;
 
@@ -927,7 +946,19 @@ public class DocumentPersistenceImpl extends BasePersistenceImpl<Document>
 
 		query.append(_SQL_SELECT_DOCUMENT_WHERE);
 
-		query.append(_FINDER_COLUMN_SIGNID_SIGNID_2);
+		boolean bindSign_email = false;
+
+		if (sign_email == null) {
+			query.append(_FINDER_COLUMN_SIGNEMAIL_SIGN_EMAIL_1);
+		}
+		else if (sign_email.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_SIGNEMAIL_SIGN_EMAIL_3);
+		}
+		else {
+			bindSign_email = true;
+
+			query.append(_FINDER_COLUMN_SIGNEMAIL_SIGN_EMAIL_2);
+		}
 
 		if (orderByComparator != null) {
 			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
@@ -997,7 +1028,9 @@ public class DocumentPersistenceImpl extends BasePersistenceImpl<Document>
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		qPos.add(signId);
+		if (bindSign_email) {
+			qPos.add(sign_email);
+		}
 
 		if (orderByComparator != null) {
 			Object[] values = orderByComparator.getOrderByConditionValues(document);
@@ -1018,29 +1051,29 @@ public class DocumentPersistenceImpl extends BasePersistenceImpl<Document>
 	}
 
 	/**
-	 * Removes all the documents where signId = &#63; from the database.
+	 * Removes all the documents where sign_email = &#63; from the database.
 	 *
-	 * @param signId the sign ID
+	 * @param sign_email the sign_email
 	 */
 	@Override
-	public void removeBySignId(long signId) {
-		for (Document document : findBySignId(signId, QueryUtil.ALL_POS,
+	public void removeBySignEmail(String sign_email) {
+		for (Document document : findBySignEmail(sign_email, QueryUtil.ALL_POS,
 				QueryUtil.ALL_POS, null)) {
 			remove(document);
 		}
 	}
 
 	/**
-	 * Returns the number of documents where signId = &#63;.
+	 * Returns the number of documents where sign_email = &#63;.
 	 *
-	 * @param signId the sign ID
+	 * @param sign_email the sign_email
 	 * @return the number of matching documents
 	 */
 	@Override
-	public int countBySignId(long signId) {
-		FinderPath finderPath = FINDER_PATH_COUNT_BY_SIGNID;
+	public int countBySignEmail(String sign_email) {
+		FinderPath finderPath = FINDER_PATH_COUNT_BY_SIGNEMAIL;
 
-		Object[] finderArgs = new Object[] { signId };
+		Object[] finderArgs = new Object[] { sign_email };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1049,7 +1082,19 @@ public class DocumentPersistenceImpl extends BasePersistenceImpl<Document>
 
 			query.append(_SQL_COUNT_DOCUMENT_WHERE);
 
-			query.append(_FINDER_COLUMN_SIGNID_SIGNID_2);
+			boolean bindSign_email = false;
+
+			if (sign_email == null) {
+				query.append(_FINDER_COLUMN_SIGNEMAIL_SIGN_EMAIL_1);
+			}
+			else if (sign_email.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_SIGNEMAIL_SIGN_EMAIL_3);
+			}
+			else {
+				bindSign_email = true;
+
+				query.append(_FINDER_COLUMN_SIGNEMAIL_SIGN_EMAIL_2);
+			}
 
 			String sql = query.toString();
 
@@ -1062,7 +1107,9 @@ public class DocumentPersistenceImpl extends BasePersistenceImpl<Document>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				qPos.add(signId);
+				if (bindSign_email) {
+					qPos.add(sign_email);
+				}
 
 				count = (Long)q.uniqueResult();
 
@@ -1081,7 +1128,9 @@ public class DocumentPersistenceImpl extends BasePersistenceImpl<Document>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_SIGNID_SIGNID_2 = "document.signId = ?";
+	private static final String _FINDER_COLUMN_SIGNEMAIL_SIGN_EMAIL_1 = "document.sign_email IS NULL";
+	private static final String _FINDER_COLUMN_SIGNEMAIL_SIGN_EMAIL_2 = "document.sign_email = ?";
+	private static final String _FINDER_COLUMN_SIGNEMAIL_SIGN_EMAIL_3 = "(document.sign_email IS NULL OR document.sign_email = '')";
 
 	public DocumentPersistenceImpl() {
 		setModelClass(Document.class);
@@ -1307,10 +1356,10 @@ public class DocumentPersistenceImpl extends BasePersistenceImpl<Document>
 			finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
 				args);
 
-			args = new Object[] { documentModelImpl.getSignId() };
+			args = new Object[] { documentModelImpl.getSign_email() };
 
-			finderCache.removeResult(FINDER_PATH_COUNT_BY_SIGNID, args);
-			finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SIGNID,
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_SIGNEMAIL, args);
+			finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SIGNEMAIL,
 				args);
 
 			finderCache.removeResult(FINDER_PATH_COUNT_ALL, FINDER_ARGS_EMPTY);
@@ -1337,19 +1386,19 @@ public class DocumentPersistenceImpl extends BasePersistenceImpl<Document>
 			}
 
 			if ((documentModelImpl.getColumnBitmask() &
-					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SIGNID.getColumnBitmask()) != 0) {
+					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SIGNEMAIL.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						documentModelImpl.getOriginalSignId()
+						documentModelImpl.getOriginalSign_email()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_SIGNID, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SIGNID,
+				finderCache.removeResult(FINDER_PATH_COUNT_BY_SIGNEMAIL, args);
+				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SIGNEMAIL,
 					args);
 
-				args = new Object[] { documentModelImpl.getSignId() };
+				args = new Object[] { documentModelImpl.getSign_email() };
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_SIGNID, args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SIGNID,
+				finderCache.removeResult(FINDER_PATH_COUNT_BY_SIGNEMAIL, args);
+				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SIGNEMAIL,
 					args);
 			}
 		}
@@ -1375,7 +1424,6 @@ public class DocumentPersistenceImpl extends BasePersistenceImpl<Document>
 		documentImpl.setDocId(document.getDocId());
 		documentImpl.setFileId(document.getFileId());
 		documentImpl.setUserId(document.getUserId());
-		documentImpl.setSignId(document.getSignId());
 		documentImpl.setReq_name(document.getReq_name());
 		documentImpl.setReq_email(document.getReq_email());
 		documentImpl.setSign_email(document.getSign_email());

@@ -76,7 +76,6 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 			{ "docId", Types.BIGINT },
 			{ "fileId", Types.BIGINT },
 			{ "userId", Types.BIGINT },
-			{ "signId", Types.BIGINT },
 			{ "req_name", Types.VARCHAR },
 			{ "req_email", Types.VARCHAR },
 			{ "sign_email", Types.VARCHAR },
@@ -97,7 +96,6 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 		TABLE_COLUMNS_MAP.put("docId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("fileId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("userId", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("signId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("req_name", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("req_email", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("sign_email", Types.VARCHAR);
@@ -113,7 +111,7 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 		TABLE_COLUMNS_MAP.put("req_dateModified", Types.VARCHAR);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table document_data (docId LONG not null primary key,fileId LONG,userId LONG,signId LONG,req_name VARCHAR(75) null,req_email VARCHAR(75) null,sign_email VARCHAR(75) null,doc_type VARCHAR(75) null,doc_status VARCHAR(75) null,doc_deadline VARCHAR(75) null,doc_description VARCHAR(75) null,file_name VARCHAR(75) null,file_type VARCHAR(75) null,file_blob BLOB,file_md5 VARCHAR(75) null,req_dateCreated VARCHAR(75) null,req_dateModified VARCHAR(75) null)";
+	public static final String TABLE_SQL_CREATE = "create table document_data (docId LONG not null primary key,fileId LONG,userId LONG,req_name VARCHAR(75) null,req_email VARCHAR(75) null,sign_email VARCHAR(75) null,doc_type VARCHAR(75) null,doc_status VARCHAR(75) null,doc_deadline VARCHAR(75) null,doc_description VARCHAR(75) null,file_name VARCHAR(75) null,file_type VARCHAR(75) null,file_blob BLOB,file_md5 VARCHAR(75) null,req_dateCreated VARCHAR(75) null,req_dateModified VARCHAR(75) null)";
 	public static final String TABLE_SQL_DROP = "drop table document_data";
 	public static final String ORDER_BY_JPQL = " ORDER BY document.docId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY document_data.docId ASC";
@@ -129,7 +127,7 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 	public static final boolean COLUMN_BITMASK_ENABLED = GetterUtil.getBoolean(DocRegistration.service.util.ServiceProps.get(
 				"value.object.column.bitmask.enabled.DocRegistration.model.Document"),
 			true);
-	public static final long SIGNID_COLUMN_BITMASK = 1L;
+	public static final long SIGN_EMAIL_COLUMN_BITMASK = 1L;
 	public static final long USERID_COLUMN_BITMASK = 2L;
 	public static final long DOCID_COLUMN_BITMASK = 4L;
 
@@ -149,7 +147,6 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 		model.setDocId(soapModel.getDocId());
 		model.setFileId(soapModel.getFileId());
 		model.setUserId(soapModel.getUserId());
-		model.setSignId(soapModel.getSignId());
 		model.setReq_name(soapModel.getReq_name());
 		model.setReq_email(soapModel.getReq_email());
 		model.setSign_email(soapModel.getSign_email());
@@ -230,7 +227,6 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 		attributes.put("docId", getDocId());
 		attributes.put("fileId", getFileId());
 		attributes.put("userId", getUserId());
-		attributes.put("signId", getSignId());
 		attributes.put("req_name", getReq_name());
 		attributes.put("req_email", getReq_email());
 		attributes.put("sign_email", getSign_email());
@@ -269,12 +265,6 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 
 		if (userId != null) {
 			setUserId(userId);
-		}
-
-		Long signId = (Long)attributes.get("signId");
-
-		if (signId != null) {
-			setSignId(signId);
 		}
 
 		String req_name = (String)attributes.get("req_name");
@@ -419,29 +409,6 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 
 	@JSON
 	@Override
-	public long getSignId() {
-		return _signId;
-	}
-
-	@Override
-	public void setSignId(long signId) {
-		_columnBitmask |= SIGNID_COLUMN_BITMASK;
-
-		if (!_setOriginalSignId) {
-			_setOriginalSignId = true;
-
-			_originalSignId = _signId;
-		}
-
-		_signId = signId;
-	}
-
-	public long getOriginalSignId() {
-		return _originalSignId;
-	}
-
-	@JSON
-	@Override
 	public String getReq_name() {
 		if (_req_name == null) {
 			return StringPool.BLANK;
@@ -485,7 +452,17 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 
 	@Override
 	public void setSign_email(String sign_email) {
+		_columnBitmask |= SIGN_EMAIL_COLUMN_BITMASK;
+
+		if (_originalSign_email == null) {
+			_originalSign_email = _sign_email;
+		}
+
 		_sign_email = sign_email;
+	}
+
+	public String getOriginalSign_email() {
+		return GetterUtil.getString(_originalSign_email);
 	}
 
 	@JSON
@@ -697,7 +674,6 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 		documentImpl.setDocId(getDocId());
 		documentImpl.setFileId(getFileId());
 		documentImpl.setUserId(getUserId());
-		documentImpl.setSignId(getSignId());
 		documentImpl.setReq_name(getReq_name());
 		documentImpl.setReq_email(getReq_email());
 		documentImpl.setSign_email(getSign_email());
@@ -776,9 +752,7 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 
 		documentModelImpl._setOriginalUserId = false;
 
-		documentModelImpl._originalSignId = documentModelImpl._signId;
-
-		documentModelImpl._setOriginalSignId = false;
+		documentModelImpl._originalSign_email = documentModelImpl._sign_email;
 
 		documentModelImpl._file_blobBlobModel = null;
 
@@ -794,8 +768,6 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 		documentCacheModel.fileId = getFileId();
 
 		documentCacheModel.userId = getUserId();
-
-		documentCacheModel.signId = getSignId();
 
 		documentCacheModel.req_name = getReq_name();
 
@@ -898,7 +870,7 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(35);
+		StringBundler sb = new StringBundler(33);
 
 		sb.append("{docId=");
 		sb.append(getDocId());
@@ -906,8 +878,6 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 		sb.append(getFileId());
 		sb.append(", userId=");
 		sb.append(getUserId());
-		sb.append(", signId=");
-		sb.append(getSignId());
 		sb.append(", req_name=");
 		sb.append(getReq_name());
 		sb.append(", req_email=");
@@ -939,7 +909,7 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(55);
+		StringBundler sb = new StringBundler(52);
 
 		sb.append("<model><model-name>");
 		sb.append("DocRegistration.model.Document");
@@ -956,10 +926,6 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 		sb.append(
 			"<column><column-name>userId</column-name><column-value><![CDATA[");
 		sb.append(getUserId());
-		sb.append("]]></column-value></column>");
-		sb.append(
-			"<column><column-name>signId</column-name><column-value><![CDATA[");
-		sb.append(getSignId());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>req_name</column-name><column-value><![CDATA[");
@@ -1024,12 +990,10 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 	private long _userId;
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
-	private long _signId;
-	private long _originalSignId;
-	private boolean _setOriginalSignId;
 	private String _req_name;
 	private String _req_email;
 	private String _sign_email;
+	private String _originalSign_email;
 	private String _doc_type;
 	private String _doc_status;
 	private String _doc_deadline;

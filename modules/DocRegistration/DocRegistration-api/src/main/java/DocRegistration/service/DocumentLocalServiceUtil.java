@@ -213,10 +213,10 @@ public class DocumentLocalServiceUtil {
 				   .dynamicQuery(dynamicQuery, start, end, orderByComparator);
 	}
 
-	public static java.util.List<DocRegistration.model.Document> findBySignId(
-		long signId, int start, int end)
+	public static java.util.List<DocRegistration.model.Document> findBySignEmail(
+		java.lang.String sign_email, int start, int end)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().findBySignId(signId, start, end);
+		return getService().findBySignEmail(sign_email, start, end);
 	}
 
 	public static java.util.List<DocRegistration.model.Document> findByUserId(

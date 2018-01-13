@@ -5,7 +5,6 @@
 		<field name="docId" type="long" />
 		<field name="fileId" type="long" />
 		<field name="userId" type="long" />
-		<field name="signId" type="long" />
 		<field name="req_name" type="String" />
 		<field name="req_email" type="String" />
 		<field name="sign_email" type="String" />

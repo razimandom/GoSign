@@ -10,7 +10,6 @@
 		</id>
 		<property name="fileId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
-		<property name="signId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="req_name" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="req_email" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="sign_email" type="com.liferay.portal.dao.orm.hibernate.StringType" />
@@ -59,5 +58,4 @@
 		</id>
 		<property column="publickey_File" name="publickey_FileBlob" type="blob" />
 	</class>
-
 </hibernate-mapping>

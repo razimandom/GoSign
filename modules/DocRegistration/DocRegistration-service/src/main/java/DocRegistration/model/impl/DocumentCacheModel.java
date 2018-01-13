@@ -63,7 +63,7 @@ public class DocumentCacheModel implements CacheModel<Document>, Externalizable 
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(33);
+		StringBundler sb = new StringBundler(31);
 
 		sb.append("{docId=");
 		sb.append(docId);
@@ -71,8 +71,6 @@ public class DocumentCacheModel implements CacheModel<Document>, Externalizable 
 		sb.append(fileId);
 		sb.append(", userId=");
 		sb.append(userId);
-		sb.append(", signId=");
-		sb.append(signId);
 		sb.append(", req_name=");
 		sb.append(req_name);
 		sb.append(", req_email=");
@@ -109,7 +107,6 @@ public class DocumentCacheModel implements CacheModel<Document>, Externalizable 
 		documentImpl.setDocId(docId);
 		documentImpl.setFileId(fileId);
 		documentImpl.setUserId(userId);
-		documentImpl.setSignId(signId);
 
 		if (req_name == null) {
 			documentImpl.setReq_name(StringPool.BLANK);
@@ -207,8 +204,6 @@ public class DocumentCacheModel implements CacheModel<Document>, Externalizable 
 		fileId = objectInput.readLong();
 
 		userId = objectInput.readLong();
-
-		signId = objectInput.readLong();
 		req_name = objectInput.readUTF();
 		req_email = objectInput.readUTF();
 		sign_email = objectInput.readUTF();
@@ -231,8 +226,6 @@ public class DocumentCacheModel implements CacheModel<Document>, Externalizable 
 		objectOutput.writeLong(fileId);
 
 		objectOutput.writeLong(userId);
-
-		objectOutput.writeLong(signId);
 
 		if (req_name == null) {
 			objectOutput.writeUTF(StringPool.BLANK);
@@ -322,7 +315,6 @@ public class DocumentCacheModel implements CacheModel<Document>, Externalizable 
 	public long docId;
 	public long fileId;
 	public long userId;
-	public long signId;
 	public String req_name;
 	public String req_email;
 	public String sign_email;
