@@ -159,6 +159,11 @@ String redirect = ParamUtil.getString(request, "backURL");
 	<button class="header btn btn-primary toggler-header-collapsed" >Change Deadline</button>
 </td>
  -->
+ <!-- 
+<td>
+	<button class="header btn btn-primary toggler-header-collapsed" >Verify Signature</button>
+</td>
+ -->
 
  <!--  
 <td>
@@ -181,6 +186,20 @@ String redirect = ParamUtil.getString(request, "backURL");
 	<aui:input label="Doc Id: " name="docId" type="hidden" value="${document.docId}" readOnly="true"/>
 	<aui:input label="New Deadline Date: " name="doc_deadline" type="type" value="${document.doc_deadline}" />
 	<aui:button name="update" type="submit" value="Update" last="true" />
+
+</aui:form>
+
+</div>
+
+<div class="content toggler-content-collapsed" id="myToggler2">
+
+<h3>Verify Signature:</h3>
+
+<portlet:actionURL name="#" var="verifyDoc" />
+
+<aui:form action="#" method="post" name="name">
+	<aui:input label="Insert Signer Public Key: " name="doc_deadline" type="textarea"/>
+	<aui:button name="Verify" type="submit" value="Verify" last="true" />
 
 </aui:form>
 

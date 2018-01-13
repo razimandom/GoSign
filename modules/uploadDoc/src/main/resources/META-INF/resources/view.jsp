@@ -15,9 +15,11 @@
 <%@ page import="com.liferay.portal.kernel.util.ListUtil"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet"%>
+
 <portlet:defineObjects />
 
 <!--  
+
 <link href="http://cdn.alloyui.com/2.5.0/aui-css/css/bootstrap.min.css"></link>
 <script src="http://cdn.alloyui.com/2.5.0/aui/aui-min.js"></script>
 
@@ -62,7 +64,7 @@
             </script>
                  
 <style>
-<!--
+
 
 
 
@@ -75,6 +77,7 @@
 </style>
 
 -->
+
 <portlet:resourceURL var="getUsers">
 	<portlet:param name="<%=Constants.CMD%>" value="get_users" />
 </portlet:resourceURL>
@@ -127,6 +130,10 @@
 
 <aui:form action="<%=addDoc.toString()%>" method="post" name="name" enctype="multipart/form-data">
 	
+	<!-- Retrieve current page URL in input -->
+	
+	<aui:input label="Complete URL (Auto): " name="currentCompURL" type="hidden" value="<%=request.getAttribute("currentCompURL") %>" readonly="true" />
+	<aui:input label="Complete Home URL (Auto): " name="currentHomeURL" type="hidden" value="<%=request.getAttribute("currentHomeURL") %>" readonly="true" />
 	
 	<!-- All these 3 inpus are hidden -->
 	<aui:input label="User ID: " name="currentUserId" type="hidden" value="<%=request.getAttribute("currentUserId") %>" readonly="true" />
@@ -140,8 +147,13 @@
 	</aui:input>
 	
 	<aui:input label="Date Created: " name="req_dateCreated" type="hidden" value="<%=request.getAttribute("currentDateTime") %>" readonly="true" />
-	<aui:input label="Upload File: " type="file" name="file" helpMessage="Upload document that need to be sign digitally"/>
+	
+	<aui:input label="Upload File: " type="file" name="file" helpMessage="Upload document that need to be sign digitally">
+	<aui:validator name="required"/>
+	</aui:input>
+	
 	<aui:input label="Description: " type="textarea" name="doc_description" helpMessage="Justification or description of signature request"/>
+
 	
 	<aui:input label="Deadline: " name="doc_deadline" type="text" value="<%=request.getAttribute("currentDateTime") %>">
 	<aui:validator name="required"/>

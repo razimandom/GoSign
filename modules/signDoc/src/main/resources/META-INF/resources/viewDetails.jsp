@@ -156,13 +156,13 @@ td{
 <td>
 	<aui:form action="<%=doRejectDoc%>" method="post" name="name">
 	<aui:input label="Doc Id: " name="docId" type="hidden" value="${document.docId}" readOnly="true"/>
-	<aui:button cssClass="btnred" name="reject" type="submit" value="Reject" last="true" />
+	<aui:button cssClass="btnred" name="reject" type="submit" value="Reject" last="true" onClick= "return confirm('Are you sure to reject this request?')"/>
 	</aui:form>
 </td>
 <td>
 	<aui:form action="<%=doSignDoc%>" method="post" name="name">
 	<aui:input label="Doc Id: " name="docId" type="hidden" value="${document.docId}" readOnly="true"/>
-	<aui:button cssClass="btngreen" name="sign" type="submit" value="Sign Document" last="true" />
+	<aui:button cssClass="btngreen" name="sign" type="submit" value="Sign Document" last="true" onClick= "return confirm('Are you sure to sign this document?')"/>
 	</aui:form>
 </td>
 </tr></table>
@@ -176,7 +176,7 @@ td{
 <aui:form action="<%=doReqJustification%>" method="post" name="name" >
 	<aui:input label="Doc Id: " name="docId" type="hidden" value="${document.docId}" readOnly="true"/>
 	<aui:input label="Add comments: " type="textarea" name="doc_description" value="Please provide more justification on this request." />
-	<aui:button name="req_justification" type="submit" value="Submit" last="true" />
+	<aui:button name="req_justification" type="submit" value="Send Email" last="true" onClick= "return confirm('Proceed to send email?')" />
 </aui:form>
 
 </div>

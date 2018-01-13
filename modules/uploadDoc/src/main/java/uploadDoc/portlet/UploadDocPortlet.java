@@ -17,6 +17,7 @@ import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.portlet.PortletURLUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -88,6 +89,14 @@ public class UploadDocPortlet extends MVCPortlet {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		User currentUser = themeDisplay.getUser();
+		
+		String currentHomeURL = themeDisplay.getURLHome();
+		//System.out.println(currentHomeURL);
+		
+		String currentCompURL = PortletURLUtil.getCurrent(renderRequest, renderResponse).toString();
+		//System.out.println(currentHost);
+		
+		
 
 		/*
 		 * Function to fetch current date and time
@@ -110,6 +119,8 @@ public class UploadDocPortlet extends MVCPortlet {
 		renderRequest.setAttribute("currentFirstName", currentUser.getFirstName());
 		renderRequest.setAttribute("currentEmail", currentUser.getEmailAddress());
 		renderRequest.setAttribute("currentDateTime", formatDateTime);
+		renderRequest.setAttribute("currentCompURL", currentCompURL);
+		renderRequest.setAttribute("currentHomeURL", currentHomeURL);
 
 		super.doView(renderRequest, renderResponse);
 	}
@@ -175,7 +186,10 @@ public class UploadDocPortlet extends MVCPortlet {
 		System.out.println("Retrieve data from upload form...");
 		System.out.println("...");
 		System.out.println("...");
-
+		
+		String currentCompURL = ParamUtil.getString(actionRequest, "currentCompURL");
+		String currentHomeURL = ParamUtil.getString(actionRequest, "currentHomeURL");
+		
 		long docId = CounterLocalServiceUtil.increment();
 		long currentUserId = ParamUtil.getLong(actionRequest, "currentUserId");
 		long signId = ParamUtil.getLong(actionRequest, "signId");
@@ -275,6 +289,7 @@ public class UploadDocPortlet extends MVCPortlet {
 
 		}
 		
+		
 		/*
 		 * Function to send email for requestor
 		 */
@@ -286,6 +301,11 @@ public class UploadDocPortlet extends MVCPortlet {
 			
 			String req_emailMail = ParamUtil.getString(actionRequest, "req_email");
 			
+			//ClassLoader loader = PortalClassLoaderUtil.getClassLoader();
+			
+			//String body = ContentUtil.get(loader, "/content/sendreq.tmpl", true);
+			//body = StringUtil.replace(body, new String[] { "Ravi", "CONGRATULATION" ,"80%" , "CCLP"}, null);
+			
 			fromAddress = new InternetAddress("noreply@42penguins.com");
 			toAddress = new InternetAddress(req_emailMail);
 			MailMessage mailMessage = new MailMessage();
@@ -293,20 +313,27 @@ public class UploadDocPortlet extends MVCPortlet {
 			mailMessage.setTo(toAddress);
 			mailMessage.setFrom(fromAddress);
 			mailMessage.setSubject("Signature Request Successfully Submitted.");
+			
+			//mailMessage.setBody(body);
+			
 			mailMessage.setBody(""
+					+ "<font face=\"verdana\" size=\"2\">"
 					+ "<p>Dear "+ req_name +",</p> " 
-					+ "<p>You request has been succesfully submitted.</p>"
+					+ "<p>Your signature request has been succesfully submitted. Please login to check the request status.</p>"
 					+ "<p><strong>Request Details:</strong></p>"
 					+ "<ul>"
-					+ "<li>Requested Title: " + req_name + "</li>"
-					+ "<li>Requested By: " + req_name + "</li>"
-					+ "<li>Document Name: " + req_name + "</li>"
+					+ "<li>Request ID: " + docId + "</li>"
 					+ "<li>Request Type: " + doc_type + "</li>"
+					+ "<li>Created On: " + req_dateCreated + "</li>"				
 					+ "<li>Deadline: " + doc_deadline + "</li>"
+					+ "<li>Description: " + doc_description + "</li>"
 					+ "</ul>"
-					+ "<p>&nbsp;</p>"
-					+ "<p>GoSign Team</p>"
+					+ "<p><a href=\"" + currentCompURL +"\"> Click here to view uploaded document</a></p><br>"
+					+ "<p>Sincerely,<br>GoSign Team<br>"
+					+ "<a href=\"" + currentHomeURL +"\"> "+ currentHomeURL + "</a></p>"
+					+ "</font>"
 					);
+			
 			mailMessage.setHTMLFormat(true);
 			MailServiceUtil.sendEmail(mailMessage);
 			System.out.println("Email has been sent to requestor!");
@@ -333,17 +360,21 @@ public class UploadDocPortlet extends MVCPortlet {
 			mailMessage.setFrom(fromAddress);
 			mailMessage.setSubject("New Request for Signature");
 			mailMessage.setBody("" 
-					+ "<p>You have received a request from " + req_name +" to sign a document.&nbsp;Please login to view and sign the document before&nbsp;</p>"
+					+ "<font face=\"verdana\" size=\"2\">"
+					+ "<p>You have received a request from " + req_name +" to sign a document. "
+					+ "<p><a href=\"" + currentHomeURL +"\">Click here</a>"
+					+ " to login to view and sign the document before " + doc_deadline + ".</p>"
 					+ "<p><strong>Request Details:</strong></p>"
 					+ "<ul>"
-					+ "<li>Requested Title: " + req_name + "</li>"
-					+ "<li>Requested By: " + req_name + "</li>"
-					+ "<li>Document Name: " + req_name + "</li>"
+					+ "<li>Request ID: " + docId + "</li>"
 					+ "<li>Request Type: " + doc_type + "</li>"
+					+ "<li>Created On: " + req_dateCreated + "</li>"				
 					+ "<li>Deadline: " + doc_deadline + "</li>"
-					+ "</ul>"
-					+ "<p>&nbsp;</p>"
-					+ "<p>GoSign Team</p>"
+					+ "<li>Description: " + doc_description + "</li>"
+					+ "</ul><br>"
+					+ "<p>Sincerely,<br>GoSign Team<br>"
+					+ "<a href=\"" + currentHomeURL +"\"> "+ currentHomeURL + "</a></p>"
+					+ "</font>"
 					);
 			mailMessage.setHTMLFormat(true);
 			MailServiceUtil.sendEmail(mailMessage);

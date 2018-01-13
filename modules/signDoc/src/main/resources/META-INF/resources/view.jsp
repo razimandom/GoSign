@@ -64,6 +64,7 @@
 					//long userId = Long.valueOf(remoteUserId);
 					//System.out.println(userId);
 					
+					
 					//User userEmail = (User) request.getAttribute(currentEmail);
 					//System.out.println(userEmail);
 					
