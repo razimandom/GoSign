@@ -40,6 +40,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -116,7 +119,7 @@ public class UploadDocPortlet extends MVCPortlet {
 		String formatDateTime = localDateTime.format(formatter);
 
 		renderRequest.setAttribute("currentUserId", currentUser.getUserId());
-		renderRequest.setAttribute("currentFirstName", currentUser.getFirstName());
+		renderRequest.setAttribute("currentFullName", currentUser.getFullName());
 		renderRequest.setAttribute("currentEmail", currentUser.getEmailAddress());
 		renderRequest.setAttribute("currentDateTime", formatDateTime);
 		renderRequest.setAttribute("currentCompURL", currentCompURL);
@@ -180,7 +183,7 @@ public class UploadDocPortlet extends MVCPortlet {
 
 	@ProcessAction(name = "addDoc")
 	public void addDoc(ActionRequest actionRequest, ActionResponse actionResponse)
-			throws IOException, PortletException {
+			throws IOException, PortletException, NoSuchAlgorithmException {
 
 		System.out.println("====================== Start ======================");
 		System.out.println("Retrieve data from upload form...");
@@ -217,76 +220,73 @@ public class UploadDocPortlet extends MVCPortlet {
 		System.out.println("...");
 		System.out.println("...");
 		
+		/*
+		 * Generate MD5 String from docId
+		 */
+		
+		String docIDString = Long.toString(docId);
+	    MessageDigest docIdMD5 = MessageDigest.getInstance("MD5");
+	    docIdMD5.update(docIDString.getBytes(),0,docIDString.length());
+	    String docIdMD5String = new BigInteger(1,docIdMD5.digest()).toString(16);
+	    System.out.println(docIdMD5String);
 
 		/*
 		 * Function to upload
 		 * 
 		 */
-
-		/**
-		 * Create and set the primary key
-		 */
-		// long id =
-		// CounterLocalServiceUtil.increment(BlobDemo.class.getName());
-		// BlobDemo blobDemo = BlobDemoLocalServiceUtil.createBlobDemo(id);
-
-		// blobDemo.setName(uploadedFileName);
-		// blobDemo.setBlobData(blobData);
-		// blobDemo.setMimeType(MimeTypesUtil.getContentType(file));
-		// BlobDemoLocalServiceUtil.addBlobDemo(blobDemo);
-
-		/*
-		 * Function to add data to database
-		 */
-
-		try {
-
-			UploadRequest uploadRequest = PortalUtil.getUploadPortletRequest(actionRequest);
-
-			/**
-			 * Get the uploaded file name with extension
-			 */
-
-			String uploadedFileName = uploadRequest.getFileName("file");
-
+	    
+		UploadRequest uploadRequest = PortalUtil.getUploadPortletRequest(actionRequest);
+		//Get the uploaded file name with extension
+		String uploadedFileName = uploadRequest.getFileName("file");
+		
+		if (uploadedFileName != null){
 			File file = uploadRequest.getFile("file");
-
 			InputStream inputStream = new FileInputStream(file);
-			/**
-			 * Below is the actual blob data
-			 */
+			// Below is the actual blob data
 			OutputBlob blobData = new OutputBlob(inputStream, file.length());
+			System.out.println("inputStream: " + inputStream);
+			
+			
+			/*
+			 * Function to add data to database
+			 */
 
-			System.out.println("Adding data to database...");
+			try {
 
-			Document doc = DocumentLocalServiceUtil.createDocument(docId);
-			doc.setReq_name(req_name);
-			doc.setReq_email(req_email);
-			//doc.setSignId(signId);
-			doc.setSign_email(sign_email);
-			doc.setReq_dateCreated(req_dateCreated);
-			doc.setDoc_deadline(doc_deadline);
-			doc.setDoc_description(doc_description);
-			doc.setDoc_status("Pending");
-			doc.setDoc_type(doc_type);
-			doc.setUserId(currentUserId);
-			doc.setFileId(fileId);
-			doc.setFile_name(uploadedFileName);
-			doc.setFile_blob(blobData);
-			doc.setFile_type(MimeTypesUtil.getContentType(file));
+				System.out.println("Adding data to database...");
+				Document doc = DocumentLocalServiceUtil.createDocument(docId);
+				doc.setReq_name(req_name);
+				doc.setReq_email(req_email);
+				//doc.setSignId(signId);
+				doc.setSign_email(sign_email);
+				doc.setReq_dateCreated(req_dateCreated);
+				doc.setDoc_deadline(doc_deadline);
+				doc.setDoc_status("Pending");
+				doc.setDoc_type(doc_type);
+				doc.setDoc_description(doc_description);
+				doc.setUserId(currentUserId);
+				doc.setFileId(fileId);
+				doc.setFile_name(uploadedFileName);
+				doc.setFile_blob(blobData);
+				doc.setFile_type(MimeTypesUtil.getContentType(file));
+				doc.setFile_md5(docIdMD5String);
 
-			doc = DocumentLocalServiceUtil.addDocument(doc);
+				doc = DocumentLocalServiceUtil.addDocument(doc);
 
-			System.out.println("Data added to database");
-			System.out.println("======================== End ======================");
+				System.out.println("Data added to database");
+				System.out.println("======================== End ======================");
 
-			// actionResponse.setRenderParameter("mvcPath", "/details.jsp");
+				// actionResponse.setRenderParameter("mvcPath", "/details.jsp");
 
-		} catch (SystemException e) {
-			System.out.println("Failed to insert data to database");
-			e.printStackTrace();
-			System.out.println("======================== End ======================");
+			} catch (SystemException e) {
+				System.out.println("Failed to insert data to database");
+				e.printStackTrace();
+				System.out.println("======================== End ======================");
 
+			}
+			
+		} else {
+			uploadedFileName = null;
 		}
 		
 		
@@ -383,30 +383,6 @@ public class UploadDocPortlet extends MVCPortlet {
 			e.printStackTrace();
 		}
 		
-		/*
-		 * Another email function
-		 
-		
-		InternetAddress fromAddress = null;
-		InternetAddress toAddress = null;
-		
-		String body = ContentUtil.get(null, "/mail/reqsign.tmpl", true);
-		body = StringUtil.replace(body, new String[] { "[$NAME$]","[$RESULT$]","[$PERCENTAGE$]","[$EXAM$]" }, new String[] { "Ravi", "CONGRATULATION" ,"80%" , "CCLP"});
-		try {
-			fromAddress = new InternetAddress("aa665845@gmail.com");
-			toAddress = new InternetAddress("adit2787@gmail.com");
-			MailMessage mailMessage = new MailMessage();
-			mailMessage.setTo(toAddress);
-			mailMessage.setFrom(fromAddress);
-			mailMessage.setSubject("Send mail by Using Tempelate");
-			mailMessage.setBody(body);
-			mailMessage.setHTMLFormat(true);
-			MailServiceUtil.sendEmail(mailMessage);
-			System.out.println("Send mail by Using Tempelate");
-		} catch (AddressException e) {
-			e.printStackTrace();
-		}
-		*/
 	}
 
 	@ProcessAction(name = "updateDoc")

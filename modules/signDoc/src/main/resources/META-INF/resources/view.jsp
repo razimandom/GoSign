@@ -140,9 +140,6 @@
 	
 		</liferay-ui:search-container-row>
 		
-		
-
-		
 	<liferay-ui:search-iterator searchContainer="<%=searchContainer %>" />
 
 </liferay-ui:search-container>

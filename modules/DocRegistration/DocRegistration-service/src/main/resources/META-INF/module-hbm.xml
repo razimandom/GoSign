@@ -58,4 +58,5 @@
 		</id>
 		<property column="publickey_File" name="publickey_FileBlob" type="blob" />
 	</class>
+
 </hibernate-mapping>

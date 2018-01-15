@@ -137,7 +137,7 @@
 	
 	<!-- All these 3 inpus are hidden -->
 	<aui:input label="User ID: " name="currentUserId" type="hidden" value="<%=request.getAttribute("currentUserId") %>" readonly="true" />
-	<aui:input label="Requestor Name: " name="req_name" type="hidden" value="<%=request.getAttribute("currentFirstName") %>" readonly="true" />
+	<aui:input label="Requestor Name: " name="req_name" type="hidden" value="<%=request.getAttribute("currentFullName") %>" readonly="true" />
 	<aui:input label="Requestor Email: " name="req_email" type="hidden" value="<%=request.getAttribute("currentEmail") %>" readonly="true" />
 	
 	

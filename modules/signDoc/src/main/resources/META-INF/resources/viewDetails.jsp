@@ -11,6 +11,8 @@
 <%@taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
 
+<portlet:defineObjects />
+
 <%
 long docId = ParamUtil.getLong(request, "docId");
 Document document = DocumentLocalServiceUtil.getDocument(docId);
@@ -112,6 +114,10 @@ td{
 	<td>${document.req_dateCreated}</td>
 </tr>
 <tr>
+	<td>Date Modified:</td>
+	<td>${document.req_dateModified}</td>
+</tr>
+<tr>
 	<td>Deadline:</td>
 	<td>${document.doc_deadline}</td>
 </tr>
@@ -156,12 +162,26 @@ td{
 <td>
 	<aui:form action="<%=doRejectDoc%>" method="post" name="name">
 	<aui:input label="Doc Id: " name="docId" type="hidden" value="${document.docId}" readOnly="true"/>
+	<aui:input label="Doc Id: " name="req_name" type="hidden" value="${document.req_name}" readOnly="true"/>
+	<aui:input label="Doc Id: " name="req_email" type="hidden" value="${document.req_email}" readOnly="true"/>
+	<aui:input label="Doc Id: " name="req_dateCreated" type="hidden" value="${document.req_dateCreated}" readOnly="true"/>
+	<aui:input label="Doc Id: " name="sign_email" type="hidden" value="${document.sign_email}" readOnly="true"/>
+	<aui:input label="Doc Id: " name="doc_deadline" type="hidden" value="${document.doc_deadline}" readOnly="true"/>
+	<aui:input label="Doc Id: " name="doc_type" type="hidden" value="${document.doc_type}" readOnly="true"/>
+	<aui:input label="Doc Id: " name="doc_status" type="hidden" value="${document.doc_status}" readOnly="true"/>
 	<aui:button cssClass="btnred" name="reject" type="submit" value="Reject" last="true" onClick= "return confirm('Are you sure to reject this request?')"/>
 	</aui:form>
 </td>
 <td>
 	<aui:form action="<%=doSignDoc%>" method="post" name="name">
 	<aui:input label="Doc Id: " name="docId" type="hidden" value="${document.docId}" readOnly="true"/>
+	<aui:input label="Doc Id: " name="req_name" type="hidden" value="${document.req_name}" readOnly="true"/>
+	<aui:input label="Doc Id: " name="req_email" type="hidden" value="${document.req_email}" readOnly="true"/>
+	<aui:input label="Doc Id: " name="req_dateCreated" type="hidden" value="${document.req_dateCreated}" readOnly="true"/>
+	<aui:input label="Doc Id: " name="sign_email" type="hidden" value="${document.sign_email}" readOnly="true"/>
+	<aui:input label="Doc Id: " name="doc_deadline" type="hidden" value="${document.doc_deadline}" readOnly="true"/>
+	<aui:input label="Doc Id: " name="doc_type" type="hidden" value="${document.doc_type}" readOnly="true"/>
+	<aui:input label="Doc Id: " name="doc_status" type="hidden" value="${document.doc_status}" readOnly="true"/>
 	<aui:button cssClass="btngreen" name="sign" type="submit" value="Sign Document" last="true" onClick= "return confirm('Are you sure to sign this document?')"/>
 	</aui:form>
 </td>
@@ -175,7 +195,14 @@ td{
 
 <aui:form action="<%=doReqJustification%>" method="post" name="name" >
 	<aui:input label="Doc Id: " name="docId" type="hidden" value="${document.docId}" readOnly="true"/>
-	<aui:input label="Add comments: " type="textarea" name="doc_description" value="Please provide more justification on this request." />
+	<aui:input label="Doc Id: " name="req_name" type="hidden" value="${document.req_name}" readOnly="true"/>
+	<aui:input label="Doc Id: " name="req_email" type="hidden" value="${document.req_email}" readOnly="true"/>
+	<aui:input label="Doc Id: " name="req_dateCreated" type="hidden" value="${document.req_dateCreated}" readOnly="true"/>
+	<aui:input label="Doc Id: " name="sign_email" type="hidden" value="${document.sign_email}" readOnly="true"/>
+	<aui:input label="Doc Id: " name="doc_deadline" type="hidden" value="${document.doc_deadline}" readOnly="true"/>
+	<aui:input label="Doc Id: " name="doc_type" type="hidden" value="${document.doc_type}" readOnly="true"/>
+	<aui:input label="Doc Id: " name="doc_status" type="hidden" value="${document.doc_status}" readOnly="true"/>
+	<aui:input label="Add comments: " type="textarea" name="justificationMsg" value="Please provide more justification on this request." />
 	<aui:button name="req_justification" type="submit" value="Send Email" last="true" onClick= "return confirm('Proceed to send email?')" />
 </aui:form>
 

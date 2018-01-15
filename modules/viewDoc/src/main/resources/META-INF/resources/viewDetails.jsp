@@ -90,6 +90,10 @@ String redirect = ParamUtil.getString(request, "backURL");
 	<td>${document.docId}</td>
 </tr>
 <tr>
+	<td>Request MD5:</td>
+	<td>${document.file_md5}</td>
+</tr>
+<tr>
 	<td>Requestor Name:</td>
 	<td>${document.req_name}</td>
 </tr>
@@ -112,6 +116,10 @@ String redirect = ParamUtil.getString(request, "backURL");
 <tr>
 	<td>Date Created:</td>
 	<td>${document.req_dateCreated}</td>
+</tr>
+<tr>
+	<td>Date Modified:</td>
+	<td>${document.req_dateModified}</td>
 </tr>
 <tr>
 	<td>Deadline:</td>

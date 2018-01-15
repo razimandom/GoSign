@@ -6,4 +6,5 @@ dependencies {
 	compileOnly group: "jstl", name: "jstl", version: "1.2"
 	compileOnly group: "org.osgi", name: "osgi.cmpn", version: "6.0.0"
 	compileOnly project (":modules:DocRegistration:DocRegistration-api")
+	compile group: 'javax.mail', name: 'mail', version: '1.4'
 }
