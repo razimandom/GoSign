@@ -146,7 +146,7 @@
 	<aui:validator name="email"/>
 	</aui:input>
 	
-	<aui:input label="Date Created: " name="req_dateCreated" type="hidden" value="<%=request.getAttribute("currentDateTime") %>" readonly="true" />
+	<aui:input label="Date Created: " name="req_dateCreated" type="hidden" value="<%=request.getAttribute("currentDateTimeCreate") %>" readonly="true" />
 	
 	<aui:input label="Upload File: " type="file" name="file" helpMessage="Upload document that need to be sign digitally">
 	<aui:validator name="required"/>
@@ -155,7 +155,7 @@
 	<aui:input label="Description: " type="textarea" name="doc_description" helpMessage="Justification or description of signature request"/>
 
 	
-	<aui:input label="Deadline: " name="doc_deadline" type="text" value="<%=request.getAttribute("currentDateTime") %>">
+	<aui:input label="Deadline: " name="doc_deadline" type="text" value="<%=request.getAttribute("currentDateTimeCreate") %>">
 	<aui:validator name="required"/>
 	</aui:input>
 	<!-- <aui:input id="<portlet:namespace />calendarDate" class="form-control" label="Deadline" name="doc_deadline" type="text" value="Click to select date"/> -->

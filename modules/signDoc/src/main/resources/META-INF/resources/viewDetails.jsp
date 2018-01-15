@@ -53,7 +53,7 @@ YUI().use(
 
 <!-- This table style need to be add in CSS file later -->
 
-<style>
+<style type="text/css">
 td{
 	padding:5px}
 	
@@ -79,8 +79,8 @@ td{
 .btngray {background-color: #e7e7e7; color: black;} /* Gray */ 
 .btngray:hover {background: #ddd;}
 
-
 </style>
+
 
 <h3>Request Details</h3>
 
@@ -90,16 +90,12 @@ td{
 	<td>${document.docId}</td>
 </tr>
 <tr>
-	<td>Requestor Name:</td>
-	<td>${document.req_name}</td>
+	<td>Request MD5:</td>
+	<td>${document.file_md5}</td>
 </tr>
 <tr>
-	<td>Requestor Email:</td>
-	<td>${document.req_email}</td>
-</tr>
-<tr>
-	<td>Signer Email:</td>
-	<td>${document.sign_email}</td>
+	<td>Request Timestamp: </td>
+	<td></td>
 </tr>
 <tr>
 	<td>Type:</td>
@@ -138,6 +134,27 @@ td{
 </tr>
 </table>
 
+<h3>Signer & Requestor Details</h3>
+
+<table>
+<tr>
+	<td>Requestor Name:</td>
+	<td>${document.req_name}</td>
+</tr>
+<tr>
+	<td>Requestor Email:</td>
+	<td>${document.req_email}</td>
+</tr>
+<tr>
+	<td>Signer Name: </td>
+	<td></td>
+</tr>
+<tr>
+	<td>Signer Email:</td>
+	<td>${document.sign_email}</td>
+</tr>
+</table>
+<br>
 <portlet:renderURL var="updateDocURL">
 <portlet:param name="docId" value="${document.docId}" />
 <portlet:param name="mvcPath" value="/updateDoc.jsp" />

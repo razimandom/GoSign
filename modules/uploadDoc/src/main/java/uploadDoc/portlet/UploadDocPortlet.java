@@ -44,9 +44,13 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
+import java.util.TimeZone;
 
 //import javax.mail.Message;
 //import javax.mail.MessagingException;
@@ -113,15 +117,53 @@ public class UploadDocPortlet extends MVCPortlet {
 		// int seconds = localDateTime.getSecond();
 		// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy
 		// HH:mm:ss");
+		
+		ZoneId zoneIdMYS = ZoneId.of("Asia/Kuala_Lumpur");
+	    //System.out.println("ZoneId: " + id);
+		LocalDateTime localDateTime = LocalDateTime.now(zoneIdMYS);
+		//System.out.println(localDateTime);
+		
+		DateTimeFormatter formatterTimeStamp = DateTimeFormatter.ofPattern("ddMMyyyy-HHmmss-A-N");
+		String currentDateTimeTimeStamp = localDateTime.format(formatterTimeStamp);
+		//System.out.println(currentDateTimeTimeStamp);
+		
+		DateTimeFormatter formatterCreate = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		String currentDateTimeCreate = localDateTime.format(formatterCreate);
 
-		LocalDateTime localDateTime = LocalDateTime.now();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-		String formatDateTime = localDateTime.format(formatter);
+		//DateTimeFormatter formatterDeadline = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		//String currentDateTimeDeadline = localDateTime.format(formatterDeadline);
+		
+		//System.out.println(formatDateTime);
+		
+		
+		
+		
+		//TimeZone tzCal = Calendar.getInstance().getTimeZone();
+		//System.out.println(tzCal.getDisplayName()); 
+		//System.out.println(tzCal.getID());
+		//System.out.println(tzCal);
+		
 
+		
+		//ZonedDateTime date1 = ZonedDateTime.now(id);
+	    //System.out.println("date1: " + date1);
+	    
+	    
+		
+
+		
+		//ZoneId currentZone = ZoneId.systemDefault();
+	    //System.out.println("CurrentZone: " + currentZone);
+	    
+		
+		//Calendar rightNow = Calendar.getInstance();
+		//System.out.println(rightNow);
+		
 		renderRequest.setAttribute("currentUserId", currentUser.getUserId());
 		renderRequest.setAttribute("currentFullName", currentUser.getFullName());
 		renderRequest.setAttribute("currentEmail", currentUser.getEmailAddress());
-		renderRequest.setAttribute("currentDateTime", formatDateTime);
+		renderRequest.setAttribute("currentDateTimeCreate", currentDateTimeCreate);
+		//renderRequest.setAttribute("currentDateTimeDeadline", currentDateTimeDeadline);
 		renderRequest.setAttribute("currentCompURL", currentCompURL);
 		renderRequest.setAttribute("currentHomeURL", currentHomeURL);
 
@@ -221,14 +263,23 @@ public class UploadDocPortlet extends MVCPortlet {
 		System.out.println("...");
 		
 		/*
-		 * Generate MD5 String from docId
+		 * Generate MD5 String from docId + request time stamp
 		 */
 		
+		ZoneId zoneIdMYS = ZoneId.of("Asia/Kuala_Lumpur");
+		LocalDateTime localDateTime = LocalDateTime.now(zoneIdMYS);
+		DateTimeFormatter formatterTimeStamp = DateTimeFormatter.ofPattern("ddMMyyyy-HHmmss-A-N");
+		String currentDateTimeTimeStamp = localDateTime.format(formatterTimeStamp);
+		
 		String docIDString = Long.toString(docId);
-	    MessageDigest docIdMD5 = MessageDigest.getInstance("MD5");
-	    docIdMD5.update(docIDString.getBytes(),0,docIDString.length());
-	    String docIdMD5String = new BigInteger(1,docIdMD5.digest()).toString(16);
-	    System.out.println(docIdMD5String);
+		
+		String docIdTimestamp = docIDString + "-" + currentDateTimeTimeStamp;
+		
+	    MessageDigest docIdTimestampMD5 = MessageDigest.getInstance("MD5");
+	    docIdTimestampMD5.update(docIdTimestamp.getBytes(),0,docIdTimestamp.length());
+	    String docIdMD5String = new BigInteger(1,docIdTimestampMD5.digest()).toString(16);
+	    //System.out.println(docIdTimestamp);
+	    //System.out.println(docIdMD5String);
 
 		/*
 		 * Function to upload
@@ -238,55 +289,48 @@ public class UploadDocPortlet extends MVCPortlet {
 		UploadRequest uploadRequest = PortalUtil.getUploadPortletRequest(actionRequest);
 		//Get the uploaded file name with extension
 		String uploadedFileName = uploadRequest.getFileName("file");
-		
-		if (uploadedFileName != null){
-			File file = uploadRequest.getFile("file");
-			InputStream inputStream = new FileInputStream(file);
-			// Below is the actual blob data
-			OutputBlob blobData = new OutputBlob(inputStream, file.length());
-			System.out.println("inputStream: " + inputStream);
-			
-			
-			/*
-			 * Function to add data to database
-			 */
+		File file = uploadRequest.getFile("file");
+		InputStream inputStream = new FileInputStream(file);
+		// Below is the actual blob data
+		OutputBlob blobData = new OutputBlob(inputStream, file.length());
+		//System.out.println("inputStream: " + inputStream);
 
-			try {
+		/*
+		 * Function to add data to database
+		 */
 
-				System.out.println("Adding data to database...");
-				Document doc = DocumentLocalServiceUtil.createDocument(docId);
-				doc.setReq_name(req_name);
-				doc.setReq_email(req_email);
-				//doc.setSignId(signId);
-				doc.setSign_email(sign_email);
-				doc.setReq_dateCreated(req_dateCreated);
-				doc.setDoc_deadline(doc_deadline);
-				doc.setDoc_status("Pending");
-				doc.setDoc_type(doc_type);
-				doc.setDoc_description(doc_description);
-				doc.setUserId(currentUserId);
-				doc.setFileId(fileId);
-				doc.setFile_name(uploadedFileName);
-				doc.setFile_blob(blobData);
-				doc.setFile_type(MimeTypesUtil.getContentType(file));
-				doc.setFile_md5(docIdMD5String);
+		try {
 
-				doc = DocumentLocalServiceUtil.addDocument(doc);
+			System.out.println("Adding data to database...");
+			Document doc = DocumentLocalServiceUtil.createDocument(docId);
+			doc.setReq_name(req_name);
+			doc.setReq_email(req_email);
+			//doc.setSignId(signId);
+			doc.setSign_email(sign_email);
+			doc.setReq_dateCreated(req_dateCreated);
+			doc.setDoc_deadline(doc_deadline);
+			doc.setDoc_status("Pending");
+			doc.setDoc_type(doc_type);
+			doc.setDoc_description(doc_description);
+			doc.setUserId(currentUserId);
+			doc.setFileId(fileId);
+			doc.setFile_name(uploadedFileName);
+			doc.setFile_blob(blobData);
+			doc.setFile_type(MimeTypesUtil.getContentType(file));
+			doc.setFile_md5(docIdMD5String);
 
-				System.out.println("Data added to database");
-				System.out.println("======================== End ======================");
+			doc = DocumentLocalServiceUtil.addDocument(doc);
 
-				// actionResponse.setRenderParameter("mvcPath", "/details.jsp");
+			System.out.println("Data added to database");
+			System.out.println("======================== End ======================");
 
-			} catch (SystemException e) {
-				System.out.println("Failed to insert data to database");
-				e.printStackTrace();
-				System.out.println("======================== End ======================");
+			// actionResponse.setRenderParameter("mvcPath", "/details.jsp");
 
-			}
-			
-		} else {
-			uploadedFileName = null;
+		} catch (SystemException e) {
+			System.out.println("Failed to insert data to database");
+			e.printStackTrace();
+			System.out.println("======================== End ======================");
+
 		}
 		
 		

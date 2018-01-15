@@ -65,8 +65,8 @@ public class SignDocPortlet extends MVCPortlet {
 		User currentUser = themeDisplay.getUser();
 		//System.out.println(currentUser);
 		
-		//String currentHomeURL = themeDisplay.getURLHome();
-		//System.out.println("currenthomeurl: " +currentHomeURL);
+		String currentHomeURL = themeDisplay.getURLHome();
+		System.out.println("currenthomeurl: " +currentHomeURL);
 		
 		//String currentCompURL = PortletURLUtil.getCurrent(renderRequest, renderResponse).toString();
 		//System.out.println(currentCompURL);

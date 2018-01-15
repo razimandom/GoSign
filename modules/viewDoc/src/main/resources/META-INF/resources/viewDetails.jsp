@@ -82,7 +82,7 @@ String redirect = ParamUtil.getString(request, "backURL");
                 value="<%=String.valueOf(document.getDocId())%>" />
         </portlet:resourceURL>
 
-<h3>Request Details: </h3>
+<h3>Request Details</h3>
 
 <table>
 <tr>
@@ -94,16 +94,8 @@ String redirect = ParamUtil.getString(request, "backURL");
 	<td>${document.file_md5}</td>
 </tr>
 <tr>
-	<td>Requestor Name:</td>
-	<td>${document.req_name}</td>
-</tr>
-<tr>
-	<td>Requestor Email:</td>
-	<td>${document.req_email}</td>
-</tr>
-<tr>
-	<td>Signer Email:</td>
-	<td>${document.sign_email}</td>
+	<td>Request Timestamp: </td>
+	<td></td>
 </tr>
 <tr>
 	<td>Type:</td>
@@ -130,18 +122,36 @@ String redirect = ParamUtil.getString(request, "backURL");
 	<td>${document.file_name}</td>
 </tr>
 <tr>
-	
- 
 	<td>Download:</td>
 	<td><aui:form action="<%=viewURL.toString() %>" method="post" name="name">
 	<button name="delDocument" type="submit">Download File</button>
 	</aui:form></td>
-
 	
 </tr>
 <tr>
 	<td>Description/Justification:</td>
 	<td>${document.doc_description}</td>
+</tr>
+</table>
+<br>
+<h3>Signer & Requestor Details</h3>
+
+<table>
+<tr>
+	<td>Requestor Name:</td>
+	<td>${document.req_name}</td>
+</tr>
+<tr>
+	<td>Requestor Email:</td>
+	<td>${document.req_email}</td>
+</tr>
+<tr>
+	<td>Signer Name: </td>
+	<td></td>
+</tr>
+<tr>
+	<td>Signer Email:</td>
+	<td>${document.sign_email}</td>
 </tr>
 </table>
 <br>

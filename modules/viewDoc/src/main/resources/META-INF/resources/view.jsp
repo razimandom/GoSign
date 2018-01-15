@@ -129,6 +129,10 @@
 			<portlet:param name="docId" value="${document.docId }" />
 		</portlet:actionURL>
 		
+		<liferay-ui:search-container-column-text name="Delete"
+			href="${delDocument}" value="Delete">
+		</liferay-ui:search-container-column-text>
+		
 		</liferay-ui:search-container-row>
 		
 	<liferay-ui:search-iterator searchContainer="<%=searchContainer%>" />

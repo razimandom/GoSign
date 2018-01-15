@@ -92,13 +92,12 @@
 			modelVar="document"
 			keyProperty="userId">
 
-    <portlet:renderURL var="viewDocURL">
-    
+    <portlet:renderURL var="viewDocURL">   
     <portlet:param name="docId" value="${document.docId}" />
     <portlet:param name="userId" value="${document.userId}" />
-    <portlet:param name="mvcPath" value="/viewDetails.jsp" />
-    
+    <portlet:param name="mvcPath" value="/viewDetails.jsp" />  
     </portlet:renderURL>
+    
 		<liferay-ui:search-container-column-text value="<%=String.valueOf(row.getPos() + 1)%>" name="No" />
 		<liferay-ui:search-container-column-text name="Req ID" property="docId">
 		</liferay-ui:search-container-column-text>

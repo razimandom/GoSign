@@ -1,0 +1,4 @@
+Bundle-Name: genKey
+Bundle-SymbolicName: genKey
+Bundle-Version: 1.0.0
+Export-Package: genKey.constants
