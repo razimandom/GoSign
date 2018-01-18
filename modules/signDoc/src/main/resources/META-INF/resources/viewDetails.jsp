@@ -163,31 +163,21 @@ td{
     
 </portlet:renderURL>
 
-<portlet:actionURL name="doRejectDoc" var="doRejectDoc" />
+<portlet:actionURL name="doSignAction" var="doSignAction" />
 <portlet:actionURL name="doSignDoc" var="doSignDoc" />
 <portlet:actionURL name="doBack" var="doBack" />
 <portlet:actionURL name="doReqJustification" var="doReqJustification" />
 
 <table>
 <tr>
+
 <td>
-	<aui:form action="<%=doBack%>" method="post" name="name">
-	<aui:button cssClass="btngrey" name="back" type="submit" value="Back" last="true" />
-	</aui:form>
+	<!-- <button class="header btn btn-primary toggler-header-collapsed" css="btnorange" >Need Justification</button> -->
 </td>
 <td>
-	<button class="header btn btn-primary toggler-header-collapsed" css="btnorange" >Need Justification</button>
-</td>
-<td>
-	<aui:form action="<%=doRejectDoc%>" method="post" name="name">
-	<aui:input label="Doc Id: " name="docId" type="type" value="${document.docId}" readOnly="true"/>
-	<aui:input label="Doc Id: " name="req_name" type="hidden" value="${document.req_name}" readOnly="true"/>
-	<aui:input label="Doc Id: " name="req_email" type="hidden" value="${document.req_email}" readOnly="true"/>
-	<aui:input label="Doc Id: " name="req_dateCreated" type="hidden" value="${document.req_dateCreated}" readOnly="true"/>
-	<aui:input label="Doc Id: " name="sign_email" type="hidden" value="${document.sign_email}" readOnly="true"/>
-	<aui:input label="Doc Id: " name="doc_deadline" type="hidden" value="${document.doc_deadline}" readOnly="true"/>
-	<aui:input label="Doc Id: " name="doc_type" type="hidden" value="${document.doc_type}" readOnly="true"/>
-	<aui:input label="Doc Id: " name="doc_status" type="type" value="${document.doc_status}" readOnly="true"/>
+	<aui:form action="<%=doSignAction%>" method="post" name="name">
+	<aui:input label="Doc Id: " name="docId" type="hidden" value="${document.docId}" readOnly="true"/>
+	<aui:input label="Action: " name="doAction" type="hidden" value="Reject" readOnly="true"/>
 	<aui:button cssClass="btnred" name="reject" type="submit" value="Reject" last="true" onClick= "return confirm('Are you sure to reject this request?')"/>
 	</aui:form>
 </td>
@@ -195,8 +185,12 @@ td{
 
 <h3>Sign Document: </h3>
 
-<aui:form action="<%=doSignDoc%>" method="post" name="name">
-	<aui:input label="Enter 6 pin: " name="userPin" type="type"/>
+<aui:form action="<%=doSignAction%>" method="post" name="name" enctype="multipart/form-data">
+	<aui:input label="Enter 6 pin: " name="userPin" type="type">
+	<aui:validator name="required"/> 
+	<aui:validator name="digits"/>
+	</aui:input> 
+	<aui:input label="Action: " name="doAction" type="hidden" value="Sign" readOnly="true"/>
 	<aui:input label="Doc Id: " name="docId" type="hidden" value="${document.docId}" readOnly="true"/>
 	<aui:input label="Doc Id: " name="doc_status" type="hidden" value="${document.doc_status}" readOnly="true"/>
 	<aui:button cssClass="btngreen" name="sign" type="submit" value="Sign Document" last="true" onClick= "return confirm('Are you sure to sign this document?')"/>
@@ -208,17 +202,17 @@ td{
 
 <portlet:actionURL name="updateDoc" var="updateDoc" />
 
-<aui:form action="<%=doReqJustification%>" method="post" name="name" >
+<aui:form action="<%=doSignAction%>" method="post" name="name" >
 	<aui:input label="Doc Id: " name="docId" type="hidden" value="${document.docId}" readOnly="true"/>
-	<aui:input label="Doc Id: " name="req_name" type="hidden" value="${document.req_name}" readOnly="true"/>
-	<aui:input label="Doc Id: " name="req_email" type="hidden" value="${document.req_email}" readOnly="true"/>
-	<aui:input label="Doc Id: " name="req_dateCreated" type="hidden" value="${document.req_dateCreated}" readOnly="true"/>
-	<aui:input label="Doc Id: " name="sign_email" type="hidden" value="${document.sign_email}" readOnly="true"/>
-	<aui:input label="Doc Id: " name="doc_deadline" type="hidden" value="${document.doc_deadline}" readOnly="true"/>
-	<aui:input label="Doc Id: " name="doc_type" type="hidden" value="${document.doc_type}" readOnly="true"/>
 	<aui:input label="Doc Id: " name="doc_status" type="hidden" value="${document.doc_status}" readOnly="true"/>
+	<aui:input label="Action: " name="doAction" type="hidden" value="Justify" readOnly="true"/>
 	<aui:input label="Add comments: " type="textarea" name="justificationMsg" value="Please provide more justification on this request." />
 	<aui:button name="req_justification" type="submit" value="Send Email" last="true" onClick= "return confirm('Proceed to send email?')" />
 </aui:form>
 
 </div>
+
+<liferay-ui:error key="error-key-signFail" message="Invalid pin! Your 6 digits pin does not match with registered pin." />
+<liferay-ui:error key="error-key-invalidPinFormat" message="Error! Please enter your 6 digits pin." />
+<liferay-ui:error key="error-key-statusFail" message="Unable to process your request. This document has been rejected or signed." />
+<liferay-ui:error key="error-key-statusInvalid" message="Error! Action does not exist! Please contact system admin." />

@@ -219,6 +219,5 @@ String redirect = ParamUtil.getString(request, "backURL");
 </div>
 
 <liferay-ui:error key="error-key" message="Verification failed! Public key does not match with signature." />
-<liferay-ui:error key="error-key-exception01" message="Error from exception" />
 <liferay-ui:error key="error-key-invalidECCPubKey" message="Error! This is invalid ECC public key format." />
 <liferay-ui:error key="error-key-null" message="Error! Public key field cannot be empty" />

@@ -114,7 +114,7 @@
 				</liferay-ui:search-container-column-text>
 			</c:when>
 			<c:when
-				test="<%=document.getDoc_status().equals("Need Justification")%>">
+				test="<%=document.getDoc_status().equals("Justify")%>">
 				<liferay-ui:search-container-column-text cssClass="txtorange"
 					name="Status" property="doc_status">
 				</liferay-ui:search-container-column-text>
