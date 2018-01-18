@@ -129,23 +129,23 @@ public class GenKeyUtil {
 	/**
 	* Creates a new gen key with the primary key. Does not add the gen key to the database.
 	*
-	* @param genkeyId the primary key for the new gen key
+	* @param userId the primary key for the new gen key
 	* @return the new gen key
 	*/
-	public static GenKey create(long genkeyId) {
-		return getPersistence().create(genkeyId);
+	public static GenKey create(long userId) {
+		return getPersistence().create(userId);
 	}
 
 	/**
 	* Removes the gen key with the primary key from the database. Also notifies the appropriate model listeners.
 	*
-	* @param genkeyId the primary key of the gen key
+	* @param userId the primary key of the gen key
 	* @return the gen key that was removed
 	* @throws NoSuchGenKeyException if a gen key with the primary key could not be found
 	*/
-	public static GenKey remove(long genkeyId)
+	public static GenKey remove(long userId)
 		throws DocRegistration.exception.NoSuchGenKeyException {
-		return getPersistence().remove(genkeyId);
+		return getPersistence().remove(userId);
 	}
 
 	public static GenKey updateImpl(GenKey genKey) {
@@ -155,23 +155,23 @@ public class GenKeyUtil {
 	/**
 	* Returns the gen key with the primary key or throws a {@link NoSuchGenKeyException} if it could not be found.
 	*
-	* @param genkeyId the primary key of the gen key
+	* @param userId the primary key of the gen key
 	* @return the gen key
 	* @throws NoSuchGenKeyException if a gen key with the primary key could not be found
 	*/
-	public static GenKey findByPrimaryKey(long genkeyId)
+	public static GenKey findByPrimaryKey(long userId)
 		throws DocRegistration.exception.NoSuchGenKeyException {
-		return getPersistence().findByPrimaryKey(genkeyId);
+		return getPersistence().findByPrimaryKey(userId);
 	}
 
 	/**
 	* Returns the gen key with the primary key or returns <code>null</code> if it could not be found.
 	*
-	* @param genkeyId the primary key of the gen key
+	* @param userId the primary key of the gen key
 	* @return the gen key, or <code>null</code> if a gen key with the primary key could not be found
 	*/
-	public static GenKey fetchByPrimaryKey(long genkeyId) {
-		return getPersistence().fetchByPrimaryKey(genkeyId);
+	public static GenKey fetchByPrimaryKey(long userId) {
+		return getPersistence().fetchByPrimaryKey(userId);
 	}
 
 	public static java.util.Map<java.io.Serializable, GenKey> fetchByPrimaryKeys(

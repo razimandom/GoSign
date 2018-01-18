@@ -51,6 +51,8 @@ public class DocumentSoap implements Serializable {
 		soapModel.setFile_md5(model.getFile_md5());
 		soapModel.setReq_dateCreated(model.getReq_dateCreated());
 		soapModel.setReq_dateModified(model.getReq_dateModified());
+		soapModel.setReq_signature(model.getReq_signature());
+		soapModel.setSign_name(model.getSign_name());
 
 		return soapModel;
 	}
@@ -231,6 +233,22 @@ public class DocumentSoap implements Serializable {
 		_req_dateModified = req_dateModified;
 	}
 
+	public String getReq_signature() {
+		return _req_signature;
+	}
+
+	public void setReq_signature(String req_signature) {
+		_req_signature = req_signature;
+	}
+
+	public String getSign_name() {
+		return _sign_name;
+	}
+
+	public void setSign_name(String sign_name) {
+		_sign_name = sign_name;
+	}
+
 	private long _docId;
 	private long _fileId;
 	private long _userId;
@@ -247,4 +265,6 @@ public class DocumentSoap implements Serializable {
 	private String _file_md5;
 	private String _req_dateCreated;
 	private String _req_dateModified;
+	private String _req_signature;
+	private String _sign_name;
 }

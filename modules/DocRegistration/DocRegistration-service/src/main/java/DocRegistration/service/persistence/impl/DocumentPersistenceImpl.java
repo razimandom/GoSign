@@ -1437,6 +1437,8 @@ public class DocumentPersistenceImpl extends BasePersistenceImpl<Document>
 		documentImpl.setFile_md5(document.getFile_md5());
 		documentImpl.setReq_dateCreated(document.getReq_dateCreated());
 		documentImpl.setReq_dateModified(document.getReq_dateModified());
+		documentImpl.setReq_signature(document.getReq_signature());
+		documentImpl.setSign_name(document.getSign_name());
 
 		return documentImpl;
 	}

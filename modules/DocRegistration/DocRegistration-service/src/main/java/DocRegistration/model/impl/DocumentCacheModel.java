@@ -63,7 +63,7 @@ public class DocumentCacheModel implements CacheModel<Document>, Externalizable 
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(31);
+		StringBundler sb = new StringBundler(35);
 
 		sb.append("{docId=");
 		sb.append(docId);
@@ -95,6 +95,10 @@ public class DocumentCacheModel implements CacheModel<Document>, Externalizable 
 		sb.append(req_dateCreated);
 		sb.append(", req_dateModified=");
 		sb.append(req_dateModified);
+		sb.append(", req_signature=");
+		sb.append(req_signature);
+		sb.append(", sign_name=");
+		sb.append(sign_name);
 		sb.append("}");
 
 		return sb.toString();
@@ -192,6 +196,20 @@ public class DocumentCacheModel implements CacheModel<Document>, Externalizable 
 			documentImpl.setReq_dateModified(req_dateModified);
 		}
 
+		if (req_signature == null) {
+			documentImpl.setReq_signature(StringPool.BLANK);
+		}
+		else {
+			documentImpl.setReq_signature(req_signature);
+		}
+
+		if (sign_name == null) {
+			documentImpl.setSign_name(StringPool.BLANK);
+		}
+		else {
+			documentImpl.setSign_name(sign_name);
+		}
+
 		documentImpl.resetOriginalValues();
 
 		return documentImpl;
@@ -216,6 +234,8 @@ public class DocumentCacheModel implements CacheModel<Document>, Externalizable 
 		file_md5 = objectInput.readUTF();
 		req_dateCreated = objectInput.readUTF();
 		req_dateModified = objectInput.readUTF();
+		req_signature = objectInput.readUTF();
+		sign_name = objectInput.readUTF();
 	}
 
 	@Override
@@ -310,6 +330,20 @@ public class DocumentCacheModel implements CacheModel<Document>, Externalizable 
 		else {
 			objectOutput.writeUTF(req_dateModified);
 		}
+
+		if (req_signature == null) {
+			objectOutput.writeUTF(StringPool.BLANK);
+		}
+		else {
+			objectOutput.writeUTF(req_signature);
+		}
+
+		if (sign_name == null) {
+			objectOutput.writeUTF(StringPool.BLANK);
+		}
+		else {
+			objectOutput.writeUTF(sign_name);
+		}
 	}
 
 	public long docId;
@@ -327,4 +361,6 @@ public class DocumentCacheModel implements CacheModel<Document>, Externalizable 
 	public String file_md5;
 	public String req_dateCreated;
 	public String req_dateModified;
+	public String req_signature;
+	public String sign_name;
 }

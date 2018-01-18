@@ -15,8 +15,6 @@
 package DocRegistration.service;
 
 import DocRegistration.model.GenKey;
-import DocRegistration.model.GenKeyPrivatekey_FileBlobModel;
-import DocRegistration.model.GenKeyPublickey_FileBlobModel;
 
 import aQute.bnd.annotation.ProviderType;
 
@@ -75,10 +73,10 @@ public interface GenKeyLocalService extends BaseLocalService,
 	/**
 	* Creates a new gen key with the primary key. Does not add the gen key to the database.
 	*
-	* @param genkeyId the primary key for the new gen key
+	* @param userId the primary key for the new gen key
 	* @return the new gen key
 	*/
-	public GenKey createGenKey(long genkeyId);
+	public GenKey createGenKey(long userId);
 
 	/**
 	* Deletes the gen key from the database. Also notifies the appropriate model listeners.
@@ -92,25 +90,25 @@ public interface GenKeyLocalService extends BaseLocalService,
 	/**
 	* Deletes the gen key with the primary key from the database. Also notifies the appropriate model listeners.
 	*
-	* @param genkeyId the primary key of the gen key
+	* @param userId the primary key of the gen key
 	* @return the gen key that was removed
 	* @throws PortalException if a gen key with the primary key could not be found
 	*/
 	@Indexable(type = IndexableType.DELETE)
-	public GenKey deleteGenKey(long genkeyId) throws PortalException;
+	public GenKey deleteGenKey(long userId) throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public GenKey fetchGenKey(long genkeyId);
+	public GenKey fetchGenKey(long userId);
 
 	/**
 	* Returns the gen key with the primary key.
 	*
-	* @param genkeyId the primary key of the gen key
+	* @param userId the primary key of the gen key
 	* @return the gen key
 	* @throws PortalException if a gen key with the primary key could not be found
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public GenKey getGenKey(long genkeyId) throws PortalException;
+	public GenKey getGenKey(long userId) throws PortalException;
 
 	/**
 	* Updates the gen key in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
@@ -120,14 +118,6 @@ public interface GenKeyLocalService extends BaseLocalService,
 	*/
 	@Indexable(type = IndexableType.REINDEX)
 	public GenKey updateGenKey(GenKey genKey);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public GenKeyPrivatekey_FileBlobModel getPrivatekey_FileBlobModel(
-		Serializable primaryKey);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public GenKeyPublickey_FileBlobModel getPublickey_FileBlobModel(
-		Serializable primaryKey);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();

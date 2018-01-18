@@ -12,6 +12,7 @@ import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -33,20 +34,31 @@ import com.liferay.portal.kernel.util.WebKeys;
 //import com.liferay.content.util.ContentUtil;
 
 import DocRegistration.model.Document;
+import DocRegistration.model.GenKey;
 import DocRegistration.service.DocumentLocalServiceUtil;
+import DocRegistration.service.GenKeyLocalServiceUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.security.InvalidKeyException;
+import java.security.KeyFactory;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.Signature;
+import java.security.SignatureException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
@@ -79,11 +91,7 @@ import org.osgi.service.component.annotations.Component;
 		"javax.portlet.init-param.template-path=/", "javax.portlet.init-param.view-template=/view.jsp",
 		"javax.portlet.name=" + UploadDocPortletKeys.UploadDoc, "javax.portlet.resource-bundle=content.Language",
 		"javax.portlet.security-role-ref=power-user,user" }, service = Portlet.class)
-public class UploadDocPortlet extends MVCPortlet {
-
-	public void uploadFileAction(ActionRequest actionRequest, ActionResponse actionResponse) {
-
-	}
+public class UploadDocPortlet extends MVCPortlet { 
 
 	/*
 	 * doView method to get information of current logged user

@@ -47,12 +47,12 @@ public class GenKeyLocalServiceWrapper implements GenKeyLocalService,
 	/**
 	* Creates a new gen key with the primary key. Does not add the gen key to the database.
 	*
-	* @param genkeyId the primary key for the new gen key
+	* @param userId the primary key for the new gen key
 	* @return the new gen key
 	*/
 	@Override
-	public DocRegistration.model.GenKey createGenKey(long genkeyId) {
-		return _genKeyLocalService.createGenKey(genkeyId);
+	public DocRegistration.model.GenKey createGenKey(long userId) {
+		return _genKeyLocalService.createGenKey(userId);
 	}
 
 	/**
@@ -70,32 +70,32 @@ public class GenKeyLocalServiceWrapper implements GenKeyLocalService,
 	/**
 	* Deletes the gen key with the primary key from the database. Also notifies the appropriate model listeners.
 	*
-	* @param genkeyId the primary key of the gen key
+	* @param userId the primary key of the gen key
 	* @return the gen key that was removed
 	* @throws PortalException if a gen key with the primary key could not be found
 	*/
 	@Override
-	public DocRegistration.model.GenKey deleteGenKey(long genkeyId)
+	public DocRegistration.model.GenKey deleteGenKey(long userId)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return _genKeyLocalService.deleteGenKey(genkeyId);
+		return _genKeyLocalService.deleteGenKey(userId);
 	}
 
 	@Override
-	public DocRegistration.model.GenKey fetchGenKey(long genkeyId) {
-		return _genKeyLocalService.fetchGenKey(genkeyId);
+	public DocRegistration.model.GenKey fetchGenKey(long userId) {
+		return _genKeyLocalService.fetchGenKey(userId);
 	}
 
 	/**
 	* Returns the gen key with the primary key.
 	*
-	* @param genkeyId the primary key of the gen key
+	* @param userId the primary key of the gen key
 	* @return the gen key
 	* @throws PortalException if a gen key with the primary key could not be found
 	*/
 	@Override
-	public DocRegistration.model.GenKey getGenKey(long genkeyId)
+	public DocRegistration.model.GenKey getGenKey(long userId)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return _genKeyLocalService.getGenKey(genkeyId);
+		return _genKeyLocalService.getGenKey(userId);
 	}
 
 	/**
@@ -108,18 +108,6 @@ public class GenKeyLocalServiceWrapper implements GenKeyLocalService,
 	public DocRegistration.model.GenKey updateGenKey(
 		DocRegistration.model.GenKey genKey) {
 		return _genKeyLocalService.updateGenKey(genKey);
-	}
-
-	@Override
-	public DocRegistration.model.GenKeyPrivatekey_FileBlobModel getPrivatekey_FileBlobModel(
-		java.io.Serializable primaryKey) {
-		return _genKeyLocalService.getPrivatekey_FileBlobModel(primaryKey);
-	}
-
-	@Override
-	public DocRegistration.model.GenKeyPublickey_FileBlobModel getPublickey_FileBlobModel(
-		java.io.Serializable primaryKey) {
-		return _genKeyLocalService.getPublickey_FileBlobModel(primaryKey);
 	}
 
 	@Override

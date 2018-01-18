@@ -37,10 +37,10 @@ public interface GenKey extends GenKeyModel, PersistedModel {
 	 *
 	 * Never modify this interface directly. Add methods to {@link DocRegistration.model.impl.GenKeyImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
-	public static final Accessor<GenKey, Long> GENKEY_ID_ACCESSOR = new Accessor<GenKey, Long>() {
+	public static final Accessor<GenKey, Long> USER_ID_ACCESSOR = new Accessor<GenKey, Long>() {
 			@Override
 			public Long get(GenKey genKey) {
-				return genKey.getGenkeyId();
+				return genKey.getUserId();
 			}
 
 			@Override

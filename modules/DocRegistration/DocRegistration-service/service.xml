@@ -5,7 +5,7 @@
 	<namespace>Document</namespace>
     <entity name="Document" local-service="true" table="document_data" json-enabled="true">
         <column name="docId" primary="true" type="long"></column>
-        <column name="fileId" type="long"></column>
+        <column name="fileId" type="long" primary="false"></column>
         <column name="userId" type="long"></column>
         <column name="req_name" type="String"></column>
         <column name="req_email" type="String"></column>
@@ -20,8 +20,10 @@
         <column name="file_md5" type="String"></column>
         <column name="req_dateCreated" type="String"></column>
         <column name="req_dateModified" type="String"></column>
+        <column name="req_signature" type="String"></column>
         
         <!-- Finder methods -->
+        <column name="sign_name" type="String"></column>
         <finder name="UserId" return-type="Collection">
 		<finder-column name="userId"/>
 		</finder>
@@ -31,11 +33,12 @@
 
     </entity>
     <entity name="GenKey" local-service="true" table="genkey_data">
-        <column name="genkeyId" primary="true" type="long"></column>
-        <column name="userId" type="long"></column>
-        <column name="privatekey_File" type="Blob"></column>
-        <column name="publickey_File" type="Blob"></column>
-        <column name="publickey_Text" type="String"></column>
+        <column name="userId" type="long" primary="true"></column>
+        <column name="key_version" type="long"></column>
         <column name="key_dateCreated" type="String"></column>
+        <column name="privatekey_Data" type="String"></column>
+        <column name="publickey_Data" type="String"></column>
+        <column name="salt_Data" type="String"></column>
+        <column name="vector_Data" type="String"></column>
     </entity>
 </service-builder> 

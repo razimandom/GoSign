@@ -23,6 +23,8 @@
 		<property name="file_md5" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="req_dateCreated" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="req_dateModified" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="req_signature" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="sign_name" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 	</class>
 	<class lazy="true" name="DocRegistration.model.DocumentFile_blobBlobModel" table="document_data">
 		<id column="docId" name="docId">
@@ -33,14 +35,15 @@
 		<property column="file_blob" name="file_blobBlob" type="blob" />
 	</class>
 	<class name="DocRegistration.model.impl.GenKeyImpl" table="genkey_data">
-		<id name="genkeyId" type="long">
+		<id name="userId" type="long">
 			<generator class="assigned" />
 		</id>
-		<property name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
-		<one-to-one access="com.liferay.portal.dao.orm.hibernate.PrivatePropertyAccessor" cascade="save-update" class="DocRegistration.model.GenKeyPrivatekey_FileBlobModel" constrained="true" name="privatekey_FileBlobModel" outer-join="false" />
-		<one-to-one access="com.liferay.portal.dao.orm.hibernate.PrivatePropertyAccessor" cascade="save-update" class="DocRegistration.model.GenKeyPublickey_FileBlobModel" constrained="true" name="publickey_FileBlobModel" outer-join="false" />
-		<property name="publickey_Text" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="key_version" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="key_dateCreated" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="privatekey_Data" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="publickey_Data" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="salt_Data" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="vector_Data" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 	</class>
 	<class lazy="true" name="DocRegistration.model.GenKeyPrivatekey_FileBlobModel" table="genkey_data">
 		<id column="genkeyId" name="genkeyId">
@@ -58,5 +61,4 @@
 		</id>
 		<property column="publickey_File" name="publickey_FileBlob" type="blob" />
 	</class>
-
 </hibernate-mapping>

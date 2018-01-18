@@ -23,8 +23,6 @@ import com.liferay.portal.kernel.service.ServiceContext;
 
 import java.io.Serializable;
 
-import java.sql.Blob;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -58,52 +56,59 @@ public class GenKeyWrapper implements GenKey, ModelWrapper<GenKey> {
 	public Map<String, Object> getModelAttributes() {
 		Map<String, Object> attributes = new HashMap<String, Object>();
 
-		attributes.put("genkeyId", getGenkeyId());
 		attributes.put("userId", getUserId());
-		attributes.put("privatekey_File", getPrivatekey_File());
-		attributes.put("publickey_File", getPublickey_File());
-		attributes.put("publickey_Text", getPublickey_Text());
+		attributes.put("key_version", getKey_version());
 		attributes.put("key_dateCreated", getKey_dateCreated());
+		attributes.put("privatekey_Data", getPrivatekey_Data());
+		attributes.put("publickey_Data", getPublickey_Data());
+		attributes.put("salt_Data", getSalt_Data());
+		attributes.put("vector_Data", getVector_Data());
 
 		return attributes;
 	}
 
 	@Override
 	public void setModelAttributes(Map<String, Object> attributes) {
-		Long genkeyId = (Long)attributes.get("genkeyId");
-
-		if (genkeyId != null) {
-			setGenkeyId(genkeyId);
-		}
-
 		Long userId = (Long)attributes.get("userId");
 
 		if (userId != null) {
 			setUserId(userId);
 		}
 
-		Blob privatekey_File = (Blob)attributes.get("privatekey_File");
+		Long key_version = (Long)attributes.get("key_version");
 
-		if (privatekey_File != null) {
-			setPrivatekey_File(privatekey_File);
-		}
-
-		Blob publickey_File = (Blob)attributes.get("publickey_File");
-
-		if (publickey_File != null) {
-			setPublickey_File(publickey_File);
-		}
-
-		String publickey_Text = (String)attributes.get("publickey_Text");
-
-		if (publickey_Text != null) {
-			setPublickey_Text(publickey_Text);
+		if (key_version != null) {
+			setKey_version(key_version);
 		}
 
 		String key_dateCreated = (String)attributes.get("key_dateCreated");
 
 		if (key_dateCreated != null) {
 			setKey_dateCreated(key_dateCreated);
+		}
+
+		String privatekey_Data = (String)attributes.get("privatekey_Data");
+
+		if (privatekey_Data != null) {
+			setPrivatekey_Data(privatekey_Data);
+		}
+
+		String publickey_Data = (String)attributes.get("publickey_Data");
+
+		if (publickey_Data != null) {
+			setPublickey_Data(publickey_Data);
+		}
+
+		String salt_Data = (String)attributes.get("salt_Data");
+
+		if (salt_Data != null) {
+			setSalt_Data(salt_Data);
+		}
+
+		String vector_Data = (String)attributes.get("vector_Data");
+
+		if (vector_Data != null) {
+			setVector_Data(vector_Data);
 		}
 	}
 
@@ -173,13 +178,33 @@ public class GenKeyWrapper implements GenKey, ModelWrapper<GenKey> {
 	}
 
 	/**
-	* Returns the publickey_ text of this gen key.
+	* Returns the privatekey_ data of this gen key.
 	*
-	* @return the publickey_ text of this gen key
+	* @return the privatekey_ data of this gen key
 	*/
 	@Override
-	public java.lang.String getPublickey_Text() {
-		return _genKey.getPublickey_Text();
+	public java.lang.String getPrivatekey_Data() {
+		return _genKey.getPrivatekey_Data();
+	}
+
+	/**
+	* Returns the publickey_ data of this gen key.
+	*
+	* @return the publickey_ data of this gen key
+	*/
+	@Override
+	public java.lang.String getPublickey_Data() {
+		return _genKey.getPublickey_Data();
+	}
+
+	/**
+	* Returns the salt_ data of this gen key.
+	*
+	* @return the salt_ data of this gen key
+	*/
+	@Override
+	public java.lang.String getSalt_Data() {
+		return _genKey.getSalt_Data();
 	}
 
 	/**
@@ -190,6 +215,16 @@ public class GenKeyWrapper implements GenKey, ModelWrapper<GenKey> {
 	@Override
 	public java.lang.String getUserUuid() {
 		return _genKey.getUserUuid();
+	}
+
+	/**
+	* Returns the vector_ data of this gen key.
+	*
+	* @return the vector_ data of this gen key
+	*/
+	@Override
+	public java.lang.String getVector_Data() {
+		return _genKey.getVector_Data();
 	}
 
 	@Override
@@ -203,33 +238,13 @@ public class GenKeyWrapper implements GenKey, ModelWrapper<GenKey> {
 	}
 
 	/**
-	* Returns the privatekey_ file of this gen key.
+	* Returns the key_version of this gen key.
 	*
-	* @return the privatekey_ file of this gen key
+	* @return the key_version of this gen key
 	*/
 	@Override
-	public Blob getPrivatekey_File() {
-		return _genKey.getPrivatekey_File();
-	}
-
-	/**
-	* Returns the publickey_ file of this gen key.
-	*
-	* @return the publickey_ file of this gen key
-	*/
-	@Override
-	public Blob getPublickey_File() {
-		return _genKey.getPublickey_File();
-	}
-
-	/**
-	* Returns the genkey ID of this gen key.
-	*
-	* @return the genkey ID of this gen key
-	*/
-	@Override
-	public long getGenkeyId() {
-		return _genKey.getGenkeyId();
+	public long getKey_version() {
+		return _genKey.getKey_version();
 	}
 
 	/**
@@ -279,16 +294,6 @@ public class GenKeyWrapper implements GenKey, ModelWrapper<GenKey> {
 	}
 
 	/**
-	* Sets the genkey ID of this gen key.
-	*
-	* @param genkeyId the genkey ID of this gen key
-	*/
-	@Override
-	public void setGenkeyId(long genkeyId) {
-		_genKey.setGenkeyId(genkeyId);
-	}
-
-	/**
 	* Sets the key_date created of this gen key.
 	*
 	* @param key_dateCreated the key_date created of this gen key
@@ -296,6 +301,16 @@ public class GenKeyWrapper implements GenKey, ModelWrapper<GenKey> {
 	@Override
 	public void setKey_dateCreated(java.lang.String key_dateCreated) {
 		_genKey.setKey_dateCreated(key_dateCreated);
+	}
+
+	/**
+	* Sets the key_version of this gen key.
+	*
+	* @param key_version the key_version of this gen key
+	*/
+	@Override
+	public void setKey_version(long key_version) {
+		_genKey.setKey_version(key_version);
 	}
 
 	@Override
@@ -319,33 +334,33 @@ public class GenKeyWrapper implements GenKey, ModelWrapper<GenKey> {
 	}
 
 	/**
-	* Sets the privatekey_ file of this gen key.
+	* Sets the privatekey_ data of this gen key.
 	*
-	* @param privatekey_File the privatekey_ file of this gen key
+	* @param privatekey_Data the privatekey_ data of this gen key
 	*/
 	@Override
-	public void setPrivatekey_File(Blob privatekey_File) {
-		_genKey.setPrivatekey_File(privatekey_File);
+	public void setPrivatekey_Data(java.lang.String privatekey_Data) {
+		_genKey.setPrivatekey_Data(privatekey_Data);
 	}
 
 	/**
-	* Sets the publickey_ file of this gen key.
+	* Sets the publickey_ data of this gen key.
 	*
-	* @param publickey_File the publickey_ file of this gen key
+	* @param publickey_Data the publickey_ data of this gen key
 	*/
 	@Override
-	public void setPublickey_File(Blob publickey_File) {
-		_genKey.setPublickey_File(publickey_File);
+	public void setPublickey_Data(java.lang.String publickey_Data) {
+		_genKey.setPublickey_Data(publickey_Data);
 	}
 
 	/**
-	* Sets the publickey_ text of this gen key.
+	* Sets the salt_ data of this gen key.
 	*
-	* @param publickey_Text the publickey_ text of this gen key
+	* @param salt_Data the salt_ data of this gen key
 	*/
 	@Override
-	public void setPublickey_Text(java.lang.String publickey_Text) {
-		_genKey.setPublickey_Text(publickey_Text);
+	public void setSalt_Data(java.lang.String salt_Data) {
+		_genKey.setSalt_Data(salt_Data);
 	}
 
 	/**
@@ -366,6 +381,16 @@ public class GenKeyWrapper implements GenKey, ModelWrapper<GenKey> {
 	@Override
 	public void setUserUuid(java.lang.String userUuid) {
 		_genKey.setUserUuid(userUuid);
+	}
+
+	/**
+	* Sets the vector_ data of this gen key.
+	*
+	* @param vector_Data the vector_ data of this gen key
+	*/
+	@Override
+	public void setVector_Data(java.lang.String vector_Data) {
+		_genKey.setVector_Data(vector_Data);
 	}
 
 	@Override

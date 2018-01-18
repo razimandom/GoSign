@@ -165,15 +165,15 @@ public class GenKeyPersistenceImpl extends BasePersistenceImpl<GenKey>
 	/**
 	 * Creates a new gen key with the primary key. Does not add the gen key to the database.
 	 *
-	 * @param genkeyId the primary key for the new gen key
+	 * @param userId the primary key for the new gen key
 	 * @return the new gen key
 	 */
 	@Override
-	public GenKey create(long genkeyId) {
+	public GenKey create(long userId) {
 		GenKey genKey = new GenKeyImpl();
 
 		genKey.setNew(true);
-		genKey.setPrimaryKey(genkeyId);
+		genKey.setPrimaryKey(userId);
 
 		return genKey;
 	}
@@ -181,13 +181,13 @@ public class GenKeyPersistenceImpl extends BasePersistenceImpl<GenKey>
 	/**
 	 * Removes the gen key with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
-	 * @param genkeyId the primary key of the gen key
+	 * @param userId the primary key of the gen key
 	 * @return the gen key that was removed
 	 * @throws NoSuchGenKeyException if a gen key with the primary key could not be found
 	 */
 	@Override
-	public GenKey remove(long genkeyId) throws NoSuchGenKeyException {
-		return remove((Serializable)genkeyId);
+	public GenKey remove(long userId) throws NoSuchGenKeyException {
+		return remove((Serializable)userId);
 	}
 
 	/**
@@ -277,12 +277,8 @@ public class GenKeyPersistenceImpl extends BasePersistenceImpl<GenKey>
 				genKey.setNew(false);
 			}
 			else {
-				session.evict(genKey);
-				session.saveOrUpdate(genKey);
+				genKey = (GenKey)session.merge(genKey);
 			}
-
-			session.flush();
-			session.clear();
 		}
 		catch (Exception e) {
 			throw processException(e);
@@ -317,12 +313,13 @@ public class GenKeyPersistenceImpl extends BasePersistenceImpl<GenKey>
 		genKeyImpl.setNew(genKey.isNew());
 		genKeyImpl.setPrimaryKey(genKey.getPrimaryKey());
 
-		genKeyImpl.setGenkeyId(genKey.getGenkeyId());
 		genKeyImpl.setUserId(genKey.getUserId());
-		genKeyImpl.setPrivatekey_File(genKey.getPrivatekey_File());
-		genKeyImpl.setPublickey_File(genKey.getPublickey_File());
-		genKeyImpl.setPublickey_Text(genKey.getPublickey_Text());
+		genKeyImpl.setKey_version(genKey.getKey_version());
 		genKeyImpl.setKey_dateCreated(genKey.getKey_dateCreated());
+		genKeyImpl.setPrivatekey_Data(genKey.getPrivatekey_Data());
+		genKeyImpl.setPublickey_Data(genKey.getPublickey_Data());
+		genKeyImpl.setSalt_Data(genKey.getSalt_Data());
+		genKeyImpl.setVector_Data(genKey.getVector_Data());
 
 		return genKeyImpl;
 	}
@@ -354,13 +351,13 @@ public class GenKeyPersistenceImpl extends BasePersistenceImpl<GenKey>
 	/**
 	 * Returns the gen key with the primary key or throws a {@link NoSuchGenKeyException} if it could not be found.
 	 *
-	 * @param genkeyId the primary key of the gen key
+	 * @param userId the primary key of the gen key
 	 * @return the gen key
 	 * @throws NoSuchGenKeyException if a gen key with the primary key could not be found
 	 */
 	@Override
-	public GenKey findByPrimaryKey(long genkeyId) throws NoSuchGenKeyException {
-		return findByPrimaryKey((Serializable)genkeyId);
+	public GenKey findByPrimaryKey(long userId) throws NoSuchGenKeyException {
+		return findByPrimaryKey((Serializable)userId);
 	}
 
 	/**
@@ -413,12 +410,12 @@ public class GenKeyPersistenceImpl extends BasePersistenceImpl<GenKey>
 	/**
 	 * Returns the gen key with the primary key or returns <code>null</code> if it could not be found.
 	 *
-	 * @param genkeyId the primary key of the gen key
+	 * @param userId the primary key of the gen key
 	 * @return the gen key, or <code>null</code> if a gen key with the primary key could not be found
 	 */
 	@Override
-	public GenKey fetchByPrimaryKey(long genkeyId) {
-		return fetchByPrimaryKey((Serializable)genkeyId);
+	public GenKey fetchByPrimaryKey(long userId) {
+		return fetchByPrimaryKey((Serializable)userId);
 	}
 
 	@Override
@@ -728,7 +725,7 @@ public class GenKeyPersistenceImpl extends BasePersistenceImpl<GenKey>
 	@ServiceReference(type = FinderCache.class)
 	protected FinderCache finderCache;
 	private static final String _SQL_SELECT_GENKEY = "SELECT genKey FROM GenKey genKey";
-	private static final String _SQL_SELECT_GENKEY_WHERE_PKS_IN = "SELECT genKey FROM GenKey genKey WHERE genkeyId IN (";
+	private static final String _SQL_SELECT_GENKEY_WHERE_PKS_IN = "SELECT genKey FROM GenKey genKey WHERE userId IN (";
 	private static final String _SQL_COUNT_GENKEY = "SELECT COUNT(genKey) FROM GenKey genKey";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "genKey.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No GenKey exists with the primary key ";

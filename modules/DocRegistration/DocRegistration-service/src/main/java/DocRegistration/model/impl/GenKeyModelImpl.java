@@ -16,11 +16,7 @@ package DocRegistration.model.impl;
 
 import DocRegistration.model.GenKey;
 import DocRegistration.model.GenKeyModel;
-import DocRegistration.model.GenKeyPrivatekey_FileBlobModel;
-import DocRegistration.model.GenKeyPublickey_FileBlobModel;
 import DocRegistration.model.GenKeySoap;
-
-import DocRegistration.service.GenKeyLocalServiceUtil;
 
 import aQute.bnd.annotation.ProviderType;
 
@@ -42,7 +38,6 @@ import com.liferay.portal.kernel.util.StringPool;
 
 import java.io.Serializable;
 
-import java.sql.Blob;
 import java.sql.Types;
 
 import java.util.ArrayList;
@@ -74,28 +69,30 @@ public class GenKeyModelImpl extends BaseModelImpl<GenKey>
 	 */
 	public static final String TABLE_NAME = "genkey_data";
 	public static final Object[][] TABLE_COLUMNS = {
-			{ "genkeyId", Types.BIGINT },
 			{ "userId", Types.BIGINT },
-			{ "privatekey_File", Types.BLOB },
-			{ "publickey_File", Types.BLOB },
-			{ "publickey_Text", Types.VARCHAR },
-			{ "key_dateCreated", Types.VARCHAR }
+			{ "key_version", Types.BIGINT },
+			{ "key_dateCreated", Types.VARCHAR },
+			{ "privatekey_Data", Types.VARCHAR },
+			{ "publickey_Data", Types.VARCHAR },
+			{ "salt_Data", Types.VARCHAR },
+			{ "vector_Data", Types.VARCHAR }
 		};
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP = new HashMap<String, Integer>();
 
 	static {
-		TABLE_COLUMNS_MAP.put("genkeyId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("userId", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("privatekey_File", Types.BLOB);
-		TABLE_COLUMNS_MAP.put("publickey_File", Types.BLOB);
-		TABLE_COLUMNS_MAP.put("publickey_Text", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("key_version", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("key_dateCreated", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("privatekey_Data", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("publickey_Data", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("salt_Data", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("vector_Data", Types.VARCHAR);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table genkey_data (genkeyId LONG not null primary key,userId LONG,privatekey_File BLOB,publickey_File BLOB,publickey_Text VARCHAR(75) null,key_dateCreated VARCHAR(75) null)";
+	public static final String TABLE_SQL_CREATE = "create table genkey_data (userId LONG not null primary key,key_version LONG,key_dateCreated VARCHAR(75) null,privatekey_Data VARCHAR(75) null,publickey_Data VARCHAR(75) null,salt_Data VARCHAR(75) null,vector_Data VARCHAR(75) null)";
 	public static final String TABLE_SQL_DROP = "drop table genkey_data";
-	public static final String ORDER_BY_JPQL = " ORDER BY genKey.genkeyId ASC";
-	public static final String ORDER_BY_SQL = " ORDER BY genkey_data.genkeyId ASC";
+	public static final String ORDER_BY_JPQL = " ORDER BY genKey.userId ASC";
+	public static final String ORDER_BY_SQL = " ORDER BY genkey_data.userId ASC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";
@@ -120,12 +117,13 @@ public class GenKeyModelImpl extends BaseModelImpl<GenKey>
 
 		GenKey model = new GenKeyImpl();
 
-		model.setGenkeyId(soapModel.getGenkeyId());
 		model.setUserId(soapModel.getUserId());
-		model.setPrivatekey_File(soapModel.getPrivatekey_File());
-		model.setPublickey_File(soapModel.getPublickey_File());
-		model.setPublickey_Text(soapModel.getPublickey_Text());
+		model.setKey_version(soapModel.getKey_version());
 		model.setKey_dateCreated(soapModel.getKey_dateCreated());
+		model.setPrivatekey_Data(soapModel.getPrivatekey_Data());
+		model.setPublickey_Data(soapModel.getPublickey_Data());
+		model.setSalt_Data(soapModel.getSalt_Data());
+		model.setVector_Data(soapModel.getVector_Data());
 
 		return model;
 	}
@@ -158,17 +156,17 @@ public class GenKeyModelImpl extends BaseModelImpl<GenKey>
 
 	@Override
 	public long getPrimaryKey() {
-		return _genkeyId;
+		return _userId;
 	}
 
 	@Override
 	public void setPrimaryKey(long primaryKey) {
-		setGenkeyId(primaryKey);
+		setUserId(primaryKey);
 	}
 
 	@Override
 	public Serializable getPrimaryKeyObj() {
-		return _genkeyId;
+		return _userId;
 	}
 
 	@Override
@@ -190,12 +188,13 @@ public class GenKeyModelImpl extends BaseModelImpl<GenKey>
 	public Map<String, Object> getModelAttributes() {
 		Map<String, Object> attributes = new HashMap<String, Object>();
 
-		attributes.put("genkeyId", getGenkeyId());
 		attributes.put("userId", getUserId());
-		attributes.put("privatekey_File", getPrivatekey_File());
-		attributes.put("publickey_File", getPublickey_File());
-		attributes.put("publickey_Text", getPublickey_Text());
+		attributes.put("key_version", getKey_version());
 		attributes.put("key_dateCreated", getKey_dateCreated());
+		attributes.put("privatekey_Data", getPrivatekey_Data());
+		attributes.put("publickey_Data", getPublickey_Data());
+		attributes.put("salt_Data", getSalt_Data());
+		attributes.put("vector_Data", getVector_Data());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
 		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
@@ -205,34 +204,16 @@ public class GenKeyModelImpl extends BaseModelImpl<GenKey>
 
 	@Override
 	public void setModelAttributes(Map<String, Object> attributes) {
-		Long genkeyId = (Long)attributes.get("genkeyId");
-
-		if (genkeyId != null) {
-			setGenkeyId(genkeyId);
-		}
-
 		Long userId = (Long)attributes.get("userId");
 
 		if (userId != null) {
 			setUserId(userId);
 		}
 
-		Blob privatekey_File = (Blob)attributes.get("privatekey_File");
+		Long key_version = (Long)attributes.get("key_version");
 
-		if (privatekey_File != null) {
-			setPrivatekey_File(privatekey_File);
-		}
-
-		Blob publickey_File = (Blob)attributes.get("publickey_File");
-
-		if (publickey_File != null) {
-			setPublickey_File(publickey_File);
-		}
-
-		String publickey_Text = (String)attributes.get("publickey_Text");
-
-		if (publickey_Text != null) {
-			setPublickey_Text(publickey_Text);
+		if (key_version != null) {
+			setKey_version(key_version);
 		}
 
 		String key_dateCreated = (String)attributes.get("key_dateCreated");
@@ -240,17 +221,30 @@ public class GenKeyModelImpl extends BaseModelImpl<GenKey>
 		if (key_dateCreated != null) {
 			setKey_dateCreated(key_dateCreated);
 		}
-	}
 
-	@JSON
-	@Override
-	public long getGenkeyId() {
-		return _genkeyId;
-	}
+		String privatekey_Data = (String)attributes.get("privatekey_Data");
 
-	@Override
-	public void setGenkeyId(long genkeyId) {
-		_genkeyId = genkeyId;
+		if (privatekey_Data != null) {
+			setPrivatekey_Data(privatekey_Data);
+		}
+
+		String publickey_Data = (String)attributes.get("publickey_Data");
+
+		if (publickey_Data != null) {
+			setPublickey_Data(publickey_Data);
+		}
+
+		String salt_Data = (String)attributes.get("salt_Data");
+
+		if (salt_Data != null) {
+			setSalt_Data(salt_Data);
+		}
+
+		String vector_Data = (String)attributes.get("vector_Data");
+
+		if (vector_Data != null) {
+			setVector_Data(vector_Data);
+		}
 	}
 
 	@JSON
@@ -282,80 +276,13 @@ public class GenKeyModelImpl extends BaseModelImpl<GenKey>
 
 	@JSON
 	@Override
-	public Blob getPrivatekey_File() {
-		if (_privatekey_FileBlobModel == null) {
-			try {
-				_privatekey_FileBlobModel = GenKeyLocalServiceUtil.getPrivatekey_FileBlobModel(getPrimaryKey());
-			}
-			catch (Exception e) {
-			}
-		}
-
-		Blob blob = null;
-
-		if (_privatekey_FileBlobModel != null) {
-			blob = _privatekey_FileBlobModel.getPrivatekey_FileBlob();
-		}
-
-		return blob;
+	public long getKey_version() {
+		return _key_version;
 	}
 
 	@Override
-	public void setPrivatekey_File(Blob privatekey_File) {
-		if (_privatekey_FileBlobModel == null) {
-			_privatekey_FileBlobModel = new GenKeyPrivatekey_FileBlobModel(getPrimaryKey(),
-					privatekey_File);
-		}
-		else {
-			_privatekey_FileBlobModel.setPrivatekey_FileBlob(privatekey_File);
-		}
-	}
-
-	@JSON
-	@Override
-	public Blob getPublickey_File() {
-		if (_publickey_FileBlobModel == null) {
-			try {
-				_publickey_FileBlobModel = GenKeyLocalServiceUtil.getPublickey_FileBlobModel(getPrimaryKey());
-			}
-			catch (Exception e) {
-			}
-		}
-
-		Blob blob = null;
-
-		if (_publickey_FileBlobModel != null) {
-			blob = _publickey_FileBlobModel.getPublickey_FileBlob();
-		}
-
-		return blob;
-	}
-
-	@Override
-	public void setPublickey_File(Blob publickey_File) {
-		if (_publickey_FileBlobModel == null) {
-			_publickey_FileBlobModel = new GenKeyPublickey_FileBlobModel(getPrimaryKey(),
-					publickey_File);
-		}
-		else {
-			_publickey_FileBlobModel.setPublickey_FileBlob(publickey_File);
-		}
-	}
-
-	@JSON
-	@Override
-	public String getPublickey_Text() {
-		if (_publickey_Text == null) {
-			return StringPool.BLANK;
-		}
-		else {
-			return _publickey_Text;
-		}
-	}
-
-	@Override
-	public void setPublickey_Text(String publickey_Text) {
-		_publickey_Text = publickey_Text;
+	public void setKey_version(long key_version) {
+		_key_version = key_version;
 	}
 
 	@JSON
@@ -372,6 +299,70 @@ public class GenKeyModelImpl extends BaseModelImpl<GenKey>
 	@Override
 	public void setKey_dateCreated(String key_dateCreated) {
 		_key_dateCreated = key_dateCreated;
+	}
+
+	@JSON
+	@Override
+	public String getPrivatekey_Data() {
+		if (_privatekey_Data == null) {
+			return StringPool.BLANK;
+		}
+		else {
+			return _privatekey_Data;
+		}
+	}
+
+	@Override
+	public void setPrivatekey_Data(String privatekey_Data) {
+		_privatekey_Data = privatekey_Data;
+	}
+
+	@JSON
+	@Override
+	public String getPublickey_Data() {
+		if (_publickey_Data == null) {
+			return StringPool.BLANK;
+		}
+		else {
+			return _publickey_Data;
+		}
+	}
+
+	@Override
+	public void setPublickey_Data(String publickey_Data) {
+		_publickey_Data = publickey_Data;
+	}
+
+	@JSON
+	@Override
+	public String getSalt_Data() {
+		if (_salt_Data == null) {
+			return StringPool.BLANK;
+		}
+		else {
+			return _salt_Data;
+		}
+	}
+
+	@Override
+	public void setSalt_Data(String salt_Data) {
+		_salt_Data = salt_Data;
+	}
+
+	@JSON
+	@Override
+	public String getVector_Data() {
+		if (_vector_Data == null) {
+			return StringPool.BLANK;
+		}
+		else {
+			return _vector_Data;
+		}
+	}
+
+	@Override
+	public void setVector_Data(String vector_Data) {
+		_vector_Data = vector_Data;
 	}
 
 	@Override
@@ -401,10 +392,13 @@ public class GenKeyModelImpl extends BaseModelImpl<GenKey>
 	public Object clone() {
 		GenKeyImpl genKeyImpl = new GenKeyImpl();
 
-		genKeyImpl.setGenkeyId(getGenkeyId());
 		genKeyImpl.setUserId(getUserId());
-		genKeyImpl.setPublickey_Text(getPublickey_Text());
+		genKeyImpl.setKey_version(getKey_version());
 		genKeyImpl.setKey_dateCreated(getKey_dateCreated());
+		genKeyImpl.setPrivatekey_Data(getPrivatekey_Data());
+		genKeyImpl.setPublickey_Data(getPublickey_Data());
+		genKeyImpl.setSalt_Data(getSalt_Data());
+		genKeyImpl.setVector_Data(getVector_Data());
 
 		genKeyImpl.resetOriginalValues();
 
@@ -465,28 +459,15 @@ public class GenKeyModelImpl extends BaseModelImpl<GenKey>
 
 	@Override
 	public void resetOriginalValues() {
-		GenKeyModelImpl genKeyModelImpl = this;
-
-		genKeyModelImpl._privatekey_FileBlobModel = null;
-
-		genKeyModelImpl._publickey_FileBlobModel = null;
 	}
 
 	@Override
 	public CacheModel<GenKey> toCacheModel() {
 		GenKeyCacheModel genKeyCacheModel = new GenKeyCacheModel();
 
-		genKeyCacheModel.genkeyId = getGenkeyId();
-
 		genKeyCacheModel.userId = getUserId();
 
-		genKeyCacheModel.publickey_Text = getPublickey_Text();
-
-		String publickey_Text = genKeyCacheModel.publickey_Text;
-
-		if ((publickey_Text != null) && (publickey_Text.length() == 0)) {
-			genKeyCacheModel.publickey_Text = null;
-		}
+		genKeyCacheModel.key_version = getKey_version();
 
 		genKeyCacheModel.key_dateCreated = getKey_dateCreated();
 
@@ -496,21 +477,59 @@ public class GenKeyModelImpl extends BaseModelImpl<GenKey>
 			genKeyCacheModel.key_dateCreated = null;
 		}
 
+		genKeyCacheModel.privatekey_Data = getPrivatekey_Data();
+
+		String privatekey_Data = genKeyCacheModel.privatekey_Data;
+
+		if ((privatekey_Data != null) && (privatekey_Data.length() == 0)) {
+			genKeyCacheModel.privatekey_Data = null;
+		}
+
+		genKeyCacheModel.publickey_Data = getPublickey_Data();
+
+		String publickey_Data = genKeyCacheModel.publickey_Data;
+
+		if ((publickey_Data != null) && (publickey_Data.length() == 0)) {
+			genKeyCacheModel.publickey_Data = null;
+		}
+
+		genKeyCacheModel.salt_Data = getSalt_Data();
+
+		String salt_Data = genKeyCacheModel.salt_Data;
+
+		if ((salt_Data != null) && (salt_Data.length() == 0)) {
+			genKeyCacheModel.salt_Data = null;
+		}
+
+		genKeyCacheModel.vector_Data = getVector_Data();
+
+		String vector_Data = genKeyCacheModel.vector_Data;
+
+		if ((vector_Data != null) && (vector_Data.length() == 0)) {
+			genKeyCacheModel.vector_Data = null;
+		}
+
 		return genKeyCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(13);
+		StringBundler sb = new StringBundler(15);
 
-		sb.append("{genkeyId=");
-		sb.append(getGenkeyId());
-		sb.append(", userId=");
+		sb.append("{userId=");
 		sb.append(getUserId());
-		sb.append(", publickey_Text=");
-		sb.append(getPublickey_Text());
+		sb.append(", key_version=");
+		sb.append(getKey_version());
 		sb.append(", key_dateCreated=");
 		sb.append(getKey_dateCreated());
+		sb.append(", privatekey_Data=");
+		sb.append(getPrivatekey_Data());
+		sb.append(", publickey_Data=");
+		sb.append(getPublickey_Data());
+		sb.append(", salt_Data=");
+		sb.append(getSalt_Data());
+		sb.append(", vector_Data=");
+		sb.append(getVector_Data());
 		sb.append("}");
 
 		return sb.toString();
@@ -518,27 +537,39 @@ public class GenKeyModelImpl extends BaseModelImpl<GenKey>
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(22);
+		StringBundler sb = new StringBundler(25);
 
 		sb.append("<model><model-name>");
 		sb.append("DocRegistration.model.GenKey");
 		sb.append("</model-name>");
 
 		sb.append(
-			"<column><column-name>genkeyId</column-name><column-value><![CDATA[");
-		sb.append(getGenkeyId());
-		sb.append("]]></column-value></column>");
-		sb.append(
 			"<column><column-name>userId</column-name><column-value><![CDATA[");
 		sb.append(getUserId());
 		sb.append("]]></column-value></column>");
 		sb.append(
-			"<column><column-name>publickey_Text</column-name><column-value><![CDATA[");
-		sb.append(getPublickey_Text());
+			"<column><column-name>key_version</column-name><column-value><![CDATA[");
+		sb.append(getKey_version());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>key_dateCreated</column-name><column-value><![CDATA[");
 		sb.append(getKey_dateCreated());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>privatekey_Data</column-name><column-value><![CDATA[");
+		sb.append(getPrivatekey_Data());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>publickey_Data</column-name><column-value><![CDATA[");
+		sb.append(getPublickey_Data());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>salt_Data</column-name><column-value><![CDATA[");
+		sb.append(getSalt_Data());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>vector_Data</column-name><column-value><![CDATA[");
+		sb.append(getVector_Data());
 		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
@@ -550,11 +581,12 @@ public class GenKeyModelImpl extends BaseModelImpl<GenKey>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			GenKey.class
 		};
-	private long _genkeyId;
 	private long _userId;
-	private GenKeyPrivatekey_FileBlobModel _privatekey_FileBlobModel;
-	private GenKeyPublickey_FileBlobModel _publickey_FileBlobModel;
-	private String _publickey_Text;
+	private long _key_version;
 	private String _key_dateCreated;
+	private String _privatekey_Data;
+	private String _publickey_Data;
+	private String _salt_Data;
+	private String _vector_Data;
 	private GenKey _escapedModel;
 }

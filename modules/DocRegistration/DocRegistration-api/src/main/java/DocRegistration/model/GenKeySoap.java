@@ -18,8 +18,6 @@ import aQute.bnd.annotation.ProviderType;
 
 import java.io.Serializable;
 
-import java.sql.Blob;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,12 +33,13 @@ public class GenKeySoap implements Serializable {
 	public static GenKeySoap toSoapModel(GenKey model) {
 		GenKeySoap soapModel = new GenKeySoap();
 
-		soapModel.setGenkeyId(model.getGenkeyId());
 		soapModel.setUserId(model.getUserId());
-		soapModel.setPrivatekey_File(model.getPrivatekey_File());
-		soapModel.setPublickey_File(model.getPublickey_File());
-		soapModel.setPublickey_Text(model.getPublickey_Text());
+		soapModel.setKey_version(model.getKey_version());
 		soapModel.setKey_dateCreated(model.getKey_dateCreated());
+		soapModel.setPrivatekey_Data(model.getPrivatekey_Data());
+		soapModel.setPublickey_Data(model.getPublickey_Data());
+		soapModel.setSalt_Data(model.getSalt_Data());
+		soapModel.setVector_Data(model.getVector_Data());
 
 		return soapModel;
 	}
@@ -86,19 +85,11 @@ public class GenKeySoap implements Serializable {
 	}
 
 	public long getPrimaryKey() {
-		return _genkeyId;
+		return _userId;
 	}
 
 	public void setPrimaryKey(long pk) {
-		setGenkeyId(pk);
-	}
-
-	public long getGenkeyId() {
-		return _genkeyId;
-	}
-
-	public void setGenkeyId(long genkeyId) {
-		_genkeyId = genkeyId;
+		setUserId(pk);
 	}
 
 	public long getUserId() {
@@ -109,28 +100,12 @@ public class GenKeySoap implements Serializable {
 		_userId = userId;
 	}
 
-	public Blob getPrivatekey_File() {
-		return _privatekey_File;
+	public long getKey_version() {
+		return _key_version;
 	}
 
-	public void setPrivatekey_File(Blob privatekey_File) {
-		_privatekey_File = privatekey_File;
-	}
-
-	public Blob getPublickey_File() {
-		return _publickey_File;
-	}
-
-	public void setPublickey_File(Blob publickey_File) {
-		_publickey_File = publickey_File;
-	}
-
-	public String getPublickey_Text() {
-		return _publickey_Text;
-	}
-
-	public void setPublickey_Text(String publickey_Text) {
-		_publickey_Text = publickey_Text;
+	public void setKey_version(long key_version) {
+		_key_version = key_version;
 	}
 
 	public String getKey_dateCreated() {
@@ -141,10 +116,43 @@ public class GenKeySoap implements Serializable {
 		_key_dateCreated = key_dateCreated;
 	}
 
-	private long _genkeyId;
+	public String getPrivatekey_Data() {
+		return _privatekey_Data;
+	}
+
+	public void setPrivatekey_Data(String privatekey_Data) {
+		_privatekey_Data = privatekey_Data;
+	}
+
+	public String getPublickey_Data() {
+		return _publickey_Data;
+	}
+
+	public void setPublickey_Data(String publickey_Data) {
+		_publickey_Data = publickey_Data;
+	}
+
+	public String getSalt_Data() {
+		return _salt_Data;
+	}
+
+	public void setSalt_Data(String salt_Data) {
+		_salt_Data = salt_Data;
+	}
+
+	public String getVector_Data() {
+		return _vector_Data;
+	}
+
+	public void setVector_Data(String vector_Data) {
+		_vector_Data = vector_Data;
+	}
+
 	private long _userId;
-	private Blob _privatekey_File;
-	private Blob _publickey_File;
-	private String _publickey_Text;
+	private long _key_version;
 	private String _key_dateCreated;
+	private String _privatekey_Data;
+	private String _publickey_Data;
+	private String _salt_Data;
+	private String _vector_Data;
 }

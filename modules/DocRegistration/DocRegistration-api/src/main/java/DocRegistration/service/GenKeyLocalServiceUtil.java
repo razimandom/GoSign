@@ -56,11 +56,11 @@ public class GenKeyLocalServiceUtil {
 	/**
 	* Creates a new gen key with the primary key. Does not add the gen key to the database.
 	*
-	* @param genkeyId the primary key for the new gen key
+	* @param userId the primary key for the new gen key
 	* @return the new gen key
 	*/
-	public static DocRegistration.model.GenKey createGenKey(long genkeyId) {
-		return getService().createGenKey(genkeyId);
+	public static DocRegistration.model.GenKey createGenKey(long userId) {
+		return getService().createGenKey(userId);
 	}
 
 	/**
@@ -77,29 +77,29 @@ public class GenKeyLocalServiceUtil {
 	/**
 	* Deletes the gen key with the primary key from the database. Also notifies the appropriate model listeners.
 	*
-	* @param genkeyId the primary key of the gen key
+	* @param userId the primary key of the gen key
 	* @return the gen key that was removed
 	* @throws PortalException if a gen key with the primary key could not be found
 	*/
-	public static DocRegistration.model.GenKey deleteGenKey(long genkeyId)
+	public static DocRegistration.model.GenKey deleteGenKey(long userId)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return getService().deleteGenKey(genkeyId);
+		return getService().deleteGenKey(userId);
 	}
 
-	public static DocRegistration.model.GenKey fetchGenKey(long genkeyId) {
-		return getService().fetchGenKey(genkeyId);
+	public static DocRegistration.model.GenKey fetchGenKey(long userId) {
+		return getService().fetchGenKey(userId);
 	}
 
 	/**
 	* Returns the gen key with the primary key.
 	*
-	* @param genkeyId the primary key of the gen key
+	* @param userId the primary key of the gen key
 	* @return the gen key
 	* @throws PortalException if a gen key with the primary key could not be found
 	*/
-	public static DocRegistration.model.GenKey getGenKey(long genkeyId)
+	public static DocRegistration.model.GenKey getGenKey(long userId)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return getService().getGenKey(genkeyId);
+		return getService().getGenKey(userId);
 	}
 
 	/**
@@ -111,16 +111,6 @@ public class GenKeyLocalServiceUtil {
 	public static DocRegistration.model.GenKey updateGenKey(
 		DocRegistration.model.GenKey genKey) {
 		return getService().updateGenKey(genKey);
-	}
-
-	public static DocRegistration.model.GenKeyPrivatekey_FileBlobModel getPrivatekey_FileBlobModel(
-		java.io.Serializable primaryKey) {
-		return getService().getPrivatekey_FileBlobModel(primaryKey);
-	}
-
-	public static DocRegistration.model.GenKeyPublickey_FileBlobModel getPublickey_FileBlobModel(
-		java.io.Serializable primaryKey) {
-		return getService().getPublickey_FileBlobModel(primaryKey);
 	}
 
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery getActionableDynamicQuery() {

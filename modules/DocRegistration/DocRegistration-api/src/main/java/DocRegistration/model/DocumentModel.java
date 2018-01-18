@@ -312,6 +312,36 @@ public interface DocumentModel extends BaseModel<Document> {
 	 */
 	public void setReq_dateModified(String req_dateModified);
 
+	/**
+	 * Returns the req_signature of this document.
+	 *
+	 * @return the req_signature of this document
+	 */
+	@AutoEscape
+	public String getReq_signature();
+
+	/**
+	 * Sets the req_signature of this document.
+	 *
+	 * @param req_signature the req_signature of this document
+	 */
+	public void setReq_signature(String req_signature);
+
+	/**
+	 * Returns the sign_name of this document.
+	 *
+	 * @return the sign_name of this document
+	 */
+	@AutoEscape
+	public String getSign_name();
+
+	/**
+	 * Sets the sign_name of this document.
+	 *
+	 * @param sign_name the sign_name of this document
+	 */
+	public void setSign_name(String sign_name);
+
 	@Override
 	public boolean isNew();
 

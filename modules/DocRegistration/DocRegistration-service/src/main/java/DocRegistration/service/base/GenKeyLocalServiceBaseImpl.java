@@ -15,8 +15,6 @@
 package DocRegistration.service.base;
 
 import DocRegistration.model.GenKey;
-import DocRegistration.model.GenKeyPrivatekey_FileBlobModel;
-import DocRegistration.model.GenKeyPublickey_FileBlobModel;
 
 import DocRegistration.service.GenKeyLocalService;
 
@@ -36,7 +34,6 @@ import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Projection;
-import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.PersistedModel;
@@ -95,25 +92,25 @@ public abstract class GenKeyLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * Creates a new gen key with the primary key. Does not add the gen key to the database.
 	 *
-	 * @param genkeyId the primary key for the new gen key
+	 * @param userId the primary key for the new gen key
 	 * @return the new gen key
 	 */
 	@Override
-	public GenKey createGenKey(long genkeyId) {
-		return genKeyPersistence.create(genkeyId);
+	public GenKey createGenKey(long userId) {
+		return genKeyPersistence.create(userId);
 	}
 
 	/**
 	 * Deletes the gen key with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
-	 * @param genkeyId the primary key of the gen key
+	 * @param userId the primary key of the gen key
 	 * @return the gen key that was removed
 	 * @throws PortalException if a gen key with the primary key could not be found
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
-	public GenKey deleteGenKey(long genkeyId) throws PortalException {
-		return genKeyPersistence.remove(genkeyId);
+	public GenKey deleteGenKey(long userId) throws PortalException {
+		return genKeyPersistence.remove(userId);
 	}
 
 	/**
@@ -210,20 +207,20 @@ public abstract class GenKeyLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	@Override
-	public GenKey fetchGenKey(long genkeyId) {
-		return genKeyPersistence.fetchByPrimaryKey(genkeyId);
+	public GenKey fetchGenKey(long userId) {
+		return genKeyPersistence.fetchByPrimaryKey(userId);
 	}
 
 	/**
 	 * Returns the gen key with the primary key.
 	 *
-	 * @param genkeyId the primary key of the gen key
+	 * @param userId the primary key of the gen key
 	 * @return the gen key
 	 * @throws PortalException if a gen key with the primary key could not be found
 	 */
 	@Override
-	public GenKey getGenKey(long genkeyId) throws PortalException {
-		return genKeyPersistence.findByPrimaryKey(genkeyId);
+	public GenKey getGenKey(long userId) throws PortalException {
+		return genKeyPersistence.findByPrimaryKey(userId);
 	}
 
 	@Override
@@ -234,7 +231,7 @@ public abstract class GenKeyLocalServiceBaseImpl extends BaseLocalServiceImpl
 		actionableDynamicQuery.setClassLoader(getClassLoader());
 		actionableDynamicQuery.setModelClass(GenKey.class);
 
-		actionableDynamicQuery.setPrimaryKeyPropertyName("genkeyId");
+		actionableDynamicQuery.setPrimaryKeyPropertyName("userId");
 
 		return actionableDynamicQuery;
 	}
@@ -247,7 +244,7 @@ public abstract class GenKeyLocalServiceBaseImpl extends BaseLocalServiceImpl
 		indexableActionableDynamicQuery.setClassLoader(getClassLoader());
 		indexableActionableDynamicQuery.setModelClass(GenKey.class);
 
-		indexableActionableDynamicQuery.setPrimaryKeyPropertyName("genkeyId");
+		indexableActionableDynamicQuery.setPrimaryKeyPropertyName("userId");
 
 		return indexableActionableDynamicQuery;
 	}
@@ -258,7 +255,7 @@ public abstract class GenKeyLocalServiceBaseImpl extends BaseLocalServiceImpl
 		actionableDynamicQuery.setClassLoader(getClassLoader());
 		actionableDynamicQuery.setModelClass(GenKey.class);
 
-		actionableDynamicQuery.setPrimaryKeyPropertyName("genkeyId");
+		actionableDynamicQuery.setPrimaryKeyPropertyName("userId");
 	}
 
 	/**
@@ -312,44 +309,6 @@ public abstract class GenKeyLocalServiceBaseImpl extends BaseLocalServiceImpl
 	@Override
 	public GenKey updateGenKey(GenKey genKey) {
 		return genKeyPersistence.update(genKey);
-	}
-
-	@Override
-	public GenKeyPrivatekey_FileBlobModel getPrivatekey_FileBlobModel(
-		Serializable primaryKey) {
-		Session session = null;
-
-		try {
-			session = genKeyPersistence.openSession();
-
-			return (GenKeyPrivatekey_FileBlobModel)session.get(GenKeyPrivatekey_FileBlobModel.class,
-				primaryKey);
-		}
-		catch (Exception e) {
-			throw genKeyPersistence.processException(e);
-		}
-		finally {
-			genKeyPersistence.closeSession(session);
-		}
-	}
-
-	@Override
-	public GenKeyPublickey_FileBlobModel getPublickey_FileBlobModel(
-		Serializable primaryKey) {
-		Session session = null;
-
-		try {
-			session = genKeyPersistence.openSession();
-
-			return (GenKeyPublickey_FileBlobModel)session.get(GenKeyPublickey_FileBlobModel.class,
-				primaryKey);
-		}
-		catch (Exception e) {
-			throw genKeyPersistence.processException(e);
-		}
-		finally {
-			genKeyPersistence.closeSession(session);
-		}
 	}
 
 	/**

@@ -74,6 +74,8 @@ public class DocumentWrapper implements Document, ModelWrapper<Document> {
 		attributes.put("file_md5", getFile_md5());
 		attributes.put("req_dateCreated", getReq_dateCreated());
 		attributes.put("req_dateModified", getReq_dateModified());
+		attributes.put("req_signature", getReq_signature());
+		attributes.put("sign_name", getSign_name());
 
 		return attributes;
 	}
@@ -174,6 +176,18 @@ public class DocumentWrapper implements Document, ModelWrapper<Document> {
 
 		if (req_dateModified != null) {
 			setReq_dateModified(req_dateModified);
+		}
+
+		String req_signature = (String)attributes.get("req_signature");
+
+		if (req_signature != null) {
+			setReq_signature(req_signature);
+		}
+
+		String sign_name = (String)attributes.get("sign_name");
+
+		if (sign_name != null) {
+			setSign_name(sign_name);
 		}
 	}
 
@@ -343,6 +357,16 @@ public class DocumentWrapper implements Document, ModelWrapper<Document> {
 	}
 
 	/**
+	* Returns the req_signature of this document.
+	*
+	* @return the req_signature of this document
+	*/
+	@Override
+	public java.lang.String getReq_signature() {
+		return _document.getReq_signature();
+	}
+
+	/**
 	* Returns the sign_email of this document.
 	*
 	* @return the sign_email of this document
@@ -350,6 +374,16 @@ public class DocumentWrapper implements Document, ModelWrapper<Document> {
 	@Override
 	public java.lang.String getSign_email() {
 		return _document.getSign_email();
+	}
+
+	/**
+	* Returns the sign_name of this document.
+	*
+	* @return the sign_name of this document
+	*/
+	@Override
+	public java.lang.String getSign_name() {
+		return _document.getSign_name();
 	}
 
 	/**
@@ -609,6 +643,16 @@ public class DocumentWrapper implements Document, ModelWrapper<Document> {
 	}
 
 	/**
+	* Sets the req_signature of this document.
+	*
+	* @param req_signature the req_signature of this document
+	*/
+	@Override
+	public void setReq_signature(java.lang.String req_signature) {
+		_document.setReq_signature(req_signature);
+	}
+
+	/**
 	* Sets the sign_email of this document.
 	*
 	* @param sign_email the sign_email of this document
@@ -616,6 +660,16 @@ public class DocumentWrapper implements Document, ModelWrapper<Document> {
 	@Override
 	public void setSign_email(java.lang.String sign_email) {
 		_document.setSign_email(sign_email);
+	}
+
+	/**
+	* Sets the sign_name of this document.
+	*
+	* @param sign_name the sign_name of this document
+	*/
+	@Override
+	public void setSign_name(java.lang.String sign_name) {
+		_document.setSign_name(sign_name);
 	}
 
 	/**

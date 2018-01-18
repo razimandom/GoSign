@@ -25,8 +25,6 @@ import com.liferay.portal.kernel.service.ServiceContext;
 
 import java.io.Serializable;
 
-import java.sql.Blob;
-
 /**
  * The base model interface for the GenKey service. Represents a row in the &quot;genkey_data&quot; database table, with each column mapped to a property of this class.
  *
@@ -63,20 +61,6 @@ public interface GenKeyModel extends BaseModel<GenKey> {
 	public void setPrimaryKey(long primaryKey);
 
 	/**
-	 * Returns the genkey ID of this gen key.
-	 *
-	 * @return the genkey ID of this gen key
-	 */
-	public long getGenkeyId();
-
-	/**
-	 * Sets the genkey ID of this gen key.
-	 *
-	 * @param genkeyId the genkey ID of this gen key
-	 */
-	public void setGenkeyId(long genkeyId);
-
-	/**
 	 * Returns the user ID of this gen key.
 	 *
 	 * @return the user ID of this gen key
@@ -105,47 +89,18 @@ public interface GenKeyModel extends BaseModel<GenKey> {
 	public void setUserUuid(String userUuid);
 
 	/**
-	 * Returns the privatekey_ file of this gen key.
+	 * Returns the key_version of this gen key.
 	 *
-	 * @return the privatekey_ file of this gen key
+	 * @return the key_version of this gen key
 	 */
-	public Blob getPrivatekey_File();
+	public long getKey_version();
 
 	/**
-	 * Sets the privatekey_ file of this gen key.
+	 * Sets the key_version of this gen key.
 	 *
-	 * @param privatekey_File the privatekey_ file of this gen key
+	 * @param key_version the key_version of this gen key
 	 */
-	public void setPrivatekey_File(Blob privatekey_File);
-
-	/**
-	 * Returns the publickey_ file of this gen key.
-	 *
-	 * @return the publickey_ file of this gen key
-	 */
-	public Blob getPublickey_File();
-
-	/**
-	 * Sets the publickey_ file of this gen key.
-	 *
-	 * @param publickey_File the publickey_ file of this gen key
-	 */
-	public void setPublickey_File(Blob publickey_File);
-
-	/**
-	 * Returns the publickey_ text of this gen key.
-	 *
-	 * @return the publickey_ text of this gen key
-	 */
-	@AutoEscape
-	public String getPublickey_Text();
-
-	/**
-	 * Sets the publickey_ text of this gen key.
-	 *
-	 * @param publickey_Text the publickey_ text of this gen key
-	 */
-	public void setPublickey_Text(String publickey_Text);
+	public void setKey_version(long key_version);
 
 	/**
 	 * Returns the key_date created of this gen key.
@@ -161,6 +116,66 @@ public interface GenKeyModel extends BaseModel<GenKey> {
 	 * @param key_dateCreated the key_date created of this gen key
 	 */
 	public void setKey_dateCreated(String key_dateCreated);
+
+	/**
+	 * Returns the privatekey_ data of this gen key.
+	 *
+	 * @return the privatekey_ data of this gen key
+	 */
+	@AutoEscape
+	public String getPrivatekey_Data();
+
+	/**
+	 * Sets the privatekey_ data of this gen key.
+	 *
+	 * @param privatekey_Data the privatekey_ data of this gen key
+	 */
+	public void setPrivatekey_Data(String privatekey_Data);
+
+	/**
+	 * Returns the publickey_ data of this gen key.
+	 *
+	 * @return the publickey_ data of this gen key
+	 */
+	@AutoEscape
+	public String getPublickey_Data();
+
+	/**
+	 * Sets the publickey_ data of this gen key.
+	 *
+	 * @param publickey_Data the publickey_ data of this gen key
+	 */
+	public void setPublickey_Data(String publickey_Data);
+
+	/**
+	 * Returns the salt_ data of this gen key.
+	 *
+	 * @return the salt_ data of this gen key
+	 */
+	@AutoEscape
+	public String getSalt_Data();
+
+	/**
+	 * Sets the salt_ data of this gen key.
+	 *
+	 * @param salt_Data the salt_ data of this gen key
+	 */
+	public void setSalt_Data(String salt_Data);
+
+	/**
+	 * Returns the vector_ data of this gen key.
+	 *
+	 * @return the vector_ data of this gen key
+	 */
+	@AutoEscape
+	public String getVector_Data();
+
+	/**
+	 * Sets the vector_ data of this gen key.
+	 *
+	 * @param vector_Data the vector_ data of this gen key
+	 */
+	public void setVector_Data(String vector_Data);
 
 	@Override
 	public boolean isNew();

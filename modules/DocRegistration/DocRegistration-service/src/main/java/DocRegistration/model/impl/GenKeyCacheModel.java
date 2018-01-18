@@ -49,7 +49,7 @@ public class GenKeyCacheModel implements CacheModel<GenKey>, Externalizable {
 
 		GenKeyCacheModel genKeyCacheModel = (GenKeyCacheModel)obj;
 
-		if (genkeyId == genKeyCacheModel.genkeyId) {
+		if (userId == genKeyCacheModel.userId) {
 			return true;
 		}
 
@@ -58,21 +58,27 @@ public class GenKeyCacheModel implements CacheModel<GenKey>, Externalizable {
 
 	@Override
 	public int hashCode() {
-		return HashUtil.hash(0, genkeyId);
+		return HashUtil.hash(0, userId);
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(9);
+		StringBundler sb = new StringBundler(15);
 
-		sb.append("{genkeyId=");
-		sb.append(genkeyId);
-		sb.append(", userId=");
+		sb.append("{userId=");
 		sb.append(userId);
-		sb.append(", publickey_Text=");
-		sb.append(publickey_Text);
+		sb.append(", key_version=");
+		sb.append(key_version);
 		sb.append(", key_dateCreated=");
 		sb.append(key_dateCreated);
+		sb.append(", privatekey_Data=");
+		sb.append(privatekey_Data);
+		sb.append(", publickey_Data=");
+		sb.append(publickey_Data);
+		sb.append(", salt_Data=");
+		sb.append(salt_Data);
+		sb.append(", vector_Data=");
+		sb.append(vector_Data);
 		sb.append("}");
 
 		return sb.toString();
@@ -82,21 +88,42 @@ public class GenKeyCacheModel implements CacheModel<GenKey>, Externalizable {
 	public GenKey toEntityModel() {
 		GenKeyImpl genKeyImpl = new GenKeyImpl();
 
-		genKeyImpl.setGenkeyId(genkeyId);
 		genKeyImpl.setUserId(userId);
-
-		if (publickey_Text == null) {
-			genKeyImpl.setPublickey_Text(StringPool.BLANK);
-		}
-		else {
-			genKeyImpl.setPublickey_Text(publickey_Text);
-		}
+		genKeyImpl.setKey_version(key_version);
 
 		if (key_dateCreated == null) {
 			genKeyImpl.setKey_dateCreated(StringPool.BLANK);
 		}
 		else {
 			genKeyImpl.setKey_dateCreated(key_dateCreated);
+		}
+
+		if (privatekey_Data == null) {
+			genKeyImpl.setPrivatekey_Data(StringPool.BLANK);
+		}
+		else {
+			genKeyImpl.setPrivatekey_Data(privatekey_Data);
+		}
+
+		if (publickey_Data == null) {
+			genKeyImpl.setPublickey_Data(StringPool.BLANK);
+		}
+		else {
+			genKeyImpl.setPublickey_Data(publickey_Data);
+		}
+
+		if (salt_Data == null) {
+			genKeyImpl.setSalt_Data(StringPool.BLANK);
+		}
+		else {
+			genKeyImpl.setSalt_Data(salt_Data);
+		}
+
+		if (vector_Data == null) {
+			genKeyImpl.setVector_Data(StringPool.BLANK);
+		}
+		else {
+			genKeyImpl.setVector_Data(vector_Data);
 		}
 
 		genKeyImpl.resetOriginalValues();
@@ -106,26 +133,22 @@ public class GenKeyCacheModel implements CacheModel<GenKey>, Externalizable {
 
 	@Override
 	public void readExternal(ObjectInput objectInput) throws IOException {
-		genkeyId = objectInput.readLong();
-
 		userId = objectInput.readLong();
-		publickey_Text = objectInput.readUTF();
+
+		key_version = objectInput.readLong();
 		key_dateCreated = objectInput.readUTF();
+		privatekey_Data = objectInput.readUTF();
+		publickey_Data = objectInput.readUTF();
+		salt_Data = objectInput.readUTF();
+		vector_Data = objectInput.readUTF();
 	}
 
 	@Override
 	public void writeExternal(ObjectOutput objectOutput)
 		throws IOException {
-		objectOutput.writeLong(genkeyId);
-
 		objectOutput.writeLong(userId);
 
-		if (publickey_Text == null) {
-			objectOutput.writeUTF(StringPool.BLANK);
-		}
-		else {
-			objectOutput.writeUTF(publickey_Text);
-		}
+		objectOutput.writeLong(key_version);
 
 		if (key_dateCreated == null) {
 			objectOutput.writeUTF(StringPool.BLANK);
@@ -133,10 +156,41 @@ public class GenKeyCacheModel implements CacheModel<GenKey>, Externalizable {
 		else {
 			objectOutput.writeUTF(key_dateCreated);
 		}
+
+		if (privatekey_Data == null) {
+			objectOutput.writeUTF(StringPool.BLANK);
+		}
+		else {
+			objectOutput.writeUTF(privatekey_Data);
+		}
+
+		if (publickey_Data == null) {
+			objectOutput.writeUTF(StringPool.BLANK);
+		}
+		else {
+			objectOutput.writeUTF(publickey_Data);
+		}
+
+		if (salt_Data == null) {
+			objectOutput.writeUTF(StringPool.BLANK);
+		}
+		else {
+			objectOutput.writeUTF(salt_Data);
+		}
+
+		if (vector_Data == null) {
+			objectOutput.writeUTF(StringPool.BLANK);
+		}
+		else {
+			objectOutput.writeUTF(vector_Data);
+		}
 	}
 
-	public long genkeyId;
 	public long userId;
-	public String publickey_Text;
+	public long key_version;
 	public String key_dateCreated;
+	public String privatekey_Data;
+	public String publickey_Data;
+	public String salt_Data;
+	public String vector_Data;
 }

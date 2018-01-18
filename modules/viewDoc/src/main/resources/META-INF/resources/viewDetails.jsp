@@ -76,7 +76,6 @@ Document document = DocumentLocalServiceUtil.getDocument(docId);
 request.setAttribute("document", document);
 String redirect = ParamUtil.getString(request, "backURL");
 %>
-
 		<portlet:resourceURL var="viewURL">
             <portlet:param name="dataId"
                 value="<%=String.valueOf(document.getDocId())%>" />
@@ -92,10 +91,6 @@ String redirect = ParamUtil.getString(request, "backURL");
 <tr>
 	<td>Request MD5:</td>
 	<td>${document.file_md5}</td>
-</tr>
-<tr>
-	<td>Request Timestamp: </td>
-	<td></td>
 </tr>
 <tr>
 	<td>Type:</td>
@@ -133,7 +128,7 @@ String redirect = ParamUtil.getString(request, "backURL");
 	<td>${document.doc_description}</td>
 </tr>
 </table>
-<br>
+
 <h3>Signer & Requestor Details</h3>
 
 <table>
@@ -147,7 +142,7 @@ String redirect = ParamUtil.getString(request, "backURL");
 </tr>
 <tr>
 	<td>Signer Name: </td>
-	<td></td>
+	<td>${document.sign_name}</td>
 </tr>
 <tr>
 	<td>Signer Email:</td>
@@ -213,12 +208,17 @@ String redirect = ParamUtil.getString(request, "backURL");
 
 <h3>Verify Signature:</h3>
 
-<portlet:actionURL name="#" var="verifyDoc" />
+<portlet:actionURL name="doVerifySign" var="doVerifySign" />
 
-<aui:form action="#" method="post" name="name">
-	<aui:input label="Insert Signer Public Key: " name="doc_deadline" type="textarea"/>
+<aui:form action="<%=doVerifySign%>" method="post" name="name">
+	<aui:input label="Doc Id: " name="docId" type="hidden" value="${document.docId}" readOnly="true"/>
+	<aui:input label="Insert Signer Public Key: " name="input_pubkey" type="textarea"/>
 	<aui:button name="Verify" type="submit" value="Verify" last="true" />
 
 </aui:form>
-
 </div>
+
+<liferay-ui:error key="error-key" message="Verification failed! Public key does not match with signature." />
+<liferay-ui:error key="error-key-exception01" message="Error from exception" />
+<liferay-ui:error key="error-key-invalidECCPubKey" message="Error! This is invalid ECC public key format." />
+<liferay-ui:error key="error-key-null" message="Error! Public key field cannot be empty" />

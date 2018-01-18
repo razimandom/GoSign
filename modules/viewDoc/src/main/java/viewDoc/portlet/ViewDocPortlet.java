@@ -5,25 +5,39 @@ import viewDoc.constants.ViewDocPortletKeys;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.ParamUtil;
 import DocRegistration.model.Document;
 import DocRegistration.service.DocumentLocalServiceUtil;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.Signature;
+import java.security.SignatureException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 import java.sql.Blob;
+import java.util.Base64;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
 import org.osgi.service.component.annotations.Component;
 
 /**
- * @author razim
+ * @author Raziman Dom
  */
 @Component(
 	immediate = true,
@@ -42,7 +56,91 @@ import org.osgi.service.component.annotations.Component;
 public class ViewDocPortlet extends MVCPortlet {
 	
 	/*
+	 * 
+	 * Verify signature
+	 * 
+	 */
+	
+	public void doVerifySign(ActionRequest actionRequest, ActionResponse actionResponse) {
+
+			//==> Retrieve data from input field
+			String encodedPubKey = ParamUtil.getString(actionRequest, "input_pubkey");
+			
+			//==> This is standard ECC public key length
+			int eccPubKeyLength = 88;
+			
+			//==> Check public key input from user
+			if(encodedPubKey.length() == 0){
+				SessionErrors.add(actionRequest, "error-key-null");
+			
+			//==>Proceed for signature verification if correct ECC public key format
+			}else if (encodedPubKey.length() == eccPubKeyLength){
+				
+				try {
+					
+					//==> Retrieve data from database for current user from document table
+					System.out.println("Retrieving data from database..."); 
+					long docId = ParamUtil.getLong(actionRequest, "docId");
+					Document doc = DocumentLocalServiceUtil.getDocument(docId);
+					String encodedSign = doc.getReq_signature();
+					String req_md5 = doc.getFile_md5();
+					
+					//==> Decode signature and public key
+					System.out.println("Decoding signature and public key...");  
+					byte[] decodedSign = Base64.getDecoder().decode(encodedSign);
+					byte[] decodedPubKey = Base64.getDecoder().decode(encodedPubKey);			
+					
+					//==> Get raw public key to verify signature
+					System.out.println("Retrieving raw public key...");
+					KeyFactory kf = KeyFactory.getInstance("EC");
+					PublicKey rawPubKey = kf.generatePublic(new X509EncodedKeySpec(decodedPubKey));
+					
+					//==>Verify signature
+					System.out.println("Verify Signature...");                
+					Signature signature = Signature.getInstance("SHA1withECDSA");   
+					byte[] bytes = req_md5.getBytes("UTF8");
+					signature.initVerify(rawPubKey);
+					signature.update(bytes);
+					
+					//==>If else message after verify key
+					if(signature.verify(decodedSign)){
+						SessionMessages.add(actionRequest, "request_processed", "Verification completed! This is valid signature.");
+					}else{
+						SessionErrors.add(actionRequest, "error-key");
+					}
+					
+				} catch (InvalidKeyException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (PortalException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (NoSuchAlgorithmException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InvalidKeySpecException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SignatureException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		
+			}else{
+				SessionErrors.add(actionRequest, "error-key-invalidECCPubKey");
+				
+			}
+			System.out.println("Verification completed!");
+			actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
+	}
+	
+	/*
+	 * 
 	 * Delete document method
+	 * 
 	 */
 	
 	public void delDocument(ActionRequest actionRequest, ActionResponse actionResponse) throws IOException, PortletException {
@@ -54,9 +152,7 @@ public class ViewDocPortlet extends MVCPortlet {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
+
 	public void doBack(ActionRequest actionRequest, ActionResponse actionResponse) 
 			throws IOException, PortletException {
 		

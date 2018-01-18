@@ -14,14 +14,17 @@ create table document_data (
 	file_blob BLOB,
 	file_md5 VARCHAR(75) null,
 	req_dateCreated VARCHAR(75) null,
-	req_dateModified VARCHAR(75) null
+	req_dateModified VARCHAR(75) null,
+	req_signature VARCHAR(75) null,
+	sign_name VARCHAR(75) null
 );
 
 create table genkey_data (
-	genkeyId LONG not null primary key,
-	userId LONG,
-	privatekey_File BLOB,
-	publickey_File BLOB,
-	publickey_Text VARCHAR(75) null,
-	key_dateCreated VARCHAR(75) null
+	userId LONG not null primary key,
+	key_version LONG,
+	key_dateCreated VARCHAR(75) null,
+	privatekey_Data VARCHAR(75) null,
+	publickey_Data VARCHAR(75) null,
+	salt_Data VARCHAR(75) null,
+	vector_Data VARCHAR(75) null
 );

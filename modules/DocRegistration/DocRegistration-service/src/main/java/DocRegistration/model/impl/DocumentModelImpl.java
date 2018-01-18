@@ -88,7 +88,9 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 			{ "file_blob", Types.BLOB },
 			{ "file_md5", Types.VARCHAR },
 			{ "req_dateCreated", Types.VARCHAR },
-			{ "req_dateModified", Types.VARCHAR }
+			{ "req_dateModified", Types.VARCHAR },
+			{ "req_signature", Types.VARCHAR },
+			{ "sign_name", Types.VARCHAR }
 		};
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP = new HashMap<String, Integer>();
 
@@ -109,9 +111,11 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 		TABLE_COLUMNS_MAP.put("file_md5", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("req_dateCreated", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("req_dateModified", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("req_signature", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("sign_name", Types.VARCHAR);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table document_data (docId LONG not null primary key,fileId LONG,userId LONG,req_name VARCHAR(75) null,req_email VARCHAR(75) null,sign_email VARCHAR(75) null,doc_type VARCHAR(75) null,doc_status VARCHAR(75) null,doc_deadline VARCHAR(75) null,doc_description VARCHAR(75) null,file_name VARCHAR(75) null,file_type VARCHAR(75) null,file_blob BLOB,file_md5 VARCHAR(75) null,req_dateCreated VARCHAR(75) null,req_dateModified VARCHAR(75) null)";
+	public static final String TABLE_SQL_CREATE = "create table document_data (docId LONG not null primary key,fileId LONG,userId LONG,req_name VARCHAR(75) null,req_email VARCHAR(75) null,sign_email VARCHAR(75) null,doc_type VARCHAR(75) null,doc_status VARCHAR(75) null,doc_deadline VARCHAR(75) null,doc_description VARCHAR(75) null,file_name VARCHAR(75) null,file_type VARCHAR(75) null,file_blob BLOB,file_md5 VARCHAR(75) null,req_dateCreated VARCHAR(75) null,req_dateModified VARCHAR(75) null,req_signature VARCHAR(75) null,sign_name VARCHAR(75) null)";
 	public static final String TABLE_SQL_DROP = "drop table document_data";
 	public static final String ORDER_BY_JPQL = " ORDER BY document.docId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY document_data.docId ASC";
@@ -160,6 +164,8 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 		model.setFile_md5(soapModel.getFile_md5());
 		model.setReq_dateCreated(soapModel.getReq_dateCreated());
 		model.setReq_dateModified(soapModel.getReq_dateModified());
+		model.setReq_signature(soapModel.getReq_signature());
+		model.setSign_name(soapModel.getSign_name());
 
 		return model;
 	}
@@ -240,6 +246,8 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 		attributes.put("file_md5", getFile_md5());
 		attributes.put("req_dateCreated", getReq_dateCreated());
 		attributes.put("req_dateModified", getReq_dateModified());
+		attributes.put("req_signature", getReq_signature());
+		attributes.put("sign_name", getSign_name());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
 		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
@@ -343,6 +351,18 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 
 		if (req_dateModified != null) {
 			setReq_dateModified(req_dateModified);
+		}
+
+		String req_signature = (String)attributes.get("req_signature");
+
+		if (req_signature != null) {
+			setReq_signature(req_signature);
+		}
+
+		String sign_name = (String)attributes.get("sign_name");
+
+		if (sign_name != null) {
+			setSign_name(sign_name);
 		}
 	}
 
@@ -640,6 +660,38 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 		_req_dateModified = req_dateModified;
 	}
 
+	@JSON
+	@Override
+	public String getReq_signature() {
+		if (_req_signature == null) {
+			return StringPool.BLANK;
+		}
+		else {
+			return _req_signature;
+		}
+	}
+
+	@Override
+	public void setReq_signature(String req_signature) {
+		_req_signature = req_signature;
+	}
+
+	@JSON
+	@Override
+	public String getSign_name() {
+		if (_sign_name == null) {
+			return StringPool.BLANK;
+		}
+		else {
+			return _sign_name;
+		}
+	}
+
+	@Override
+	public void setSign_name(String sign_name) {
+		_sign_name = sign_name;
+	}
+
 	public long getColumnBitmask() {
 		return _columnBitmask;
 	}
@@ -686,6 +738,8 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 		documentImpl.setFile_md5(getFile_md5());
 		documentImpl.setReq_dateCreated(getReq_dateCreated());
 		documentImpl.setReq_dateModified(getReq_dateModified());
+		documentImpl.setReq_signature(getReq_signature());
+		documentImpl.setSign_name(getSign_name());
 
 		documentImpl.resetOriginalValues();
 
@@ -865,12 +919,28 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 			documentCacheModel.req_dateModified = null;
 		}
 
+		documentCacheModel.req_signature = getReq_signature();
+
+		String req_signature = documentCacheModel.req_signature;
+
+		if ((req_signature != null) && (req_signature.length() == 0)) {
+			documentCacheModel.req_signature = null;
+		}
+
+		documentCacheModel.sign_name = getSign_name();
+
+		String sign_name = documentCacheModel.sign_name;
+
+		if ((sign_name != null) && (sign_name.length() == 0)) {
+			documentCacheModel.sign_name = null;
+		}
+
 		return documentCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(33);
+		StringBundler sb = new StringBundler(37);
 
 		sb.append("{docId=");
 		sb.append(getDocId());
@@ -902,6 +972,10 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 		sb.append(getReq_dateCreated());
 		sb.append(", req_dateModified=");
 		sb.append(getReq_dateModified());
+		sb.append(", req_signature=");
+		sb.append(getReq_signature());
+		sb.append(", sign_name=");
+		sb.append(getSign_name());
 		sb.append("}");
 
 		return sb.toString();
@@ -909,7 +983,7 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(52);
+		StringBundler sb = new StringBundler(58);
 
 		sb.append("<model><model-name>");
 		sb.append("DocRegistration.model.Document");
@@ -975,6 +1049,14 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 			"<column><column-name>req_dateModified</column-name><column-value><![CDATA[");
 		sb.append(getReq_dateModified());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>req_signature</column-name><column-value><![CDATA[");
+		sb.append(getReq_signature());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>sign_name</column-name><column-value><![CDATA[");
+		sb.append(getSign_name());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -1004,6 +1086,8 @@ public class DocumentModelImpl extends BaseModelImpl<Document>
 	private String _file_md5;
 	private String _req_dateCreated;
 	private String _req_dateModified;
+	private String _req_signature;
+	private String _sign_name;
 	private long _columnBitmask;
 	private Document _escapedModel;
 }

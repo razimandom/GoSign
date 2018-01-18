@@ -59,38 +59,38 @@ public interface GenKeyPersistence extends BasePersistence<GenKey> {
 	/**
 	* Creates a new gen key with the primary key. Does not add the gen key to the database.
 	*
-	* @param genkeyId the primary key for the new gen key
+	* @param userId the primary key for the new gen key
 	* @return the new gen key
 	*/
-	public GenKey create(long genkeyId);
+	public GenKey create(long userId);
 
 	/**
 	* Removes the gen key with the primary key from the database. Also notifies the appropriate model listeners.
 	*
-	* @param genkeyId the primary key of the gen key
+	* @param userId the primary key of the gen key
 	* @return the gen key that was removed
 	* @throws NoSuchGenKeyException if a gen key with the primary key could not be found
 	*/
-	public GenKey remove(long genkeyId) throws NoSuchGenKeyException;
+	public GenKey remove(long userId) throws NoSuchGenKeyException;
 
 	public GenKey updateImpl(GenKey genKey);
 
 	/**
 	* Returns the gen key with the primary key or throws a {@link NoSuchGenKeyException} if it could not be found.
 	*
-	* @param genkeyId the primary key of the gen key
+	* @param userId the primary key of the gen key
 	* @return the gen key
 	* @throws NoSuchGenKeyException if a gen key with the primary key could not be found
 	*/
-	public GenKey findByPrimaryKey(long genkeyId) throws NoSuchGenKeyException;
+	public GenKey findByPrimaryKey(long userId) throws NoSuchGenKeyException;
 
 	/**
 	* Returns the gen key with the primary key or returns <code>null</code> if it could not be found.
 	*
-	* @param genkeyId the primary key of the gen key
+	* @param userId the primary key of the gen key
 	* @return the gen key, or <code>null</code> if a gen key with the primary key could not be found
 	*/
-	public GenKey fetchByPrimaryKey(long genkeyId);
+	public GenKey fetchByPrimaryKey(long userId);
 
 	@Override
 	public java.util.Map<java.io.Serializable, GenKey> fetchByPrimaryKeys(
