@@ -1,4 +1,0 @@
-Bundle-Name: signDoc
-Bundle-SymbolicName: signDoc
-Bundle-Version: 1.0.0
-Export-Package: signDoc.constants

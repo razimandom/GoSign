@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="false" default-lazy="false">
+	<import class="com._42Penguins.gosign.model.EntDoc" />
+	<import class="com._42Penguins.gosign.model.EntFileUpload" />
+	<import class="com._42Penguins.gosign.model.EntKey" />
+	<class name="com._42Penguins.gosign.model.impl.EntDocImpl" table="document_data">
+		<id name="docId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="fileId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="req_name" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="req_email" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="sign_name" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="sign_email" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="doc_type" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="doc_md5" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="doc_status" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="doc_deadline" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="doc_description" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="doc_signature" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="req_dateCreated" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="req_dateModified" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="req_timeCreated" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="req_timeModified" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+	</class>
+	<class name="com._42Penguins.gosign.model.impl.EntFileUploadImpl" table="fileupload_data">
+		<id name="fileId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="docId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="file_name" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="file_type" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<one-to-one access="com.liferay.portal.dao.orm.hibernate.PrivatePropertyAccessor" cascade="save-update" class="com._42Penguins.gosign.model.EntFileUploadFile_blobBlobModel" constrained="true" name="file_blobBlobModel" outer-join="false" />
+	</class>
+	<class lazy="true" name="com._42Penguins.gosign.model.EntFileUploadFile_blobBlobModel" table="fileupload_data">
+		<id column="fileId" name="fileId">
+			<generator class="foreign">
+				<param name="property">com._42Penguins.gosign.model.impl.EntFileUploadImpl</param>
+			</generator>
+		</id>
+		<property column="file_blob" name="file_blobBlob" type="blob" />
+	</class>
+	<class name="com._42Penguins.gosign.model.impl.EntKeyImpl" table="genkey_data">
+		<id name="userId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="key_version" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="key_dateCreated" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="privatekey_Data" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="publickey_Data" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="salt_Data" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="vector_Data" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+	</class>
+</hibernate-mapping>

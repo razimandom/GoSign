@@ -2,48 +2,23 @@ package genKey.portlet;
 
 import genKey.constants.GenKeyPortletKeys;
 
+import com._42Penguins.gosign.model.EntKey;
+import com._42Penguins.gosign.service.EntKeyLocalServiceUtil;
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
-import com.liferay.mail.kernel.model.MailMessage;
-import com.liferay.mail.kernel.service.MailServiceUtil;
-import com.liferay.portal.kernel.dao.jdbc.OutputBlob;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.portlet.PortletURLUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.upload.UploadRequest;
-import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
-
-import DocRegistration.model.Document;
-import DocRegistration.service.DocumentLocalServiceUtil;
-
-import DocRegistration.model.GenKey;
-import DocRegistration.service.GenKeyLocalServiceUtil;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.math.BigInteger;
-import java.nio.ByteBuffer;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
-import java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
@@ -51,23 +26,20 @@ import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Signature;
 import java.security.SignatureException;
-import java.security.interfaces.ECPrivateKey;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.ECGenParameterSpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
-import java.util.Base64.Encoder;
 import java.util.Random;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.KeyAgreement;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -75,8 +47,6 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
@@ -84,8 +54,6 @@ import javax.portlet.PortletException;
 import javax.portlet.ProcessAction;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-
-import java.util.Base64; 
 
 import org.osgi.service.component.annotations.Component;
 
@@ -158,7 +126,13 @@ public class GenKeyPortlet extends MVCPortlet {
         	ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
     		User currentUser = themeDisplay.getUser();
     		
-        	
+    		//==> Get current date & time
+    		ZoneId zoneIdMYS = ZoneId.of("Asia/Kuala_Lumpur");
+    		LocalDateTime localDateTime = LocalDateTime.now(zoneIdMYS);
+    		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    		String currentDateTime = localDateTime.format(formatter);
+    		
+    		
     		//long keyId = CounterLocalServiceUtil.increment();
     		long currentUserId = currentUser.getUserId();
     		
@@ -409,16 +383,16 @@ public class GenKeyPortlet extends MVCPortlet {
             
             
 			System.out.println("Adding data to database...");
-			GenKey genkey = GenKeyLocalServiceUtil.createGenKey(currentUserId);
+			EntKey genkey = EntKeyLocalServiceUtil.createEntKey(currentUserId);
 			genkey.setUserId(currentUserId);
 			//genkey.setKey_version(keyVersion);
-			genkey.setKey_dateCreated("1");
+			genkey.setKey_dateCreated(currentDateTime);
 			genkey.setPrivatekey_Data(encodeECCEncryptedPrivateKey);
 			genkey.setPublickey_Data(encodedECCpublicKeyBytes);
 			genkey.setSalt_Data(encodeSalt);
 			genkey.setVector_Data(encodeVector);
 
-			genkey = GenKeyLocalServiceUtil.addGenKey(genkey);
+			genkey = EntKeyLocalServiceUtil.addEntKey(genkey);
 
 			System.out.println("Data added to database");
 			System.out.println("======================== End ======================");
@@ -499,14 +473,14 @@ public class GenKeyPortlet extends MVCPortlet {
 		try {
 
 			System.out.println("Adding data to database...");
-			GenKey genkey = GenKeyLocalServiceUtil.createGenKey(genkeyId);
+			EntKey genkey = EntKeyLocalServiceUtil.createEntKey(genkeyId);
 			
 			genkey.setUserId(currentUserId);
 			genkey.setUserId(currentUserId);
 			//genkey.setPrivatekey_File(privatekey_blob);
 			//genkey.setPublickey_File(privatekey_blob);
 
-			genkey = GenKeyLocalServiceUtil.addGenKey(genkey);
+			genkey = EntKeyLocalServiceUtil.addEntKey(genkey);
 
 
 		} catch (SystemException e) {
@@ -530,7 +504,7 @@ public class GenKeyPortlet extends MVCPortlet {
 			//==> Retrieve some data from database for current user
 			System.out.println("Retrieving data from database...");
 			long userId = ParamUtil.getLong(actionRequest, "currentUserId");
-			GenKey genkey = GenKeyLocalServiceUtil.getGenKey(userId);
+			EntKey genkey = EntKeyLocalServiceUtil.getEntKey(userId);
 			String encodedEncryptedPriKey = genkey.getPrivatekey_Data();
 			String encodedSalt = genkey.getSalt_Data();
 			String encodedVector = genkey.getVector_Data();

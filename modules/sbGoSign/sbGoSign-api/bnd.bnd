@@ -1,0 +1,9 @@
+Bundle-Name: sbGoSign-api
+Bundle-SymbolicName: com._42Penguins.gosign.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com._42Penguins.gosign.exception,\
+	com._42Penguins.gosign.model,\
+	com._42Penguins.gosign.service,\
+	com._42Penguins.gosign.service.persistence
+-includeresource: META-INF/service.xml=../sbGoSign-service/service.xml

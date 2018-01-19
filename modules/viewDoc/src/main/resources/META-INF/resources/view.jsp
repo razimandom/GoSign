@@ -5,10 +5,11 @@
 <%@page import="com.liferay.portal.kernel.model.User"%>
 <%@ include file="/init.jsp"%>
 <%@page import="com.liferay.portal.kernel.language.LanguageUtil"%>
-<%@page import="DocRegistration.model.Document"%>
+
 <%@page import="java.util.List"%>
 <%@page import="com.liferay.portal.kernel.util.PortalUtil"%>
-<%@page import="DocRegistration.service.DocumentLocalServiceUtil"%>
+<%@page import="com._42Penguins.gosign.service.EntDocLocalServiceUtil"%>
+<%@page import="com._42Penguins.gosign.model.EntDoc"%>
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet"%>
 <%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui"%>
 <%@ page import="com.liferay.portal.kernel.util.ListUtil"%>
@@ -52,9 +53,9 @@
 		<%
 		String remoteUserId = request.getRemoteUser();
 		long userId = Long.valueOf(remoteUserId);
-		System.out.println(userId);
+		//System.out.println(userId);
 		//long currentUserId = request.getAttribute("currentUserId");
-		List<Document> docList = DocumentLocalServiceUtil.findByUserId(userId, -1, -1);
+		List<EntDoc> docList = EntDocLocalServiceUtil.findByUserId(userId, -1, -1);
 
 		//List<Document> docList = DocumentLocalServiceUtil.getDocuments(-1, -1);
 		results = ListUtil.subList(docList, searchContainer.getStart(), searchContainer.getEnd());
@@ -66,11 +67,11 @@
 	</liferay-ui:search-container-results>
 
 	<liferay-ui:search-container-row
-		className="DocRegistration.model.Document" modelVar="document"
+		className="com._42Penguins.gosign.model.EntDoc" modelVar="document"
 		keyProperty="docId">
 
 		<portlet:renderURL var="viewDocURL">
-
+			<portlet:param name="fileId" value="${document.fileId}" />
 			<portlet:param name="docId" value="${document.docId}" />
 			<portlet:param name="mvcPath" value="/viewDetails.jsp" />
 		</portlet:renderURL>
@@ -127,6 +128,7 @@
 		
 		<portlet:actionURL var="delDocument" name="delDocument">
 			<portlet:param name="docId" value="${document.docId }" />
+			<portlet:param name="fileId" value="${document.fileId }" />
 		</portlet:actionURL>
 		
 		<liferay-ui:search-container-column-text name="Delete"

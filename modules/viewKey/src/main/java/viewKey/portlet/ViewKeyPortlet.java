@@ -2,14 +2,13 @@ package viewKey.portlet;
 
 import viewKey.constants.ViewKeyPortletKeys;
 
+import com._42Penguins.gosign.model.EntKey;
+import com._42Penguins.gosign.service.EntKeyLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.WebKeys;
-
-import DocRegistration.model.GenKey;
-import DocRegistration.service.GenKeyLocalServiceUtil;
 
 import java.io.IOException;
 
@@ -46,19 +45,31 @@ public class ViewKeyPortlet extends MVCPortlet {
 		ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		User currentUser = themeDisplay.getUser();
 		long userId = currentUser.getUserId();
-		super.doView(renderRequest, renderResponse);
 
-		try {
-			GenKey genkey = GenKeyLocalServiceUtil.getGenKey(userId);
+		try { 
+			
+			EntKey genkey = EntKeyLocalServiceUtil.getEntKey(userId);
 			String pubKey = genkey.getPublickey_Data();
 			String priKey = genkey.getPrivatekey_Data();
-			System.out.println(pubKey);
-	
+			String keyError = "Error generating key. Please regenerate your key.";
+			
+			if (pubKey != null && priKey != null){
+				renderRequest.setAttribute("pubKey", pubKey);
+				renderRequest.setAttribute("priKey", priKey);
+			} else {
+				renderRequest.setAttribute("pubKey", keyError);
+				renderRequest.setAttribute("priKey", keyError);
+			}
+
 		} catch (PortalException e) {
 			// TODO Auto-generated catch block
+			String noKey = "No key available. Please generate your key.";
+			renderRequest.setAttribute("pubKey", noKey);
+			renderRequest.setAttribute("priKey", noKey);
 			e.printStackTrace();
+
 		}
-		
+		super.doView(renderRequest, renderResponse);
 	}
 	
 	

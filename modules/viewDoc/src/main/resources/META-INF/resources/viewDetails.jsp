@@ -6,8 +6,10 @@
 <%@page import="com.liferay.portal.kernel.util.ListUtil" %>
 <%@taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui"%>
 <%@taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet" %>
-<%@page import="DocRegistration.model.Document"%>
-<%@page import="DocRegistration.service.DocumentLocalServiceUtil"%>
+<%@page import="com._42Penguins.gosign.service.EntDocLocalServiceUtil"%>
+<%@page import="com._42Penguins.gosign.model.EntDoc"%>
+<%@page import="com._42Penguins.gosign.service.EntFileUploadLocalServiceUtil"%>
+<%@page import="com._42Penguins.gosign.model.EntFileUpload"%>
 <%@taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
 
@@ -72,13 +74,17 @@ td{
 
 <%
 long docId = ParamUtil.getLong(request, "docId");
-Document document = DocumentLocalServiceUtil.getDocument(docId);
+long fileId = ParamUtil.getLong(request, "fileId");
+EntDoc document = EntDocLocalServiceUtil.getEntDoc(docId);
+EntFileUpload fileup = EntFileUploadLocalServiceUtil.getEntFileUpload(fileId);
 request.setAttribute("document", document);
+request.setAttribute("fileup", fileup);
 String redirect = ParamUtil.getString(request, "backURL");
 %>
+
+
 		<portlet:resourceURL var="viewURL">
-            <portlet:param name="dataId"
-                value="<%=String.valueOf(document.getDocId())%>" />
+            <portlet:param name="fileId" value="<%=String.valueOf(fileup.getFileId())%>" />
         </portlet:resourceURL>
 
 <h3>Request Details</h3>
@@ -90,7 +96,7 @@ String redirect = ParamUtil.getString(request, "backURL");
 </tr>
 <tr>
 	<td>Request MD5:</td>
-	<td>${document.file_md5}</td>
+	<td>${document.doc_md5}</td>
 </tr>
 <tr>
 	<td>Type:</td>
@@ -114,7 +120,7 @@ String redirect = ParamUtil.getString(request, "backURL");
 </tr>
 <tr>
 	<td>File Name:</td>
-	<td>${document.file_name}</td>
+	<td>${fileup.file_name}</td>
 </tr>
 <tr>
 	<td>Download:</td>
@@ -151,18 +157,20 @@ String redirect = ParamUtil.getString(request, "backURL");
 </table>
 <br>
 
-<portlet:actionURL name="delDocument" var="delDocument" />
-<portlet:actionURL name="doBack" var="doBack" />
+<portlet:actionURL name="doAction" var="doAction" />
 
 <table>
 <tr>
 <td>
-	<aui:form action="<%=doBack%>" method="post" name="name">
+	<aui:form action="<%=doAction%>" method="post" name="name">
+	<aui:input label="Action: " name="doAction" type="hidden" value="back" readOnly="true"/>
 	<aui:button cssClass="btngrey" name="back" type="submit" value="Back" last="true" />
 	</aui:form>
 </td>
 <td>
-	<aui:form action="<%=delDocument%>" method="post" name="name">
+
+	<aui:form action="<%=doAction%>" method="post" name="name">
+	<aui:input label="Action: " name="doAction" type="hidden" value="delete" readOnly="true"/>
 	<aui:input label="Doc Id: " name="docId" type="hidden" value="${document.docId}" readOnly="true"/>
 	<aui:button cssClass="btnred" name="delDocument" type="submit" value="Delete" last="true" />
 	</aui:form>
@@ -193,10 +201,10 @@ String redirect = ParamUtil.getString(request, "backURL");
 
 <h3>Change Deadline:</h3>
 
-<portlet:actionURL name="updateDoc" var="updateDoc" />
-
-<aui:form action="<%=updateDoc%>" method="post" name="name">
-	<aui:input label="Doc Id: " name="docId" type="hidden" value="${document.docId}" readOnly="true"/>
+<aui:form action="<%=doAction%>" method="post" name="name">
+	<aui:input label="Action: " name="doAction" type="hidden" value="update" readOnly="true"/>
+	<aui:input label="Doc Id: " name="docId" type="type" value="${document.docId}" readOnly="true"/>
+	<aui:input label="File Id: " name="fileId" type="type" value="${fileup.fileId}" readOnly="true"/>
 	<aui:input label="New Deadline Date: " name="doc_deadline" type="type" value="${document.doc_deadline}" />
 	<aui:button name="update" type="submit" value="Update" last="true" />
 
@@ -208,10 +216,10 @@ String redirect = ParamUtil.getString(request, "backURL");
 
 <h3>Verify Signature:</h3>
 
-<portlet:actionURL name="doVerifySign" var="doVerifySign" />
-
-<aui:form action="<%=doVerifySign%>" method="post" name="name">
-	<aui:input label="Doc Id: " name="docId" type="hidden" value="${document.docId}" readOnly="true"/>
+<aui:form action="<%=doAction%>" method="post" name="name">
+	<aui:input label="Action: " name="doAction" type="hidden" value="verify" readOnly="true"/>
+	<aui:input label="Doc Id: " name="docId" type="type" value="${document.docId}" readOnly="true"/>
+	<aui:input label="File Id: " name="fileId" type="type" value="${fileup.fileId}" readOnly="true"/>
 	<aui:input label="Insert Signer Public Key: " name="input_pubkey" type="textarea"/>
 	<aui:button name="Verify" type="submit" value="Verify" last="true" />
 
@@ -221,3 +229,5 @@ String redirect = ParamUtil.getString(request, "backURL");
 <liferay-ui:error key="error-key" message="Verification failed! Public key does not match with signature." />
 <liferay-ui:error key="error-key-invalidECCPubKey" message="Error! This is invalid ECC public key format." />
 <liferay-ui:error key="error-key-null" message="Error! Public key field cannot be empty" />
+<liferay-ui:error key="error-key-nosign" message="This document has not been signed." />
+<liferay-ui:error key="error-key-invalidAction" message="Invalid action." />

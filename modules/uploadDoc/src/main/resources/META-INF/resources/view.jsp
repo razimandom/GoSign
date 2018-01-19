@@ -1,15 +1,14 @@
 <%@page import="com.liferay.portal.kernel.service.persistence.UserUtil"%>
 <%@page import="com.liferay.portal.kernel.service.UserLocalServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.util.Constants"%>
-
 <%@page import="javax.portlet.PortletException"%>
 <%@page import="com.liferay.portal.kernel.model.User"%>
 <%@ include file="/init.jsp"%>
 <%@page import="com.liferay.portal.kernel.language.LanguageUtil"%>
-<%@page import="DocRegistration.model.Document"%>
 <%@page import="java.util.List"%>
 <%@page import="com.liferay.portal.kernel.util.PortalUtil"%>
-<%@page import="DocRegistration.service.DocumentLocalServiceUtil"%>
+<%@page import="com._42Penguins.gosign.service.EntDocLocalServiceUtil"%>
+<%@page import="com._42Penguins.gosign.model.EntDoc"%>
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet"%>
 <%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui"%>
 <%@ page import="com.liferay.portal.kernel.util.ListUtil"%>
@@ -130,23 +129,12 @@
 
 <aui:form action="<%=addDoc.toString()%>" method="post" name="name" enctype="multipart/form-data">
 	
-	<!-- Retrieve current page URL in input -->
-	
 	<aui:input label="Complete URL (Auto): " name="currentCompURL" type="hidden" value="<%=request.getAttribute("currentCompURL") %>" readonly="true" />
-	<aui:input label="Complete Home URL (Auto): " name="currentHomeURL" type="hidden" value="<%=request.getAttribute("currentHomeURL") %>" readonly="true" />
-	
-	<!-- All these 3 inpus are hidden -->
-	<aui:input label="User ID: " name="currentUserId" type="hidden" value="<%=request.getAttribute("currentUserId") %>" readonly="true" />
-	<aui:input label="Requestor Name: " name="req_name" type="hidden" value="<%=request.getAttribute("currentFullName") %>" readonly="true" />
-	<aui:input label="Requestor Email: " name="req_email" type="hidden" value="<%=request.getAttribute("currentEmail") %>" readonly="true" />
-	
 	
 	<aui:input id="myInputNode" name="sign_email" label="Signer Email: " helpMessage="Email of the user that will sign this document">
 	<aui:validator name="required"/>
 	<aui:validator name="email"/>
 	</aui:input>
-	
-	<aui:input label="Date Created: " name="req_dateCreated" type="hidden" value="<%=request.getAttribute("currentDateTimeCreate") %>" readonly="true" />
 	
 	<aui:input label="Upload File: " type="file" name="file" helpMessage="Upload document that need to be sign digitally">
 	<aui:validator name="required"/>

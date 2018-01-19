@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" default-destroy-method="destroy" default-init-method="afterPropertiesSet" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean class="com._42Penguins.gosign.service.impl.EntDocLocalServiceImpl" id="com._42Penguins.gosign.service.EntDocLocalService" />
+	<bean class="com._42Penguins.gosign.service.impl.EntDocServiceImpl" id="com._42Penguins.gosign.service.EntDocService" />
+	<bean class="com._42Penguins.gosign.service.persistence.impl.EntDocPersistenceImpl" id="com._42Penguins.gosign.service.persistence.EntDocPersistence" parent="basePersistence" />
+	<bean class="com._42Penguins.gosign.service.impl.EntFileUploadLocalServiceImpl" id="com._42Penguins.gosign.service.EntFileUploadLocalService" />
+	<bean class="com._42Penguins.gosign.service.impl.EntFileUploadServiceImpl" id="com._42Penguins.gosign.service.EntFileUploadService" />
+	<bean class="com._42Penguins.gosign.service.persistence.impl.EntFileUploadPersistenceImpl" id="com._42Penguins.gosign.service.persistence.EntFileUploadPersistence" parent="basePersistence" />
+	<bean class="com._42Penguins.gosign.service.impl.EntKeyLocalServiceImpl" id="com._42Penguins.gosign.service.EntKeyLocalService" />
+	<bean class="com._42Penguins.gosign.service.impl.EntKeyServiceImpl" id="com._42Penguins.gosign.service.EntKeyService" />
+	<bean class="com._42Penguins.gosign.service.persistence.impl.EntKeyPersistenceImpl" id="com._42Penguins.gosign.service.persistence.EntKeyPersistence" parent="basePersistence" />
+</beans>

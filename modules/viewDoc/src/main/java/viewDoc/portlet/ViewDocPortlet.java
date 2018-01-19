@@ -2,14 +2,16 @@ package viewDoc.portlet;
 
 import viewDoc.constants.ViewDocPortletKeys;
 
+import com._42Penguins.gosign.model.EntDoc;
+import com._42Penguins.gosign.model.EntFileUpload;
+import com._42Penguins.gosign.service.EntDocLocalServiceUtil;
+import com._42Penguins.gosign.service.EntFileUploadLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.ParamUtil;
-import DocRegistration.model.Document;
-import DocRegistration.service.DocumentLocalServiceUtil;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -53,6 +55,63 @@ import org.osgi.service.component.annotations.Component;
 )
 public class ViewDocPortlet extends MVCPortlet {
 	
+	public void doAction(ActionRequest actionRequest, ActionResponse actionResponse) throws PortalException {
+		
+		try {
+			
+			long docId = ParamUtil.getLong(actionRequest, "docId");
+			String doAction = ParamUtil.getString(actionRequest, "doAction");
+			EntDoc doc = EntDocLocalServiceUtil.getEntDoc(docId);
+			String encodedSign = doc.getDoc_signature();
+			System.out.println(encodedSign);
+			
+			String actionVerify = "verify";
+			String actionUpdate = "update";
+			String actionDel = "delete";
+			String actionBack = "back";
+			
+			if (doAction.equals(actionVerify)){
+				
+				if(encodedSign.isEmpty()){
+					System.out.println("No signature");
+					SessionErrors.add(actionRequest, "error-key-nosign");
+					actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
+					
+				}else{
+					doVerifySign(actionRequest, actionResponse);
+				}
+				
+			} else if (doAction.equals(actionDel)){
+				doDelDoc(actionRequest, actionResponse);
+				actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
+				
+			} else if (doAction.equals(actionBack)){
+				doBack(actionRequest, actionResponse);
+				actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
+				
+			} else if (doAction.equals(actionUpdate)){
+				doUpdateDoc(actionRequest, actionResponse);
+				actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
+			} else {
+				SessionErrors.add(actionRequest, "error-key-invalidAction");
+				actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
+			}
+			
+			
+			
+			
+			
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (PortletException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
 	/*
 	 * 
 	 * Verify signature
@@ -79,9 +138,9 @@ public class ViewDocPortlet extends MVCPortlet {
 					//==> Retrieve data from database for current user from document table
 					System.out.println("Retrieving data from database..."); 
 					long docId = ParamUtil.getLong(actionRequest, "docId");
-					Document doc = DocumentLocalServiceUtil.getDocument(docId);
-					String encodedSign = doc.getReq_signature();
-					String req_md5 = doc.getFile_md5();
+					EntDoc doc = EntDocLocalServiceUtil.getEntDoc(docId);
+					String encodedSign = doc.getDoc_signature();
+					String req_md5 = doc.getDoc_md5();
 					
 					//==> Decode signature and public key
 					System.out.println("Decoding signature and public key...");  
@@ -141,10 +200,12 @@ public class ViewDocPortlet extends MVCPortlet {
 	 * 
 	 */
 	
-	public void delDocument(ActionRequest actionRequest, ActionResponse actionResponse) throws IOException, PortletException {
+	public void doDelDoc(ActionRequest actionRequest, ActionResponse actionResponse) throws IOException, PortletException {
 		long docId = ParamUtil.getLong(actionRequest, "docId");
+		long fileId = ParamUtil.getLong(actionRequest, "fileId");
 		try {
-			DocumentLocalServiceUtil.deleteDocument(docId);
+			EntDocLocalServiceUtil.deleteEntDoc(docId);
+			EntFileUploadLocalServiceUtil.deleteEntFileUpload(fileId);
 			System.out.println("Document " + docId + "has been deleted");
 		} catch (PortalException | SystemException e) {
 			e.printStackTrace();
@@ -159,21 +220,22 @@ public class ViewDocPortlet extends MVCPortlet {
 		
 	}
 	
-	public void updateDoc(ActionRequest actionRequest, ActionResponse actionResponse) throws IOException, PortletException {
+	public void doUpdateDoc(ActionRequest actionRequest, ActionResponse actionResponse) throws IOException, PortletException {
 		
 		System.out.println("================Start updateDoc=================");
 		try{
 			System.out.println("Updating deadline...");
 			Long docId = ParamUtil.getLong(actionRequest, "docId");
+			//Long fileId = ParamUtil.getLong(actionRequest, "docId");
 			String doc_deadline = ParamUtil.getString(actionRequest, "doc_deadline");
 			
-			Document doc = DocumentLocalServiceUtil.getDocument(docId);
+			EntDoc doc = EntDocLocalServiceUtil.getEntDoc(docId);
 			doc.setDoc_deadline(doc_deadline);
 			actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 			System.out.println("New deadline is " + doc_deadline);
 			System.out.println("Inserting data to DB");
 			
-			doc=DocumentLocalServiceUtil.updateDocument(doc);
+			doc = EntDocLocalServiceUtil.updateEntDoc(doc);
 			
 		} catch (Exception e){
 			System.out.println("Fail to update deadline...");
@@ -191,16 +253,18 @@ public class ViewDocPortlet extends MVCPortlet {
             PortletException {
  
         try {
-            long dataId = ParamUtil.getLong(resourceRequest, "dataId");
+            long fileId = ParamUtil.getLong(resourceRequest, "fileId");
             
-            Document doc = DocumentLocalServiceUtil.getDocument(dataId);
+            EntFileUpload fileup = EntFileUploadLocalServiceUtil.getEntFileUpload(fileId);
 
-            if (doc != null) {
-                Blob blob = doc.getFile_blob();
+            if (fileup != null) {
+            	
+            	System.out.println("hello");
+                Blob blob = fileup.getFile_blob();
                 byte[] binaryData = blob.getBytes(1, (int) blob.length());
                 // resourceResponse.setContentType(blobDemo.getMimeType());
                 resourceResponse.setContentType("application/application-download");
-                resourceResponse.setProperty("Content-disposition","attachement; filename=" + doc.getFile_name());
+                resourceResponse.setProperty("Content-disposition","attachement; filename=" + fileup.getFile_name());
                 OutputStream o = resourceResponse.getPortletOutputStream();
                 o.write(binaryData);
                 o.flush();
