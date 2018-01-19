@@ -1,0 +1,4 @@
+Bundle-Name: viewKey
+Bundle-SymbolicName: viewKey
+Bundle-Version: 1.0.0
+Export-Package: viewKey.constants
