@@ -89,18 +89,19 @@ public interface EntKeyModel extends BaseModel<EntKey> {
 	public void setUserUuid(String userUuid);
 
 	/**
-	 * Returns the key_version of this ent key.
+	 * Returns the key_status of this ent key.
 	 *
-	 * @return the key_version of this ent key
+	 * @return the key_status of this ent key
 	 */
-	public long getKey_version();
+	@AutoEscape
+	public String getKey_status();
 
 	/**
-	 * Sets the key_version of this ent key.
+	 * Sets the key_status of this ent key.
 	 *
-	 * @param key_version the key_version of this ent key
+	 * @param key_status the key_status of this ent key
 	 */
-	public void setKey_version(long key_version);
+	public void setKey_status(String key_status);
 
 	/**
 	 * Returns the key_date created of this ent key.
@@ -176,6 +177,21 @@ public interface EntKeyModel extends BaseModel<EntKey> {
 	 * @param vector_Data the vector_ data of this ent key
 	 */
 	public void setVector_Data(String vector_Data);
+
+	/**
+	 * Returns the sign_name of this ent key.
+	 *
+	 * @return the sign_name of this ent key
+	 */
+	@AutoEscape
+	public String getSign_name();
+
+	/**
+	 * Sets the sign_name of this ent key.
+	 *
+	 * @param sign_name the sign_name of this ent key
+	 */
+	public void setSign_name(String sign_name);
 
 	@Override
 	public boolean isNew();

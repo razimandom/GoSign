@@ -77,20 +77,6 @@ public interface EntFileUploadModel extends BaseModel<EntFileUpload> {
 	public void setFileId(long fileId);
 
 	/**
-	 * Returns the doc ID of this ent file upload.
-	 *
-	 * @return the doc ID of this ent file upload
-	 */
-	public long getDocId();
-
-	/**
-	 * Sets the doc ID of this ent file upload.
-	 *
-	 * @param docId the doc ID of this ent file upload
-	 */
-	public void setDocId(long docId);
-
-	/**
 	 * Returns the file_name of this ent file upload.
 	 *
 	 * @return the file_name of this ent file upload

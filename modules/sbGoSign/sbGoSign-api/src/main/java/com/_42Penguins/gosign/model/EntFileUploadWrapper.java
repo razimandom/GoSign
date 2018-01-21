@@ -60,7 +60,6 @@ public class EntFileUploadWrapper implements EntFileUpload,
 		Map<String, Object> attributes = new HashMap<String, Object>();
 
 		attributes.put("fileId", getFileId());
-		attributes.put("docId", getDocId());
 		attributes.put("file_name", getFile_name());
 		attributes.put("file_type", getFile_type());
 		attributes.put("file_blob", getFile_blob());
@@ -74,12 +73,6 @@ public class EntFileUploadWrapper implements EntFileUpload,
 
 		if (fileId != null) {
 			setFileId(fileId);
-		}
-
-		Long docId = (Long)attributes.get("docId");
-
-		if (docId != null) {
-			setDocId(docId);
 		}
 
 		String file_name = (String)attributes.get("file_name");
@@ -197,16 +190,6 @@ public class EntFileUploadWrapper implements EntFileUpload,
 	}
 
 	/**
-	* Returns the doc ID of this ent file upload.
-	*
-	* @return the doc ID of this ent file upload
-	*/
-	@Override
-	public long getDocId() {
-		return _entFileUpload.getDocId();
-	}
-
-	/**
 	* Returns the file ID of this ent file upload.
 	*
 	* @return the file ID of this ent file upload
@@ -234,16 +217,6 @@ public class EntFileUploadWrapper implements EntFileUpload,
 	@Override
 	public void setCachedModel(boolean cachedModel) {
 		_entFileUpload.setCachedModel(cachedModel);
-	}
-
-	/**
-	* Sets the doc ID of this ent file upload.
-	*
-	* @param docId the doc ID of this ent file upload
-	*/
-	@Override
-	public void setDocId(long docId) {
-		_entFileUpload.setDocId(docId);
 	}
 
 	@Override

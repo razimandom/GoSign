@@ -30,7 +30,6 @@
 		<id name="fileId" type="long">
 			<generator class="assigned" />
 		</id>
-		<property name="docId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="file_name" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="file_type" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<one-to-one access="com.liferay.portal.dao.orm.hibernate.PrivatePropertyAccessor" cascade="save-update" class="com._42Penguins.gosign.model.EntFileUploadFile_blobBlobModel" constrained="true" name="file_blobBlobModel" outer-join="false" />
@@ -47,11 +46,12 @@
 		<id name="userId" type="long">
 			<generator class="assigned" />
 		</id>
-		<property name="key_version" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="key_status" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="key_dateCreated" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="privatekey_Data" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="publickey_Data" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="salt_Data" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="vector_Data" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="sign_name" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 	</class>
 </hibernate-mapping>

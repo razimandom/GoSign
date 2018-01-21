@@ -20,7 +20,6 @@ create table document_data (
 
 create table fileupload_data (
 	fileId LONG not null primary key,
-	docId LONG,
 	file_name VARCHAR(75) null,
 	file_type VARCHAR(75) null,
 	file_blob BLOB
@@ -28,10 +27,11 @@ create table fileupload_data (
 
 create table genkey_data (
 	userId LONG not null primary key,
-	key_version LONG,
+	key_status VARCHAR(75) null,
 	key_dateCreated VARCHAR(75) null,
 	privatekey_Data VARCHAR(75) null,
 	publickey_Data VARCHAR(75) null,
 	salt_Data VARCHAR(75) null,
-	vector_Data VARCHAR(75) null
+	vector_Data VARCHAR(75) null,
+	sign_name VARCHAR(75) null
 );

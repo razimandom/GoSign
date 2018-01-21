@@ -70,7 +70,6 @@ public class EntFileUploadModelImpl extends BaseModelImpl<EntFileUpload>
 	public static final String TABLE_NAME = "fileupload_data";
 	public static final Object[][] TABLE_COLUMNS = {
 			{ "fileId", Types.BIGINT },
-			{ "docId", Types.BIGINT },
 			{ "file_name", Types.VARCHAR },
 			{ "file_type", Types.VARCHAR },
 			{ "file_blob", Types.BLOB }
@@ -79,13 +78,12 @@ public class EntFileUploadModelImpl extends BaseModelImpl<EntFileUpload>
 
 	static {
 		TABLE_COLUMNS_MAP.put("fileId", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("docId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("file_name", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("file_type", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("file_blob", Types.BLOB);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table fileupload_data (fileId LONG not null primary key,docId LONG,file_name VARCHAR(75) null,file_type VARCHAR(75) null,file_blob BLOB)";
+	public static final String TABLE_SQL_CREATE = "create table fileupload_data (fileId LONG not null primary key,file_name VARCHAR(75) null,file_type VARCHAR(75) null,file_blob BLOB)";
 	public static final String TABLE_SQL_DROP = "drop table fileupload_data";
 	public static final String ORDER_BY_JPQL = " ORDER BY entFileUpload.fileId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY fileupload_data.fileId ASC";
@@ -114,7 +112,6 @@ public class EntFileUploadModelImpl extends BaseModelImpl<EntFileUpload>
 		EntFileUpload model = new EntFileUploadImpl();
 
 		model.setFileId(soapModel.getFileId());
-		model.setDocId(soapModel.getDocId());
 		model.setFile_name(soapModel.getFile_name());
 		model.setFile_type(soapModel.getFile_type());
 		model.setFile_blob(soapModel.getFile_blob());
@@ -183,7 +180,6 @@ public class EntFileUploadModelImpl extends BaseModelImpl<EntFileUpload>
 		Map<String, Object> attributes = new HashMap<String, Object>();
 
 		attributes.put("fileId", getFileId());
-		attributes.put("docId", getDocId());
 		attributes.put("file_name", getFile_name());
 		attributes.put("file_type", getFile_type());
 		attributes.put("file_blob", getFile_blob());
@@ -200,12 +196,6 @@ public class EntFileUploadModelImpl extends BaseModelImpl<EntFileUpload>
 
 		if (fileId != null) {
 			setFileId(fileId);
-		}
-
-		Long docId = (Long)attributes.get("docId");
-
-		if (docId != null) {
-			setDocId(docId);
 		}
 
 		String file_name = (String)attributes.get("file_name");
@@ -236,17 +226,6 @@ public class EntFileUploadModelImpl extends BaseModelImpl<EntFileUpload>
 	@Override
 	public void setFileId(long fileId) {
 		_fileId = fileId;
-	}
-
-	@JSON
-	@Override
-	public long getDocId() {
-		return _docId;
-	}
-
-	@Override
-	public void setDocId(long docId) {
-		_docId = docId;
 	}
 
 	@JSON
@@ -340,7 +319,6 @@ public class EntFileUploadModelImpl extends BaseModelImpl<EntFileUpload>
 		EntFileUploadImpl entFileUploadImpl = new EntFileUploadImpl();
 
 		entFileUploadImpl.setFileId(getFileId());
-		entFileUploadImpl.setDocId(getDocId());
 		entFileUploadImpl.setFile_name(getFile_name());
 		entFileUploadImpl.setFile_type(getFile_type());
 
@@ -414,8 +392,6 @@ public class EntFileUploadModelImpl extends BaseModelImpl<EntFileUpload>
 
 		entFileUploadCacheModel.fileId = getFileId();
 
-		entFileUploadCacheModel.docId = getDocId();
-
 		entFileUploadCacheModel.file_name = getFile_name();
 
 		String file_name = entFileUploadCacheModel.file_name;
@@ -437,12 +413,10 @@ public class EntFileUploadModelImpl extends BaseModelImpl<EntFileUpload>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(11);
+		StringBundler sb = new StringBundler(9);
 
 		sb.append("{fileId=");
 		sb.append(getFileId());
-		sb.append(", docId=");
-		sb.append(getDocId());
 		sb.append(", file_name=");
 		sb.append(getFile_name());
 		sb.append(", file_type=");
@@ -453,7 +427,7 @@ public class EntFileUploadModelImpl extends BaseModelImpl<EntFileUpload>
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(19);
+		StringBundler sb = new StringBundler(16);
 
 		sb.append("<model><model-name>");
 		sb.append("com._42Penguins.gosign.model.EntFileUpload");
@@ -462,10 +436,6 @@ public class EntFileUploadModelImpl extends BaseModelImpl<EntFileUpload>
 		sb.append(
 			"<column><column-name>fileId</column-name><column-value><![CDATA[");
 		sb.append(getFileId());
-		sb.append("]]></column-value></column>");
-		sb.append(
-			"<column><column-name>docId</column-name><column-value><![CDATA[");
-		sb.append(getDocId());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>file_name</column-name><column-value><![CDATA[");
@@ -486,7 +456,6 @@ public class EntFileUploadModelImpl extends BaseModelImpl<EntFileUpload>
 			EntFileUpload.class
 		};
 	private long _fileId;
-	private long _docId;
 	private String _file_name;
 	private String _file_type;
 	private EntFileUploadFile_blobBlobModel _file_blobBlobModel;

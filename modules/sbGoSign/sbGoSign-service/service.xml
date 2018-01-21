@@ -38,12 +38,13 @@
 	
 	<entity name="EntKey" local-service="true" table="genkey_data">
 		<column name="userId" type="long" primary="true"></column>
-		<column name="key_version" type="long"></column>
+		<column name="key_status" type="String"></column>
 		<column name="key_dateCreated" type="String"></column>
 		<column name="privatekey_Data" type="String"></column>
 		<column name="publickey_Data" type="String"></column>
 		<column name="salt_Data" type="String"></column>
 		<column name="vector_Data" type="String"></column>
+        <column name="sign_name" type="String"></column>
 	</entity>
 
 	<entity name="EntFileUpload" local-service="true" table="fileupload_data">

@@ -57,12 +57,13 @@ public class EntKeyWrapper implements EntKey, ModelWrapper<EntKey> {
 		Map<String, Object> attributes = new HashMap<String, Object>();
 
 		attributes.put("userId", getUserId());
-		attributes.put("key_version", getKey_version());
+		attributes.put("key_status", getKey_status());
 		attributes.put("key_dateCreated", getKey_dateCreated());
 		attributes.put("privatekey_Data", getPrivatekey_Data());
 		attributes.put("publickey_Data", getPublickey_Data());
 		attributes.put("salt_Data", getSalt_Data());
 		attributes.put("vector_Data", getVector_Data());
+		attributes.put("sign_name", getSign_name());
 
 		return attributes;
 	}
@@ -75,10 +76,10 @@ public class EntKeyWrapper implements EntKey, ModelWrapper<EntKey> {
 			setUserId(userId);
 		}
 
-		Long key_version = (Long)attributes.get("key_version");
+		String key_status = (String)attributes.get("key_status");
 
-		if (key_version != null) {
-			setKey_version(key_version);
+		if (key_status != null) {
+			setKey_status(key_status);
 		}
 
 		String key_dateCreated = (String)attributes.get("key_dateCreated");
@@ -109,6 +110,12 @@ public class EntKeyWrapper implements EntKey, ModelWrapper<EntKey> {
 
 		if (vector_Data != null) {
 			setVector_Data(vector_Data);
+		}
+
+		String sign_name = (String)attributes.get("sign_name");
+
+		if (sign_name != null) {
+			setSign_name(sign_name);
 		}
 	}
 
@@ -178,6 +185,16 @@ public class EntKeyWrapper implements EntKey, ModelWrapper<EntKey> {
 	}
 
 	/**
+	* Returns the key_status of this ent key.
+	*
+	* @return the key_status of this ent key
+	*/
+	@Override
+	public java.lang.String getKey_status() {
+		return _entKey.getKey_status();
+	}
+
+	/**
 	* Returns the privatekey_ data of this ent key.
 	*
 	* @return the privatekey_ data of this ent key
@@ -208,6 +225,16 @@ public class EntKeyWrapper implements EntKey, ModelWrapper<EntKey> {
 	}
 
 	/**
+	* Returns the sign_name of this ent key.
+	*
+	* @return the sign_name of this ent key
+	*/
+	@Override
+	public java.lang.String getSign_name() {
+		return _entKey.getSign_name();
+	}
+
+	/**
 	* Returns the user uuid of this ent key.
 	*
 	* @return the user uuid of this ent key
@@ -235,16 +262,6 @@ public class EntKeyWrapper implements EntKey, ModelWrapper<EntKey> {
 	@Override
 	public java.lang.String toXmlString() {
 		return _entKey.toXmlString();
-	}
-
-	/**
-	* Returns the key_version of this ent key.
-	*
-	* @return the key_version of this ent key
-	*/
-	@Override
-	public long getKey_version() {
-		return _entKey.getKey_version();
 	}
 
 	/**
@@ -304,13 +321,13 @@ public class EntKeyWrapper implements EntKey, ModelWrapper<EntKey> {
 	}
 
 	/**
-	* Sets the key_version of this ent key.
+	* Sets the key_status of this ent key.
 	*
-	* @param key_version the key_version of this ent key
+	* @param key_status the key_status of this ent key
 	*/
 	@Override
-	public void setKey_version(long key_version) {
-		_entKey.setKey_version(key_version);
+	public void setKey_status(java.lang.String key_status) {
+		_entKey.setKey_status(key_status);
 	}
 
 	@Override
@@ -361,6 +378,16 @@ public class EntKeyWrapper implements EntKey, ModelWrapper<EntKey> {
 	@Override
 	public void setSalt_Data(java.lang.String salt_Data) {
 		_entKey.setSalt_Data(salt_Data);
+	}
+
+	/**
+	* Sets the sign_name of this ent key.
+	*
+	* @param sign_name the sign_name of this ent key
+	*/
+	@Override
+	public void setSign_name(java.lang.String sign_name) {
+		_entKey.setSign_name(sign_name);
 	}
 
 	/**

@@ -36,7 +36,6 @@ public class EntFileUploadSoap implements Serializable {
 		EntFileUploadSoap soapModel = new EntFileUploadSoap();
 
 		soapModel.setFileId(model.getFileId());
-		soapModel.setDocId(model.getDocId());
 		soapModel.setFile_name(model.getFile_name());
 		soapModel.setFile_type(model.getFile_type());
 		soapModel.setFile_blob(model.getFile_blob());
@@ -100,14 +99,6 @@ public class EntFileUploadSoap implements Serializable {
 		_fileId = fileId;
 	}
 
-	public long getDocId() {
-		return _docId;
-	}
-
-	public void setDocId(long docId) {
-		_docId = docId;
-	}
-
 	public String getFile_name() {
 		return _file_name;
 	}
@@ -133,7 +124,6 @@ public class EntFileUploadSoap implements Serializable {
 	}
 
 	private long _fileId;
-	private long _docId;
 	private String _file_name;
 	private String _file_type;
 	private Blob _file_blob;

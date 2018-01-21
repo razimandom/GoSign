@@ -70,26 +70,28 @@ public class EntKeyModelImpl extends BaseModelImpl<EntKey>
 	public static final String TABLE_NAME = "genkey_data";
 	public static final Object[][] TABLE_COLUMNS = {
 			{ "userId", Types.BIGINT },
-			{ "key_version", Types.BIGINT },
+			{ "key_status", Types.VARCHAR },
 			{ "key_dateCreated", Types.VARCHAR },
 			{ "privatekey_Data", Types.VARCHAR },
 			{ "publickey_Data", Types.VARCHAR },
 			{ "salt_Data", Types.VARCHAR },
-			{ "vector_Data", Types.VARCHAR }
+			{ "vector_Data", Types.VARCHAR },
+			{ "sign_name", Types.VARCHAR }
 		};
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP = new HashMap<String, Integer>();
 
 	static {
 		TABLE_COLUMNS_MAP.put("userId", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("key_version", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("key_status", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("key_dateCreated", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("privatekey_Data", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("publickey_Data", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("salt_Data", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("vector_Data", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("sign_name", Types.VARCHAR);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table genkey_data (userId LONG not null primary key,key_version LONG,key_dateCreated VARCHAR(75) null,privatekey_Data VARCHAR(75) null,publickey_Data VARCHAR(75) null,salt_Data VARCHAR(75) null,vector_Data VARCHAR(75) null)";
+	public static final String TABLE_SQL_CREATE = "create table genkey_data (userId LONG not null primary key,key_status VARCHAR(75) null,key_dateCreated VARCHAR(75) null,privatekey_Data VARCHAR(75) null,publickey_Data VARCHAR(75) null,salt_Data VARCHAR(75) null,vector_Data VARCHAR(75) null,sign_name VARCHAR(75) null)";
 	public static final String TABLE_SQL_DROP = "drop table genkey_data";
 	public static final String ORDER_BY_JPQL = " ORDER BY entKey.userId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY genkey_data.userId ASC";
@@ -118,12 +120,13 @@ public class EntKeyModelImpl extends BaseModelImpl<EntKey>
 		EntKey model = new EntKeyImpl();
 
 		model.setUserId(soapModel.getUserId());
-		model.setKey_version(soapModel.getKey_version());
+		model.setKey_status(soapModel.getKey_status());
 		model.setKey_dateCreated(soapModel.getKey_dateCreated());
 		model.setPrivatekey_Data(soapModel.getPrivatekey_Data());
 		model.setPublickey_Data(soapModel.getPublickey_Data());
 		model.setSalt_Data(soapModel.getSalt_Data());
 		model.setVector_Data(soapModel.getVector_Data());
+		model.setSign_name(soapModel.getSign_name());
 
 		return model;
 	}
@@ -189,12 +192,13 @@ public class EntKeyModelImpl extends BaseModelImpl<EntKey>
 		Map<String, Object> attributes = new HashMap<String, Object>();
 
 		attributes.put("userId", getUserId());
-		attributes.put("key_version", getKey_version());
+		attributes.put("key_status", getKey_status());
 		attributes.put("key_dateCreated", getKey_dateCreated());
 		attributes.put("privatekey_Data", getPrivatekey_Data());
 		attributes.put("publickey_Data", getPublickey_Data());
 		attributes.put("salt_Data", getSalt_Data());
 		attributes.put("vector_Data", getVector_Data());
+		attributes.put("sign_name", getSign_name());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
 		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
@@ -210,10 +214,10 @@ public class EntKeyModelImpl extends BaseModelImpl<EntKey>
 			setUserId(userId);
 		}
 
-		Long key_version = (Long)attributes.get("key_version");
+		String key_status = (String)attributes.get("key_status");
 
-		if (key_version != null) {
-			setKey_version(key_version);
+		if (key_status != null) {
+			setKey_status(key_status);
 		}
 
 		String key_dateCreated = (String)attributes.get("key_dateCreated");
@@ -244,6 +248,12 @@ public class EntKeyModelImpl extends BaseModelImpl<EntKey>
 
 		if (vector_Data != null) {
 			setVector_Data(vector_Data);
+		}
+
+		String sign_name = (String)attributes.get("sign_name");
+
+		if (sign_name != null) {
+			setSign_name(sign_name);
 		}
 	}
 
@@ -276,13 +286,18 @@ public class EntKeyModelImpl extends BaseModelImpl<EntKey>
 
 	@JSON
 	@Override
-	public long getKey_version() {
-		return _key_version;
+	public String getKey_status() {
+		if (_key_status == null) {
+			return StringPool.BLANK;
+		}
+		else {
+			return _key_status;
+		}
 	}
 
 	@Override
-	public void setKey_version(long key_version) {
-		_key_version = key_version;
+	public void setKey_status(String key_status) {
+		_key_status = key_status;
 	}
 
 	@JSON
@@ -365,6 +380,22 @@ public class EntKeyModelImpl extends BaseModelImpl<EntKey>
 		_vector_Data = vector_Data;
 	}
 
+	@JSON
+	@Override
+	public String getSign_name() {
+		if (_sign_name == null) {
+			return StringPool.BLANK;
+		}
+		else {
+			return _sign_name;
+		}
+	}
+
+	@Override
+	public void setSign_name(String sign_name) {
+		_sign_name = sign_name;
+	}
+
 	@Override
 	public ExpandoBridge getExpandoBridge() {
 		return ExpandoBridgeFactoryUtil.getExpandoBridge(0,
@@ -393,12 +424,13 @@ public class EntKeyModelImpl extends BaseModelImpl<EntKey>
 		EntKeyImpl entKeyImpl = new EntKeyImpl();
 
 		entKeyImpl.setUserId(getUserId());
-		entKeyImpl.setKey_version(getKey_version());
+		entKeyImpl.setKey_status(getKey_status());
 		entKeyImpl.setKey_dateCreated(getKey_dateCreated());
 		entKeyImpl.setPrivatekey_Data(getPrivatekey_Data());
 		entKeyImpl.setPublickey_Data(getPublickey_Data());
 		entKeyImpl.setSalt_Data(getSalt_Data());
 		entKeyImpl.setVector_Data(getVector_Data());
+		entKeyImpl.setSign_name(getSign_name());
 
 		entKeyImpl.resetOriginalValues();
 
@@ -467,7 +499,13 @@ public class EntKeyModelImpl extends BaseModelImpl<EntKey>
 
 		entKeyCacheModel.userId = getUserId();
 
-		entKeyCacheModel.key_version = getKey_version();
+		entKeyCacheModel.key_status = getKey_status();
+
+		String key_status = entKeyCacheModel.key_status;
+
+		if ((key_status != null) && (key_status.length() == 0)) {
+			entKeyCacheModel.key_status = null;
+		}
 
 		entKeyCacheModel.key_dateCreated = getKey_dateCreated();
 
@@ -509,17 +547,25 @@ public class EntKeyModelImpl extends BaseModelImpl<EntKey>
 			entKeyCacheModel.vector_Data = null;
 		}
 
+		entKeyCacheModel.sign_name = getSign_name();
+
+		String sign_name = entKeyCacheModel.sign_name;
+
+		if ((sign_name != null) && (sign_name.length() == 0)) {
+			entKeyCacheModel.sign_name = null;
+		}
+
 		return entKeyCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(15);
+		StringBundler sb = new StringBundler(17);
 
 		sb.append("{userId=");
 		sb.append(getUserId());
-		sb.append(", key_version=");
-		sb.append(getKey_version());
+		sb.append(", key_status=");
+		sb.append(getKey_status());
 		sb.append(", key_dateCreated=");
 		sb.append(getKey_dateCreated());
 		sb.append(", privatekey_Data=");
@@ -530,6 +576,8 @@ public class EntKeyModelImpl extends BaseModelImpl<EntKey>
 		sb.append(getSalt_Data());
 		sb.append(", vector_Data=");
 		sb.append(getVector_Data());
+		sb.append(", sign_name=");
+		sb.append(getSign_name());
 		sb.append("}");
 
 		return sb.toString();
@@ -537,7 +585,7 @@ public class EntKeyModelImpl extends BaseModelImpl<EntKey>
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(28);
 
 		sb.append("<model><model-name>");
 		sb.append("com._42Penguins.gosign.model.EntKey");
@@ -548,8 +596,8 @@ public class EntKeyModelImpl extends BaseModelImpl<EntKey>
 		sb.append(getUserId());
 		sb.append("]]></column-value></column>");
 		sb.append(
-			"<column><column-name>key_version</column-name><column-value><![CDATA[");
-		sb.append(getKey_version());
+			"<column><column-name>key_status</column-name><column-value><![CDATA[");
+		sb.append(getKey_status());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>key_dateCreated</column-name><column-value><![CDATA[");
@@ -571,6 +619,10 @@ public class EntKeyModelImpl extends BaseModelImpl<EntKey>
 			"<column><column-name>vector_Data</column-name><column-value><![CDATA[");
 		sb.append(getVector_Data());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>sign_name</column-name><column-value><![CDATA[");
+		sb.append(getSign_name());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -582,11 +634,12 @@ public class EntKeyModelImpl extends BaseModelImpl<EntKey>
 			EntKey.class
 		};
 	private long _userId;
-	private long _key_version;
+	private String _key_status;
 	private String _key_dateCreated;
 	private String _privatekey_Data;
 	private String _publickey_Data;
 	private String _salt_Data;
 	private String _vector_Data;
+	private String _sign_name;
 	private EntKey _escapedModel;
 }

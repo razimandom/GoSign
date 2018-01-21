@@ -323,7 +323,6 @@ public class EntFileUploadPersistenceImpl extends BasePersistenceImpl<EntFileUpl
 		entFileUploadImpl.setPrimaryKey(entFileUpload.getPrimaryKey());
 
 		entFileUploadImpl.setFileId(entFileUpload.getFileId());
-		entFileUploadImpl.setDocId(entFileUpload.getDocId());
 		entFileUploadImpl.setFile_name(entFileUpload.getFile_name());
 		entFileUploadImpl.setFile_type(entFileUpload.getFile_type());
 		entFileUploadImpl.setFile_blob(entFileUpload.getFile_blob());

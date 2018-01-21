@@ -96,11 +96,7 @@ public class ViewDocPortlet extends MVCPortlet {
 				SessionErrors.add(actionRequest, "error-key-invalidAction");
 				actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 			}
-			
-			
-			
-			
-			
+				
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

@@ -34,12 +34,13 @@ public class EntKeySoap implements Serializable {
 		EntKeySoap soapModel = new EntKeySoap();
 
 		soapModel.setUserId(model.getUserId());
-		soapModel.setKey_version(model.getKey_version());
+		soapModel.setKey_status(model.getKey_status());
 		soapModel.setKey_dateCreated(model.getKey_dateCreated());
 		soapModel.setPrivatekey_Data(model.getPrivatekey_Data());
 		soapModel.setPublickey_Data(model.getPublickey_Data());
 		soapModel.setSalt_Data(model.getSalt_Data());
 		soapModel.setVector_Data(model.getVector_Data());
+		soapModel.setSign_name(model.getSign_name());
 
 		return soapModel;
 	}
@@ -100,12 +101,12 @@ public class EntKeySoap implements Serializable {
 		_userId = userId;
 	}
 
-	public long getKey_version() {
-		return _key_version;
+	public String getKey_status() {
+		return _key_status;
 	}
 
-	public void setKey_version(long key_version) {
-		_key_version = key_version;
+	public void setKey_status(String key_status) {
+		_key_status = key_status;
 	}
 
 	public String getKey_dateCreated() {
@@ -148,11 +149,20 @@ public class EntKeySoap implements Serializable {
 		_vector_Data = vector_Data;
 	}
 
+	public String getSign_name() {
+		return _sign_name;
+	}
+
+	public void setSign_name(String sign_name) {
+		_sign_name = sign_name;
+	}
+
 	private long _userId;
-	private long _key_version;
+	private String _key_status;
 	private String _key_dateCreated;
 	private String _privatekey_Data;
 	private String _publickey_Data;
 	private String _salt_Data;
 	private String _vector_Data;
+	private String _sign_name;
 }

@@ -226,7 +226,7 @@ public class VerifyDocPortlet extends MVCPortlet {
 
 			// Generating AES key
 			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-			KeySpec mykeySpec = new PBEKeySpec(userPin.toCharArray(), decodedSalt, 10000, 128);
+			KeySpec mykeySpec = new PBEKeySpec(userPin.toCharArray(), decodedSalt, 200000, 128);
 			SecretKey tmp = factory.generateSecret(mykeySpec);
 			SecretKeySpec mySecretkey = new SecretKeySpec(tmp.getEncoded(), "AES");
 			IvParameterSpec vector = new IvParameterSpec(decodedVector);

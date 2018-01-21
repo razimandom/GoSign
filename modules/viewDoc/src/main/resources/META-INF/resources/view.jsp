@@ -40,7 +40,6 @@
 
 <liferay-portlet:renderURL varImpl="iteratorURL">
 	<portlet:param name="mvcPath" value="/view.jsp" />
-
 </liferay-portlet:renderURL>
 
 <liferay-ui:search-container

@@ -311,12 +311,13 @@ public class EntKeyPersistenceImpl extends BasePersistenceImpl<EntKey>
 		entKeyImpl.setPrimaryKey(entKey.getPrimaryKey());
 
 		entKeyImpl.setUserId(entKey.getUserId());
-		entKeyImpl.setKey_version(entKey.getKey_version());
+		entKeyImpl.setKey_status(entKey.getKey_status());
 		entKeyImpl.setKey_dateCreated(entKey.getKey_dateCreated());
 		entKeyImpl.setPrivatekey_Data(entKey.getPrivatekey_Data());
 		entKeyImpl.setPublickey_Data(entKey.getPublickey_Data());
 		entKeyImpl.setSalt_Data(entKey.getSalt_Data());
 		entKeyImpl.setVector_Data(entKey.getVector_Data());
+		entKeyImpl.setSign_name(entKey.getSign_name());
 
 		return entKeyImpl;
 	}

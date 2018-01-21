@@ -64,12 +64,10 @@ public class EntFileUploadCacheModel implements CacheModel<EntFileUpload>,
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(9);
+		StringBundler sb = new StringBundler(7);
 
 		sb.append("{fileId=");
 		sb.append(fileId);
-		sb.append(", docId=");
-		sb.append(docId);
 		sb.append(", file_name=");
 		sb.append(file_name);
 		sb.append(", file_type=");
@@ -83,7 +81,6 @@ public class EntFileUploadCacheModel implements CacheModel<EntFileUpload>,
 		EntFileUploadImpl entFileUploadImpl = new EntFileUploadImpl();
 
 		entFileUploadImpl.setFileId(fileId);
-		entFileUploadImpl.setDocId(docId);
 
 		if (file_name == null) {
 			entFileUploadImpl.setFile_name(StringPool.BLANK);
@@ -107,8 +104,6 @@ public class EntFileUploadCacheModel implements CacheModel<EntFileUpload>,
 	@Override
 	public void readExternal(ObjectInput objectInput) throws IOException {
 		fileId = objectInput.readLong();
-
-		docId = objectInput.readLong();
 		file_name = objectInput.readUTF();
 		file_type = objectInput.readUTF();
 	}
@@ -117,8 +112,6 @@ public class EntFileUploadCacheModel implements CacheModel<EntFileUpload>,
 	public void writeExternal(ObjectOutput objectOutput)
 		throws IOException {
 		objectOutput.writeLong(fileId);
-
-		objectOutput.writeLong(docId);
 
 		if (file_name == null) {
 			objectOutput.writeUTF(StringPool.BLANK);
@@ -136,7 +129,6 @@ public class EntFileUploadCacheModel implements CacheModel<EntFileUpload>,
 	}
 
 	public long fileId;
-	public long docId;
 	public String file_name;
 	public String file_type;
 }

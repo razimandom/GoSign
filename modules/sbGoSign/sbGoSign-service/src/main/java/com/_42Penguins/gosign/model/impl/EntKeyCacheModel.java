@@ -63,12 +63,12 @@ public class EntKeyCacheModel implements CacheModel<EntKey>, Externalizable {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(15);
+		StringBundler sb = new StringBundler(17);
 
 		sb.append("{userId=");
 		sb.append(userId);
-		sb.append(", key_version=");
-		sb.append(key_version);
+		sb.append(", key_status=");
+		sb.append(key_status);
 		sb.append(", key_dateCreated=");
 		sb.append(key_dateCreated);
 		sb.append(", privatekey_Data=");
@@ -79,6 +79,8 @@ public class EntKeyCacheModel implements CacheModel<EntKey>, Externalizable {
 		sb.append(salt_Data);
 		sb.append(", vector_Data=");
 		sb.append(vector_Data);
+		sb.append(", sign_name=");
+		sb.append(sign_name);
 		sb.append("}");
 
 		return sb.toString();
@@ -89,7 +91,13 @@ public class EntKeyCacheModel implements CacheModel<EntKey>, Externalizable {
 		EntKeyImpl entKeyImpl = new EntKeyImpl();
 
 		entKeyImpl.setUserId(userId);
-		entKeyImpl.setKey_version(key_version);
+
+		if (key_status == null) {
+			entKeyImpl.setKey_status(StringPool.BLANK);
+		}
+		else {
+			entKeyImpl.setKey_status(key_status);
+		}
 
 		if (key_dateCreated == null) {
 			entKeyImpl.setKey_dateCreated(StringPool.BLANK);
@@ -126,6 +134,13 @@ public class EntKeyCacheModel implements CacheModel<EntKey>, Externalizable {
 			entKeyImpl.setVector_Data(vector_Data);
 		}
 
+		if (sign_name == null) {
+			entKeyImpl.setSign_name(StringPool.BLANK);
+		}
+		else {
+			entKeyImpl.setSign_name(sign_name);
+		}
+
 		entKeyImpl.resetOriginalValues();
 
 		return entKeyImpl;
@@ -134,13 +149,13 @@ public class EntKeyCacheModel implements CacheModel<EntKey>, Externalizable {
 	@Override
 	public void readExternal(ObjectInput objectInput) throws IOException {
 		userId = objectInput.readLong();
-
-		key_version = objectInput.readLong();
+		key_status = objectInput.readUTF();
 		key_dateCreated = objectInput.readUTF();
 		privatekey_Data = objectInput.readUTF();
 		publickey_Data = objectInput.readUTF();
 		salt_Data = objectInput.readUTF();
 		vector_Data = objectInput.readUTF();
+		sign_name = objectInput.readUTF();
 	}
 
 	@Override
@@ -148,7 +163,12 @@ public class EntKeyCacheModel implements CacheModel<EntKey>, Externalizable {
 		throws IOException {
 		objectOutput.writeLong(userId);
 
-		objectOutput.writeLong(key_version);
+		if (key_status == null) {
+			objectOutput.writeUTF(StringPool.BLANK);
+		}
+		else {
+			objectOutput.writeUTF(key_status);
+		}
 
 		if (key_dateCreated == null) {
 			objectOutput.writeUTF(StringPool.BLANK);
@@ -184,13 +204,21 @@ public class EntKeyCacheModel implements CacheModel<EntKey>, Externalizable {
 		else {
 			objectOutput.writeUTF(vector_Data);
 		}
+
+		if (sign_name == null) {
+			objectOutput.writeUTF(StringPool.BLANK);
+		}
+		else {
+			objectOutput.writeUTF(sign_name);
+		}
 	}
 
 	public long userId;
-	public long key_version;
+	public String key_status;
 	public String key_dateCreated;
 	public String privatekey_Data;
 	public String publickey_Data;
 	public String salt_Data;
 	public String vector_Data;
+	public String sign_name;
 }

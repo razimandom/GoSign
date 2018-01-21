@@ -82,7 +82,9 @@ request.setAttribute("fileup", fileup);
 String redirect = ParamUtil.getString(request, "backURL");
 %>
 
-
+		<liferay-portlet:renderURL varImpl="viewSignProfileURL">
+			<portlet:param name="mvcPath" value="/viewSignProfile.jsp" />
+		</liferay-portlet:renderURL>
 		<portlet:resourceURL var="viewURL">
             <portlet:param name="fileId" value="<%=String.valueOf(fileup.getFileId())%>" />
         </portlet:resourceURL>
@@ -154,6 +156,13 @@ String redirect = ParamUtil.getString(request, "backURL");
 	<td>Signer Email:</td>
 	<td>${document.sign_email}</td>
 </tr>
+<tr>
+	<td>Signer Profile:</td>
+	<td><aui:form action="<%=viewSignProfileURL.toString() %>" method="post" name="name">
+	<aui:input label="Sign Id: " name="signId" type="hidden" value="${document.userId}" readOnly="true"/>
+	<button name="submit" type="submit">View Profile</button>
+	</aui:form></td>
+</tr>
 </table>
 <br>
 
@@ -203,8 +212,8 @@ String redirect = ParamUtil.getString(request, "backURL");
 
 <aui:form action="<%=doAction%>" method="post" name="name">
 	<aui:input label="Action: " name="doAction" type="hidden" value="update" readOnly="true"/>
-	<aui:input label="Doc Id: " name="docId" type="type" value="${document.docId}" readOnly="true"/>
-	<aui:input label="File Id: " name="fileId" type="type" value="${fileup.fileId}" readOnly="true"/>
+	<aui:input label="Doc Id: " name="docId" type="hidden" value="${document.docId}" readOnly="true"/>
+	<aui:input label="File Id: " name="fileId" type="hidden" value="${fileup.fileId}" readOnly="true"/>
 	<aui:input label="New Deadline Date: " name="doc_deadline" type="type" value="${document.doc_deadline}" />
 	<aui:button name="update" type="submit" value="Update" last="true" />
 
@@ -218,8 +227,8 @@ String redirect = ParamUtil.getString(request, "backURL");
 
 <aui:form action="<%=doAction%>" method="post" name="name">
 	<aui:input label="Action: " name="doAction" type="hidden" value="verify" readOnly="true"/>
-	<aui:input label="Doc Id: " name="docId" type="type" value="${document.docId}" readOnly="true"/>
-	<aui:input label="File Id: " name="fileId" type="type" value="${fileup.fileId}" readOnly="true"/>
+	<aui:input label="Doc Id: " name="docId" type="hidden" value="${document.docId}" readOnly="true"/>
+	<aui:input label="File Id: " name="fileId" type="hidden" value="${fileup.fileId}" readOnly="true"/>
 	<aui:input label="Insert Signer Public Key: " name="input_pubkey" type="textarea"/>
 	<aui:button name="Verify" type="submit" value="Verify" last="true" />
 
