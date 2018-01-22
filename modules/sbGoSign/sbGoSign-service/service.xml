@@ -10,10 +10,12 @@
 		<column name="docId" primary="true" type="long"></column>
 		<column name="fileId" type="long" primary="false"></column>
 		<column name="userId" type="long"></column>
+		<column name="signId" type="long"></column>
 		<column name="req_name" type="String"></column>
 		<column name="req_email" type="String"></column>
 		<column name="sign_name" type="String"></column>
 		<column name="sign_email" type="String"></column>
+		<column name="doc_title" type="String"></column>
 		<column name="doc_type" type="String"></column>
 		<column name="doc_md5" type="String"></column>
 		<column name="doc_status" type="String"></column>

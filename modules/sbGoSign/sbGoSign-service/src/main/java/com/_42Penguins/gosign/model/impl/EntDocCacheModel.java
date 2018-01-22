@@ -63,7 +63,7 @@ public class EntDocCacheModel implements CacheModel<EntDoc>, Externalizable {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(35);
+		StringBundler sb = new StringBundler(39);
 
 		sb.append("{docId=");
 		sb.append(docId);
@@ -71,6 +71,8 @@ public class EntDocCacheModel implements CacheModel<EntDoc>, Externalizable {
 		sb.append(fileId);
 		sb.append(", userId=");
 		sb.append(userId);
+		sb.append(", signId=");
+		sb.append(signId);
 		sb.append(", req_name=");
 		sb.append(req_name);
 		sb.append(", req_email=");
@@ -79,6 +81,8 @@ public class EntDocCacheModel implements CacheModel<EntDoc>, Externalizable {
 		sb.append(sign_name);
 		sb.append(", sign_email=");
 		sb.append(sign_email);
+		sb.append(", doc_title=");
+		sb.append(doc_title);
 		sb.append(", doc_type=");
 		sb.append(doc_type);
 		sb.append(", doc_md5=");
@@ -111,6 +115,7 @@ public class EntDocCacheModel implements CacheModel<EntDoc>, Externalizable {
 		entDocImpl.setDocId(docId);
 		entDocImpl.setFileId(fileId);
 		entDocImpl.setUserId(userId);
+		entDocImpl.setSignId(signId);
 
 		if (req_name == null) {
 			entDocImpl.setReq_name(StringPool.BLANK);
@@ -138,6 +143,13 @@ public class EntDocCacheModel implements CacheModel<EntDoc>, Externalizable {
 		}
 		else {
 			entDocImpl.setSign_email(sign_email);
+		}
+
+		if (doc_title == null) {
+			entDocImpl.setDoc_title(StringPool.BLANK);
+		}
+		else {
+			entDocImpl.setDoc_title(doc_title);
 		}
 
 		if (doc_type == null) {
@@ -222,10 +234,13 @@ public class EntDocCacheModel implements CacheModel<EntDoc>, Externalizable {
 		fileId = objectInput.readLong();
 
 		userId = objectInput.readLong();
+
+		signId = objectInput.readLong();
 		req_name = objectInput.readUTF();
 		req_email = objectInput.readUTF();
 		sign_name = objectInput.readUTF();
 		sign_email = objectInput.readUTF();
+		doc_title = objectInput.readUTF();
 		doc_type = objectInput.readUTF();
 		doc_md5 = objectInput.readUTF();
 		doc_status = objectInput.readUTF();
@@ -246,6 +261,8 @@ public class EntDocCacheModel implements CacheModel<EntDoc>, Externalizable {
 		objectOutput.writeLong(fileId);
 
 		objectOutput.writeLong(userId);
+
+		objectOutput.writeLong(signId);
 
 		if (req_name == null) {
 			objectOutput.writeUTF(StringPool.BLANK);
@@ -273,6 +290,13 @@ public class EntDocCacheModel implements CacheModel<EntDoc>, Externalizable {
 		}
 		else {
 			objectOutput.writeUTF(sign_email);
+		}
+
+		if (doc_title == null) {
+			objectOutput.writeUTF(StringPool.BLANK);
+		}
+		else {
+			objectOutput.writeUTF(doc_title);
 		}
 
 		if (doc_type == null) {
@@ -349,10 +373,12 @@ public class EntDocCacheModel implements CacheModel<EntDoc>, Externalizable {
 	public long docId;
 	public long fileId;
 	public long userId;
+	public long signId;
 	public String req_name;
 	public String req_email;
 	public String sign_name;
 	public String sign_email;
+	public String doc_title;
 	public String doc_type;
 	public String doc_md5;
 	public String doc_status;

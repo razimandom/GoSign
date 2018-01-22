@@ -59,10 +59,12 @@ public class EntDocWrapper implements EntDoc, ModelWrapper<EntDoc> {
 		attributes.put("docId", getDocId());
 		attributes.put("fileId", getFileId());
 		attributes.put("userId", getUserId());
+		attributes.put("signId", getSignId());
 		attributes.put("req_name", getReq_name());
 		attributes.put("req_email", getReq_email());
 		attributes.put("sign_name", getSign_name());
 		attributes.put("sign_email", getSign_email());
+		attributes.put("doc_title", getDoc_title());
 		attributes.put("doc_type", getDoc_type());
 		attributes.put("doc_md5", getDoc_md5());
 		attributes.put("doc_status", getDoc_status());
@@ -97,6 +99,12 @@ public class EntDocWrapper implements EntDoc, ModelWrapper<EntDoc> {
 			setUserId(userId);
 		}
 
+		Long signId = (Long)attributes.get("signId");
+
+		if (signId != null) {
+			setSignId(signId);
+		}
+
 		String req_name = (String)attributes.get("req_name");
 
 		if (req_name != null) {
@@ -119,6 +127,12 @@ public class EntDocWrapper implements EntDoc, ModelWrapper<EntDoc> {
 
 		if (sign_email != null) {
 			setSign_email(sign_email);
+		}
+
+		String doc_title = (String)attributes.get("doc_title");
+
+		if (doc_title != null) {
+			setDoc_title(doc_title);
 		}
 
 		String doc_type = (String)attributes.get("doc_type");
@@ -288,6 +302,16 @@ public class EntDocWrapper implements EntDoc, ModelWrapper<EntDoc> {
 	}
 
 	/**
+	* Returns the doc_title of this ent doc.
+	*
+	* @return the doc_title of this ent doc
+	*/
+	@Override
+	public java.lang.String getDoc_title() {
+		return _entDoc.getDoc_title();
+	}
+
+	/**
 	* Returns the doc_type of this ent doc.
 	*
 	* @return the doc_type of this ent doc
@@ -428,6 +452,16 @@ public class EntDocWrapper implements EntDoc, ModelWrapper<EntDoc> {
 	}
 
 	/**
+	* Returns the sign ID of this ent doc.
+	*
+	* @return the sign ID of this ent doc
+	*/
+	@Override
+	public long getSignId() {
+		return _entDoc.getSignId();
+	}
+
+	/**
 	* Returns the user ID of this ent doc.
 	*
 	* @return the user ID of this ent doc
@@ -505,6 +539,16 @@ public class EntDocWrapper implements EntDoc, ModelWrapper<EntDoc> {
 	@Override
 	public void setDoc_status(java.lang.String doc_status) {
 		_entDoc.setDoc_status(doc_status);
+	}
+
+	/**
+	* Sets the doc_title of this ent doc.
+	*
+	* @param doc_title the doc_title of this ent doc
+	*/
+	@Override
+	public void setDoc_title(java.lang.String doc_title) {
+		_entDoc.setDoc_title(doc_title);
 	}
 
 	/**
@@ -621,6 +665,16 @@ public class EntDocWrapper implements EntDoc, ModelWrapper<EntDoc> {
 	@Override
 	public void setReq_timeModified(java.lang.String req_timeModified) {
 		_entDoc.setReq_timeModified(req_timeModified);
+	}
+
+	/**
+	* Sets the sign ID of this ent doc.
+	*
+	* @param signId the sign ID of this ent doc
+	*/
+	@Override
+	public void setSignId(long signId) {
+		_entDoc.setSignId(signId);
 	}
 
 	/**

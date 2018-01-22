@@ -13,6 +13,11 @@
 <%@taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
 
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 <!-- Start - This script and script for toggler button 
 
 <script src="https://cdn.alloyui.com/3.0.1/aui/aui-min.js"></script>
@@ -89,16 +94,17 @@ String redirect = ParamUtil.getString(request, "backURL");
             <portlet:param name="fileId" value="<%=String.valueOf(fileup.getFileId())%>" />
         </portlet:resourceURL>
 
-<h3>Request Details</h3>
-
-<table>
+<div class="container">
+  <h3>Request Details:</h3>            
+  <table class="table table-hover">
+    <tbody>
 <tr>
-	<td>Request ID:</td>
+	<td width="250">Request ID:</td>
 	<td>${document.docId}</td>
 </tr>
 <tr>
-	<td>Request MD5:</td>
-	<td>${document.doc_md5}</td>
+	<td>Request Title:</td>
+	<td>${document.doc_title}</td>
 </tr>
 <tr>
 	<td>Type:</td>
@@ -121,7 +127,43 @@ String redirect = ParamUtil.getString(request, "backURL");
 	<td>${document.doc_deadline}</td>
 </tr>
 <tr>
-	<td>File Name:</td>
+	<td>Description/Justification:</td>
+	<td>${document.doc_description}</td>
+</tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="container">
+  <h3>Requester & Signer Details:</h3>            
+  <table class="table table-hover">
+    <tbody>
+<tr>
+	<td width="250">Requester Name:</td>
+	<td>${document.req_name}</td>
+</tr>
+<tr>
+	<td >Requester Email:</td>
+	<td>${document.req_email}</td>
+</tr>
+<tr>
+	<td>Signer Name: </td>
+	<td>${document.sign_name} <a href="<%=viewSignProfileURL.toString() %>">[View profile]</a></td>
+</tr>
+<tr>
+	<td>Signer Email:</td>
+	<td>${document.sign_email}</td>
+</tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="container">
+  <h3>Uploaded Document:</h3>            
+  <table class="table table-hover">
+    <tbody>
+<tr>
+	<td width="250">File Name:</td>
 	<td>${fileup.file_name}</td>
 </tr>
 <tr>
@@ -131,39 +173,29 @@ String redirect = ParamUtil.getString(request, "backURL");
 	</aui:form></td>
 	
 </tr>
-<tr>
-	<td>Description/Justification:</td>
-	<td>${document.doc_description}</td>
-</tr>
-</table>
+    </tbody>
+  </table>
+</div>
 
-<h3>Signer & Requestor Details</h3>
-
-<table>
+<div class="container">
+  <h3>Other Details:</h3>            
+  <table class="table table-hover">
+    <tbody>
 <tr>
-	<td>Requestor Name:</td>
-	<td>${document.req_name}</td>
+	<td width="250">Request MD5:</td>
+	<td>${document.doc_md5}</td>
 </tr>
 <tr>
-	<td>Requestor Email:</td>
-	<td>${document.req_email}</td>
+	<td>Time Created: </td>
+	<td>${document.req_timeCreated}</td>
 </tr>
 <tr>
-	<td>Signer Name: </td>
-	<td>${document.sign_name}</td>
+	<td>Time Modified: </td>
+	<td>${document.req_timeModified}</td>
 </tr>
-<tr>
-	<td>Signer Email:</td>
-	<td>${document.sign_email}</td>
-</tr>
-<tr>
-	<td>Signer Profile:</td>
-	<td><aui:form action="<%=viewSignProfileURL.toString() %>" method="post" name="name">
-	<aui:input label="Sign Id: " name="signId" type="hidden" value="${document.userId}" readOnly="true"/>
-	<button name="submit" type="submit">View Profile</button>
-	</aui:form></td>
-</tr>
-</table>
+    </tbody>
+  </table>
+</div>
 <br>
 
 <portlet:actionURL name="doAction" var="doAction" />

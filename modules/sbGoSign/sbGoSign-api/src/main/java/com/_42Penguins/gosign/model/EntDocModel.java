@@ -117,6 +117,20 @@ public interface EntDocModel extends BaseModel<EntDoc> {
 	public void setUserUuid(String userUuid);
 
 	/**
+	 * Returns the sign ID of this ent doc.
+	 *
+	 * @return the sign ID of this ent doc
+	 */
+	public long getSignId();
+
+	/**
+	 * Sets the sign ID of this ent doc.
+	 *
+	 * @param signId the sign ID of this ent doc
+	 */
+	public void setSignId(long signId);
+
+	/**
 	 * Returns the req_name of this ent doc.
 	 *
 	 * @return the req_name of this ent doc
@@ -175,6 +189,21 @@ public interface EntDocModel extends BaseModel<EntDoc> {
 	 * @param sign_email the sign_email of this ent doc
 	 */
 	public void setSign_email(String sign_email);
+
+	/**
+	 * Returns the doc_title of this ent doc.
+	 *
+	 * @return the doc_title of this ent doc
+	 */
+	@AutoEscape
+	public String getDoc_title();
+
+	/**
+	 * Sets the doc_title of this ent doc.
+	 *
+	 * @param doc_title the doc_title of this ent doc
+	 */
+	public void setDoc_title(String doc_title);
 
 	/**
 	 * Returns the doc_type of this ent doc.

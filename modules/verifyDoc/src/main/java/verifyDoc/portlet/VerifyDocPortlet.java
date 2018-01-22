@@ -10,15 +10,19 @@ import com._42Penguins.gosign.service.EntFileUploadLocalServiceUtil;
 import com._42Penguins.gosign.service.EntKeyLocalServiceUtil;
 import com.liferay.mail.kernel.model.MailMessage;
 import com.liferay.mail.kernel.service.MailServiceUtil;
+import com.liferay.portal.kernel.dao.jdbc.OutputBlob;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.security.KeyFactory;
@@ -43,6 +47,7 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
+import javax.portlet.ProcessAction;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
@@ -51,7 +56,7 @@ import javax.portlet.ResourceResponse;
 import org.osgi.service.component.annotations.Component;
 
 /**
- * @author razim
+ * @author Raziman Dom
  */
 @Component(
 	immediate = true,
@@ -89,46 +94,78 @@ public class VerifyDocPortlet extends MVCPortlet {
 		actionResponse.setRenderParameter("mvcPath", "/view.jsp");
 
 	}
+	
+	/**
+	 * Action to get input action from user. All action will be redirect to sign/reject/justify
+	 * @param actionRequest
+	 * @param actionResponse
+	 * @throws IOException
+	 * @throws PortletException
+	 * @throws PortalException
+	 */
 
 	public void doSignAction(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, PortalException {
 		
-		//==> Initiate variables
+		/*
+		 *  Initiate variables
+		 */
+		
 		long docId = ParamUtil.getLong(actionRequest, "docId");
 		String doAction = ParamUtil.getString(actionRequest, "doAction");
 		EntDoc doc = EntDocLocalServiceUtil.getEntDoc(docId);
 		String doc_status = doc.getDoc_status();
 		
-		//==> Get current date & time
+		/*
+		 * Fetch current date and time
+		 */
+		
 		ZoneId zoneIdMYS = ZoneId.of("Asia/Kuala_Lumpur");
 		LocalDateTime localDateTime = LocalDateTime.now(zoneIdMYS);
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		String currentDateTime = localDateTime.format(formatter);
-
-		//==> Retrieve user pin parameter
+		DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("ddMMyyyy-HHmmss-A-N");
+		DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		String currentTime = localDateTime.format(formatterTime);
+		String currentDate = localDateTime.format(formatterDate);
+		
+		/*
+		 * Fetch current user data
+		 */
+		
+		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		User currentUser = themeDisplay.getUser();
+		String currentHomeURL = themeDisplay.getURLHome();
+		
+		/*
+		 * Retrive user 6 pins. Standard length for user pin is 6 digits only
+		 */
+		
 		String userPin = ParamUtil.getString(actionRequest, "userPin");
-
-		//==> Standard length for user pin is 6 digits only
 		int userPinLength = 6;
 
-		//==> List of status
+		
+		/*
+		 * List of status and action
+		 */
+		
 		String statusPending = "Pending";
 		String statusSigned = "Signed";
 		String statusReject = "Rejected";
 		String statusJustify = "Justify";
-
-		//==> List of action
+		
 		String actionSign = "Sign";
 		String actionReject = "Reject";
 		String actionJustify = "Justify";
 		
-		//==> Validation before redirect to sign, verify and justify method
+		/*
+		 * Validation before redirect to sign, verify and justify method
+		 */
+		
 		if (doAction.equals(actionSign)) {
 
 			if (doc_status.equals(statusPending) || doc_status.equals(statusJustify)) {
 
 				if (userPin.length() == userPinLength) {
-					doSignDoc(userPin, currentDateTime, actionRequest, actionResponse);
+					doSignDoc(userPin, currentUser, currentDate, currentTime, currentHomeURL, actionRequest, actionResponse);
 				} else {
 					SessionErrors.add(actionRequest, "error-key-invalidPinFormat");
 					actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
@@ -146,7 +183,7 @@ public class VerifyDocPortlet extends MVCPortlet {
 		} else if (doAction.equals(actionReject)) {
 
 			if (doc_status.equals(statusPending) || doc_status.equals(statusJustify)) {
-				doRejectDoc(currentDateTime, actionRequest, actionResponse);
+				doRejectDoc(currentUser, currentDate, currentTime, currentHomeURL, actionRequest, actionResponse);
 
 			} else if (doc_status.equals(statusSigned) || doc_status.equals(statusReject)) {
 				SessionErrors.add(actionRequest, "error-key-statusFail");
@@ -160,7 +197,7 @@ public class VerifyDocPortlet extends MVCPortlet {
 		} else if (doAction.equals(actionJustify)) {
 
 			if (doc_status.equals(statusPending) || doc_status.equals(statusJustify)) {
-				doJustifyDoc(currentDateTime, actionRequest, actionResponse);
+				doJustifyDoc(currentUser, currentDate, currentTime, currentHomeURL, actionRequest, actionResponse);
 
 			} else if (doc_status.equals(statusSigned) || doc_status.equals(statusReject)) {
 				SessionErrors.add(actionRequest, "error-key-statusFail");
@@ -177,24 +214,23 @@ public class VerifyDocPortlet extends MVCPortlet {
 		}
 
 	}
+	
+	/**
+	 * Action method to sign document with 6 digits pin
+	 */
 
-	public void doSignDoc(String userPin, String currentDateTime, ActionRequest actionRequest, ActionResponse actionResponse)
+	public void doSignDoc(String userPin, User currentUser, String currentDate, String currentTime, String currentHomeURL, ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException {
 
 		System.out.println("================>>> START - doSignDoc");
 
-		// ==> Start signing if user entered 6 digits
 		try {
-
-			// ==> Get current user
-			ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-			User currentUser = themeDisplay.getUser();
-			String currentHomeURL = themeDisplay.getURLHome();
 
 			System.out.println("\n================>>> START: Decrypting private key using AES 128 bit\n");
 
-			// ==> Retrieve some data from database for current user from genkey
-			// table
+			/*
+			 *  Retrieve data from database for current user from EntKey entity
+			 */
 			System.out.println("Retrieving data from database...");
 			long userId = currentUser.getUserId();
 			EntKey genkey = EntKeyLocalServiceUtil.getEntKey(userId);
@@ -203,20 +239,25 @@ public class VerifyDocPortlet extends MVCPortlet {
 			String encodedVector = genkey.getVector_Data();
 			// String encodedPubKey = genkey.getPublickey_Data();
 
-			// ==> Retrieve some data from database for current user from document table
+			/*
+			 *  Retrieve data from database for current user from EntDoc entity
+			 */
 			long docId = ParamUtil.getLong(actionRequest, "docId");
 			EntDoc doc = EntDocLocalServiceUtil.getEntDoc(docId);
+			long signId = userId;
 			String req_name = doc.getReq_name();
 			String req_email = doc.getReq_email();
-			String req_dateModified = currentDateTime;
+			String req_dateModified = currentDate;
+			String req_timeModified = currentTime;
 			String sign_name = currentUser.getFullName();
 			String doc_type = doc.getDoc_type();
 			String doc_md5 = doc.getDoc_md5();
 			String doc_status = "Signed";
-
 			Cipher dcipher;
 
-			// ==> Decode private key, salt, and vector
+			/*
+			 * Decode private key, salt, and vector
+			 */
 			System.out.println("Decoding encrypted private key...");
 			byte[] decodedEncryptedPriKey = Base64.getDecoder().decode(encodedEncryptedPriKey);
 			System.out.println("Decoding Salt...");
@@ -224,14 +265,18 @@ public class VerifyDocPortlet extends MVCPortlet {
 			System.out.println("Decoding Vector...");
 			byte[] decodedVector = Base64.getDecoder().decode(encodedVector);
 
-			// Generating AES key
+			/*
+			 * Generating AES key
+			 */
 			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
 			KeySpec mykeySpec = new PBEKeySpec(userPin.toCharArray(), decodedSalt, 200000, 128);
 			SecretKey tmp = factory.generateSecret(mykeySpec);
 			SecretKeySpec mySecretkey = new SecretKeySpec(tmp.getEncoded(), "AES");
 			IvParameterSpec vector = new IvParameterSpec(decodedVector);
 
-			// ==> Create and initiate decryption using AES key
+			/*
+			 * Create and initiate decryption using AES key
+			 */
 			System.out.println("Initiate decryption alogrithm...");
 			dcipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 			// System.out.println("Algorithm to decrypt private key: " +
@@ -239,7 +284,9 @@ public class VerifyDocPortlet extends MVCPortlet {
 			dcipher.init(Cipher.DECRYPT_MODE, mySecretkey, vector);
 			// System.out.println("Secret key: " + mySecretkey);
 
-			// ==> Decrypt private key and get String
+			/*
+			 * Decrypt private key and get String
+			 */
 			System.out.println("Decrypting private key...");
 			String decodedDecryptedPriKey = new String(dcipher.doFinal(decodedEncryptedPriKey));
 			// System.out.println("Decrypted PrivateKey:
@@ -250,7 +297,9 @@ public class VerifyDocPortlet extends MVCPortlet {
 
 			System.out.println("\n================>>> START - SIGN DOCUMENT\n");
 
-			// ==> Get raw private key for signing
+			/*
+			 * Get raw private key for signing
+			 */
 			KeyFactory kf = KeyFactory.getInstance("EC"); // or "EC" or whatever
 			PrivateKey rawPrivateKey = kf.generatePrivate(new PKCS8EncodedKeySpec(FinaldecodedDecryptedPriKey));
 			// System.out.println("Raw Private Key: "+rawPrivateKey);
@@ -267,11 +316,16 @@ public class VerifyDocPortlet extends MVCPortlet {
 
 			System.out.println("\n================>>> END - SIGN DOCUMENT\n");
 
-			// ==> Insert data to database
+			/*
+			 * Insert data to database
+			 */
+			
 			System.out.println("Inserting data to DB...");
 			doc.setReq_dateModified(req_dateModified);
+			doc.setReq_timeModified(req_timeModified);
 			doc.setDoc_signature(encodedSignature);
 			doc.setDoc_status(doc_status);
+			doc.setSignId(signId);
 			doc.setSign_name(sign_name);
 			actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 			doc = EntDocLocalServiceUtil.updateEntDoc(doc);
@@ -325,31 +379,32 @@ public class VerifyDocPortlet extends MVCPortlet {
 	 * Reject Signature Module
 	 */
 
-	public void doRejectDoc(String currentDateTime, ActionRequest actionRequest, ActionResponse actionResponse)
+	public void doRejectDoc(User currentUser, String currentDate, String currentTime, String currentHomeURL, ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, PortalException {
 
 		System.out.println("================Start doRejectDoc=================");
 
-		// ==> Get current user
-		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-		User currentUser = themeDisplay.getUser();
-		String currentHomeURL = themeDisplay.getURLHome();
-
 		// ==> Retrieve some data from database for current user from document
 		// table
 		System.out.println("Retrieving data from database...");
+		
 		long docId = ParamUtil.getLong(actionRequest, "docId");
+		long signId = (currentUser.getUserId());
 		EntDoc doc = EntDocLocalServiceUtil.getEntDoc(docId);
 		String req_name = doc.getReq_name();
 		String req_email = doc.getReq_email();
-		String req_dateModified = currentDateTime;
+		String req_dateModified = currentDate;
+		String req_timeModified = currentTime;
 		String sign_name = currentUser.getFullName();
 		String doc_type = doc.getDoc_type();
 		String doc_status = "Rejected";
 
 		try {
-
+			
+			doc.setSignId(signId);
 			doc.setSign_name(sign_name);
+			doc.setReq_dateModified(req_dateModified);
+			doc.setReq_timeModified(req_timeModified);
 			doc.setDoc_status(doc_status);
 			System.out.println("Status updated: " + doc_status);
 			System.out.println("Inserting data to DB");
@@ -403,30 +458,29 @@ public class VerifyDocPortlet extends MVCPortlet {
 	 * Justification Signature Module
 	 */
 
-	public void doJustifyDoc(String currentDateTime, ActionRequest actionRequest, ActionResponse actionResponse)
+	public void doJustifyDoc(User currentUser, String currentDate, String currentTime, String currentHomeURL, ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, PortalException {
 
 		System.out.println("================Start doReqJustification=================");
-
-		// ==> Get current user
-		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-		User currentUser = themeDisplay.getUser();
-		String currentHomeURL = themeDisplay.getURLHome();
 
 		// ==> Retrieve some data from database for current user from document
 		// table
 		System.out.println("Retrieving data from database...");
 		long docId = ParamUtil.getLong(actionRequest, "docId");
+		long signId = (currentUser.getUserId());
 		EntDoc doc = EntDocLocalServiceUtil.getEntDoc(docId);
 		String req_name = doc.getReq_name();
 		String req_email = doc.getReq_email();
-		String req_dateModified = currentDateTime;
+		String req_dateModified = currentDate;
+		String req_timeModified = currentTime;
 		String sign_name = currentUser.getFullName();
 		String doc_type = doc.getDoc_type();
 		String doc_status = "Justify";
 
 		try {
-
+			
+			doc.setSignId(signId);
+			doc.setReq_timeModified(req_timeModified);
 			doc.setReq_dateModified(req_dateModified);
 			doc.setSign_name(sign_name);
 			doc.setDoc_status(doc_status);
@@ -493,10 +547,11 @@ public class VerifyDocPortlet extends MVCPortlet {
 
 		System.out.println("================End doReqJustification=================");
 	}
+	
 
 	/*
 	 * 
-	 * Here serveResource method is used for displaying blob data
+	 * serveResource method is used for displaying blob data
 	 *
 	 */
 

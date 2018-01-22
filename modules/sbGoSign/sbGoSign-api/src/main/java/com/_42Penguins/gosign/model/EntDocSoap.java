@@ -36,10 +36,12 @@ public class EntDocSoap implements Serializable {
 		soapModel.setDocId(model.getDocId());
 		soapModel.setFileId(model.getFileId());
 		soapModel.setUserId(model.getUserId());
+		soapModel.setSignId(model.getSignId());
 		soapModel.setReq_name(model.getReq_name());
 		soapModel.setReq_email(model.getReq_email());
 		soapModel.setSign_name(model.getSign_name());
 		soapModel.setSign_email(model.getSign_email());
+		soapModel.setDoc_title(model.getDoc_title());
 		soapModel.setDoc_type(model.getDoc_type());
 		soapModel.setDoc_md5(model.getDoc_md5());
 		soapModel.setDoc_status(model.getDoc_status());
@@ -126,6 +128,14 @@ public class EntDocSoap implements Serializable {
 		_userId = userId;
 	}
 
+	public long getSignId() {
+		return _signId;
+	}
+
+	public void setSignId(long signId) {
+		_signId = signId;
+	}
+
 	public String getReq_name() {
 		return _req_name;
 	}
@@ -156,6 +166,14 @@ public class EntDocSoap implements Serializable {
 
 	public void setSign_email(String sign_email) {
 		_sign_email = sign_email;
+	}
+
+	public String getDoc_title() {
+		return _doc_title;
+	}
+
+	public void setDoc_title(String doc_title) {
+		_doc_title = doc_title;
 	}
 
 	public String getDoc_type() {
@@ -241,10 +259,12 @@ public class EntDocSoap implements Serializable {
 	private long _docId;
 	private long _fileId;
 	private long _userId;
+	private long _signId;
 	private String _req_name;
 	private String _req_email;
 	private String _sign_name;
 	private String _sign_email;
+	private String _doc_title;
 	private String _doc_type;
 	private String _doc_md5;
 	private String _doc_status;

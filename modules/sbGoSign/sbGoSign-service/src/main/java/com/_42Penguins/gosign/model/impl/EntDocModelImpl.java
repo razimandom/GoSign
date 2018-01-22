@@ -72,10 +72,12 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 			{ "docId", Types.BIGINT },
 			{ "fileId", Types.BIGINT },
 			{ "userId", Types.BIGINT },
+			{ "signId", Types.BIGINT },
 			{ "req_name", Types.VARCHAR },
 			{ "req_email", Types.VARCHAR },
 			{ "sign_name", Types.VARCHAR },
 			{ "sign_email", Types.VARCHAR },
+			{ "doc_title", Types.VARCHAR },
 			{ "doc_type", Types.VARCHAR },
 			{ "doc_md5", Types.VARCHAR },
 			{ "doc_status", Types.VARCHAR },
@@ -93,10 +95,12 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 		TABLE_COLUMNS_MAP.put("docId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("fileId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("userId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("signId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("req_name", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("req_email", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("sign_name", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("sign_email", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("doc_title", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("doc_type", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("doc_md5", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("doc_status", Types.VARCHAR);
@@ -109,7 +113,7 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 		TABLE_COLUMNS_MAP.put("req_timeModified", Types.VARCHAR);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table document_data (docId LONG not null primary key,fileId LONG,userId LONG,req_name VARCHAR(75) null,req_email VARCHAR(75) null,sign_name VARCHAR(75) null,sign_email VARCHAR(75) null,doc_type VARCHAR(75) null,doc_md5 VARCHAR(75) null,doc_status VARCHAR(75) null,doc_deadline VARCHAR(75) null,doc_description VARCHAR(75) null,doc_signature VARCHAR(75) null,req_dateCreated VARCHAR(75) null,req_dateModified VARCHAR(75) null,req_timeCreated VARCHAR(75) null,req_timeModified VARCHAR(75) null)";
+	public static final String TABLE_SQL_CREATE = "create table document_data (docId LONG not null primary key,fileId LONG,userId LONG,signId LONG,req_name VARCHAR(75) null,req_email VARCHAR(75) null,sign_name VARCHAR(75) null,sign_email VARCHAR(75) null,doc_title VARCHAR(75) null,doc_type VARCHAR(75) null,doc_md5 VARCHAR(75) null,doc_status VARCHAR(75) null,doc_deadline VARCHAR(75) null,doc_description VARCHAR(75) null,doc_signature VARCHAR(75) null,req_dateCreated VARCHAR(75) null,req_dateModified VARCHAR(75) null,req_timeCreated VARCHAR(75) null,req_timeModified VARCHAR(75) null)";
 	public static final String TABLE_SQL_DROP = "drop table document_data";
 	public static final String ORDER_BY_JPQL = " ORDER BY entDoc.docId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY document_data.docId ASC";
@@ -145,10 +149,12 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 		model.setDocId(soapModel.getDocId());
 		model.setFileId(soapModel.getFileId());
 		model.setUserId(soapModel.getUserId());
+		model.setSignId(soapModel.getSignId());
 		model.setReq_name(soapModel.getReq_name());
 		model.setReq_email(soapModel.getReq_email());
 		model.setSign_name(soapModel.getSign_name());
 		model.setSign_email(soapModel.getSign_email());
+		model.setDoc_title(soapModel.getDoc_title());
 		model.setDoc_type(soapModel.getDoc_type());
 		model.setDoc_md5(soapModel.getDoc_md5());
 		model.setDoc_status(soapModel.getDoc_status());
@@ -226,10 +232,12 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 		attributes.put("docId", getDocId());
 		attributes.put("fileId", getFileId());
 		attributes.put("userId", getUserId());
+		attributes.put("signId", getSignId());
 		attributes.put("req_name", getReq_name());
 		attributes.put("req_email", getReq_email());
 		attributes.put("sign_name", getSign_name());
 		attributes.put("sign_email", getSign_email());
+		attributes.put("doc_title", getDoc_title());
 		attributes.put("doc_type", getDoc_type());
 		attributes.put("doc_md5", getDoc_md5());
 		attributes.put("doc_status", getDoc_status());
@@ -267,6 +275,12 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 			setUserId(userId);
 		}
 
+		Long signId = (Long)attributes.get("signId");
+
+		if (signId != null) {
+			setSignId(signId);
+		}
+
 		String req_name = (String)attributes.get("req_name");
 
 		if (req_name != null) {
@@ -289,6 +303,12 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 
 		if (sign_email != null) {
 			setSign_email(sign_email);
+		}
+
+		String doc_title = (String)attributes.get("doc_title");
+
+		if (doc_title != null) {
+			setDoc_title(doc_title);
 		}
 
 		String doc_type = (String)attributes.get("doc_type");
@@ -415,6 +435,17 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 
 	@JSON
 	@Override
+	public long getSignId() {
+		return _signId;
+	}
+
+	@Override
+	public void setSignId(long signId) {
+		_signId = signId;
+	}
+
+	@JSON
+	@Override
 	public String getReq_name() {
 		if (_req_name == null) {
 			return StringPool.BLANK;
@@ -485,6 +516,22 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 
 	public String getOriginalSign_email() {
 		return GetterUtil.getString(_originalSign_email);
+	}
+
+	@JSON
+	@Override
+	public String getDoc_title() {
+		if (_doc_title == null) {
+			return StringPool.BLANK;
+		}
+		else {
+			return _doc_title;
+		}
+	}
+
+	@Override
+	public void setDoc_title(String doc_title) {
+		_doc_title = doc_title;
 	}
 
 	@JSON
@@ -681,10 +728,12 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 		entDocImpl.setDocId(getDocId());
 		entDocImpl.setFileId(getFileId());
 		entDocImpl.setUserId(getUserId());
+		entDocImpl.setSignId(getSignId());
 		entDocImpl.setReq_name(getReq_name());
 		entDocImpl.setReq_email(getReq_email());
 		entDocImpl.setSign_name(getSign_name());
 		entDocImpl.setSign_email(getSign_email());
+		entDocImpl.setDoc_title(getDoc_title());
 		entDocImpl.setDoc_type(getDoc_type());
 		entDocImpl.setDoc_md5(getDoc_md5());
 		entDocImpl.setDoc_status(getDoc_status());
@@ -776,6 +825,8 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 
 		entDocCacheModel.userId = getUserId();
 
+		entDocCacheModel.signId = getSignId();
+
 		entDocCacheModel.req_name = getReq_name();
 
 		String req_name = entDocCacheModel.req_name;
@@ -806,6 +857,14 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 
 		if ((sign_email != null) && (sign_email.length() == 0)) {
 			entDocCacheModel.sign_email = null;
+		}
+
+		entDocCacheModel.doc_title = getDoc_title();
+
+		String doc_title = entDocCacheModel.doc_title;
+
+		if ((doc_title != null) && (doc_title.length() == 0)) {
+			entDocCacheModel.doc_title = null;
 		}
 
 		entDocCacheModel.doc_type = getDoc_type();
@@ -893,7 +952,7 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(35);
+		StringBundler sb = new StringBundler(39);
 
 		sb.append("{docId=");
 		sb.append(getDocId());
@@ -901,6 +960,8 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 		sb.append(getFileId());
 		sb.append(", userId=");
 		sb.append(getUserId());
+		sb.append(", signId=");
+		sb.append(getSignId());
 		sb.append(", req_name=");
 		sb.append(getReq_name());
 		sb.append(", req_email=");
@@ -909,6 +970,8 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 		sb.append(getSign_name());
 		sb.append(", sign_email=");
 		sb.append(getSign_email());
+		sb.append(", doc_title=");
+		sb.append(getDoc_title());
 		sb.append(", doc_type=");
 		sb.append(getDoc_type());
 		sb.append(", doc_md5=");
@@ -936,7 +999,7 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(55);
+		StringBundler sb = new StringBundler(61);
 
 		sb.append("<model><model-name>");
 		sb.append("com._42Penguins.gosign.model.EntDoc");
@@ -955,6 +1018,10 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 		sb.append(getUserId());
 		sb.append("]]></column-value></column>");
 		sb.append(
+			"<column><column-name>signId</column-name><column-value><![CDATA[");
+		sb.append(getSignId());
+		sb.append("]]></column-value></column>");
+		sb.append(
 			"<column><column-name>req_name</column-name><column-value><![CDATA[");
 		sb.append(getReq_name());
 		sb.append("]]></column-value></column>");
@@ -969,6 +1036,10 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 		sb.append(
 			"<column><column-name>sign_email</column-name><column-value><![CDATA[");
 		sb.append(getSign_email());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>doc_title</column-name><column-value><![CDATA[");
+		sb.append(getDoc_title());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>doc_type</column-name><column-value><![CDATA[");
@@ -1025,11 +1096,13 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 	private long _userId;
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
+	private long _signId;
 	private String _req_name;
 	private String _req_email;
 	private String _sign_name;
 	private String _sign_email;
 	private String _originalSign_email;
+	private String _doc_title;
 	private String _doc_type;
 	private String _doc_md5;
 	private String _doc_status;

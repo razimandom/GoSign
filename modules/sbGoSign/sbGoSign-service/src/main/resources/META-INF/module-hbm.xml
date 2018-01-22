@@ -11,10 +11,12 @@
 		</id>
 		<property name="fileId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="signId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="req_name" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="req_email" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="sign_name" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="sign_email" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="doc_title" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="doc_type" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="doc_md5" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="doc_status" type="com.liferay.portal.dao.orm.hibernate.StringType" />

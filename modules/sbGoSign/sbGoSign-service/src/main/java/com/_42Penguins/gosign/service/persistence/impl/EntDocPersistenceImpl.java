@@ -1419,10 +1419,12 @@ public class EntDocPersistenceImpl extends BasePersistenceImpl<EntDoc>
 		entDocImpl.setDocId(entDoc.getDocId());
 		entDocImpl.setFileId(entDoc.getFileId());
 		entDocImpl.setUserId(entDoc.getUserId());
+		entDocImpl.setSignId(entDoc.getSignId());
 		entDocImpl.setReq_name(entDoc.getReq_name());
 		entDocImpl.setReq_email(entDoc.getReq_email());
 		entDocImpl.setSign_name(entDoc.getSign_name());
 		entDocImpl.setSign_email(entDoc.getSign_email());
+		entDocImpl.setDoc_title(entDoc.getDoc_title());
 		entDocImpl.setDoc_type(entDoc.getDoc_type());
 		entDocImpl.setDoc_md5(entDoc.getDoc_md5());
 		entDocImpl.setDoc_status(entDoc.getDoc_status());

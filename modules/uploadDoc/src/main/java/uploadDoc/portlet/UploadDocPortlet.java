@@ -140,7 +140,7 @@ public class UploadDocPortlet extends MVCPortlet {
 	public void addDoc(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, NoSuchAlgorithmException {
 		
-		/**
+		/*
 		 * Fetch current date and time
 		 */
 		
@@ -149,7 +149,7 @@ public class UploadDocPortlet extends MVCPortlet {
 		DateTimeFormatter formatterTimeStamp = DateTimeFormatter.ofPattern("ddMMyyyy-HHmmss-A-N");
 		DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		
-		/**
+		/*
 		 * Fetch current user data
 		 */
 		
@@ -171,8 +171,9 @@ public class UploadDocPortlet extends MVCPortlet {
 		String req_name = currentUser.getFullName();
 		String req_email = currentUser.getEmailAddress();
 		String req_dateCreated = currentDate;
-		//String req_timeStamp = currentTimeStamp;
+		String req_timeCreated = currentTimeStamp;
 		String sign_email = ParamUtil.getString(actionRequest, "sign_email");
+		String doc_title = ParamUtil.getString(actionRequest, "doc_title");
 		String doc_description = ParamUtil.getString(actionRequest, "doc_description");
 		String doc_deadline = ParamUtil.getString(actionRequest, "doc_deadline");
 		String doc_type = ParamUtil.getString(actionRequest, "doc_type");
@@ -202,8 +203,8 @@ public class UploadDocPortlet extends MVCPortlet {
 		 */
 
 		doInsertDB(
-				docId, fileId, req_name, req_email, sign_email,
-				req_dateCreated, doc_deadline, doc_type,
+				docId, fileId, doc_title, req_name, req_email, sign_email,
+				req_dateCreated, req_timeCreated, doc_deadline, doc_type,
 				docIdMD5String, doc_description, currentUserId,
 				uploadedFileName, blobData, file, 
 				actionRequest, actionResponse);
@@ -213,7 +214,7 @@ public class UploadDocPortlet extends MVCPortlet {
 		 */
 		
 		doSendEmail(
-				docId, doc_type, req_name, req_email, sign_email, 
+				docId, doc_title, doc_type, req_name, req_email, sign_email, 
 				doc_deadline, req_dateCreated, currentCompURL, currentHomeURL, 
 				actionRequest, actionResponse);
 
@@ -247,8 +248,8 @@ public class UploadDocPortlet extends MVCPortlet {
 
 	@ProcessAction(name = "doInsertDB")
 	public void doInsertDB(
-			long docId, long fileId, String req_name, String req_email, String sign_email,
-			String req_dateCreated, String doc_deadline, String doc_type, String docIdMD5String, String doc_description,
+			long docId, long fileId, String doc_title, String req_name, String req_email, String sign_email,
+			String req_dateCreated, String req_timeCreated, String doc_deadline, String doc_type, String docIdMD5String, String doc_description,
 			long currentUserId, String uploadedFileName, OutputBlob blobData, File file,
 			ActionRequest actionRequest, ActionResponse actionResponse){
 		
@@ -257,10 +258,13 @@ public class UploadDocPortlet extends MVCPortlet {
 			System.out.println("Adding data to database...");
 			EntDoc doc = EntDocLocalServiceUtil.createEntDoc(docId);
 			EntFileUpload fileup = EntFileUploadLocalServiceUtil.createEntFileUpload(fileId);
+			doc.setDoc_title(doc_title);
 			doc.setReq_name(req_name);
 			doc.setReq_email(req_email);
+			doc.setSign_name("[Auto-generated after signer review this request]");
 			doc.setSign_email(sign_email);
 			doc.setReq_dateCreated(req_dateCreated);
+			doc.setReq_timeCreated(req_timeCreated);
 			doc.setDoc_deadline(doc_deadline);
 			doc.setDoc_status("Pending");
 			doc.setDoc_type(doc_type);
@@ -308,7 +312,7 @@ public class UploadDocPortlet extends MVCPortlet {
 	
 	@ProcessAction(name = "doSendEmail")
 	public void doSendEmail(
-			long docId, String doc_type, String req_name, String req_email, String sign_email, 
+			long docId, String doc_title, String doc_type, String req_name, String req_email, String sign_email, 
 			String doc_deadline, String req_dateCreated, String currentCompURL, String currentHomeURL, 
 			ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException {
@@ -336,6 +340,7 @@ public class UploadDocPortlet extends MVCPortlet {
 					+ "<p><strong>Request Details:</strong></p>"
 					+ "<table style=\"font-family:arial;font-size:13px\">"
 					+ "<tr><td>Request ID:</td><td> " + docId + "</td></tr>"
+					+ "<tr><td>Request Title:</td><td> " + doc_title + "</td></tr>"
 					+ "<tr><td>Request Type:</td><td> " + doc_type + "</td></tr>"
 					+ "<tr><td>Created On:</td><td> " + req_dateCreated + "</td></tr>"
 					+ "<tr><td>Deadline:</td><td> " + doc_deadline + "</td></tr>"
@@ -378,6 +383,7 @@ public class UploadDocPortlet extends MVCPortlet {
 					+ "<p><strong>Request Details:</strong></p>"
 					+ "<table style=\"font-family:arial;font-size:13px\">"
 					+ "<tr><td>Request ID:</td><td> " + docId + "</td></tr>"
+					+ "<tr><td>Request Title:</td><td> " + doc_title + "</td></tr>"
 					+ "<tr><td>Request Type:</td><td> " + doc_type + "</td></tr>"
 					+ "<tr><td>Created On:</td><td> " + req_dateCreated + "</td></tr>"
 					+ "<tr><td>Deadline:</td><td> " + doc_deadline + "</td></tr>"

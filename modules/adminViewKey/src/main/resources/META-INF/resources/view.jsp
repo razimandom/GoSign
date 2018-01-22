@@ -24,10 +24,7 @@
 	<liferay-ui:search-container-results>
 
 		<%
-			String remoteUserId = request.getRemoteUser();
-					long userId = Long.valueOf(remoteUserId);
 					List<EntKey> keyList = EntKeyLocalServiceUtil.getEntKeies(-1, -1);
-
 					//List<Document> docList = DocumentLocalServiceUtil.getDocuments(-1, -1);
 					results = ListUtil.subList(keyList, searchContainer.getStart(), searchContainer.getEnd());
 					//results = UserLocalServiceUtil.getUsers(searchContainer.getStart(), searchContainer.getEnd());
@@ -41,18 +38,8 @@
 		className="com._42Penguins.gosign.model.EntKey" modelVar="key"
 		keyProperty="userId">
 
-		<!--  
-		<portlet:renderURL var="viewDocURL">
-			<portlet:param name="fileId" value="${document.fileId}" />
-			<portlet:param name="docId" value="${document.docId}" />
-			<portlet:param name="mvcPath" value="/viewDetails.jsp" />
-		</portlet:renderURL>
-		
-		-->
-
 		<liferay-ui:search-container-column-text
 			value="<%=String.valueOf(row.getPos() + 1)%>" name="No" />
-
 
 		<liferay-ui:search-container-column-text name="User ID"
 			property="userId">
@@ -66,22 +53,20 @@
 		<liferay-ui:search-container-column-text name="Created On"
 			property="key_dateCreated">
 		</liferay-ui:search-container-column-text>
-
-		<!--  
 		
-		<liferay-ui:search-container-column-text name="Action"
-			href="${viewDocURL}" value="View">
-		</liferay-ui:search-container-column-text>
-		
-		<portlet:actionURL var="delDocument" name="delDocument">
-			<portlet:param name="docId" value="${document.docId }" />
-			<portlet:param name="fileId" value="${document.fileId }" />
+		<portlet:actionURL var="doDelKey" name="doDelKey">
+			<portlet:param name="userId" value="${key.userId }" />
 		</portlet:actionURL>
 		
 		<liferay-ui:search-container-column-text name="Delete"
-			href="${delDocument}" value="Delete">
+			href="${doDelKey}" value="Delete">
+			
+			<aui:form action="<%=doDelKey%>" method="post" name="doDelKey" >
+	<aui:button name="doDelKey" type="submit" value="Delete Key" last="true" onClick= "return confirm('Proceed to send email?')" />
+		</aui:form>
+			
+			
 		</liferay-ui:search-container-column-text>
-		-->
 	</liferay-ui:search-container-row>
 
 	<liferay-ui:search-iterator searchContainer="<%=searchContainer%>" />

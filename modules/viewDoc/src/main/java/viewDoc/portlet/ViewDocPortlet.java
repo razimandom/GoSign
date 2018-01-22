@@ -191,9 +191,7 @@ public class ViewDocPortlet extends MVCPortlet {
 	}
 	
 	/*
-	 * 
 	 * Delete document method
-	 * 
 	 */
 	
 	public void doDelDoc(ActionRequest actionRequest, ActionResponse actionResponse) throws IOException, PortletException {
@@ -203,6 +201,7 @@ public class ViewDocPortlet extends MVCPortlet {
 			EntDocLocalServiceUtil.deleteEntDoc(docId);
 			EntFileUploadLocalServiceUtil.deleteEntFileUpload(fileId);
 			System.out.println("Document " + docId + "has been deleted");
+			SessionMessages.add(actionRequest, "request_processed", "Deleted.");
 		} catch (PortalException | SystemException e) {
 			e.printStackTrace();
 		}
@@ -232,6 +231,8 @@ public class ViewDocPortlet extends MVCPortlet {
 			System.out.println("Inserting data to DB");
 			
 			doc = EntDocLocalServiceUtil.updateEntDoc(doc);
+			
+			SessionMessages.add(actionRequest, "request_processed", "Updated.");
 			
 		} catch (Exception e){
 			System.out.println("Fail to update deadline...");

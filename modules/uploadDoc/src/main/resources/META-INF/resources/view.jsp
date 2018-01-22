@@ -131,6 +131,10 @@
 	
 	<aui:input label="Complete URL (Auto): " name="currentCompURL" type="hidden" value="<%=request.getAttribute("currentCompURL") %>" readonly="true" />
 	
+	<aui:input label="Title: " name="doc_title" helpMessage="In brief about this document/request.">
+	<aui:validator name="required"/>
+	</aui:input>
+	
 	<aui:input id="myInputNode" name="sign_email" label="Signer Email: " helpMessage="Email of the user that will sign this document">
 	<aui:validator name="required"/>
 	<aui:validator name="email"/>

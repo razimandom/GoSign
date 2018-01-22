@@ -125,13 +125,13 @@
 			href="${viewDocURL}" value="View">
 		</liferay-ui:search-container-column-text>
 		
-		<portlet:actionURL var="delDocument" name="delDocument">
+		<portlet:actionURL var="doDelDoc" name="doDelDoc">
 			<portlet:param name="docId" value="${document.docId }" />
 			<portlet:param name="fileId" value="${document.fileId }" />
 		</portlet:actionURL>
 		
 		<liferay-ui:search-container-column-text name="Delete"
-			href="${delDocument}" value="Delete">
+			href="${doDelDoc}" value="Delete">
 		</liferay-ui:search-container-column-text>
 		
 		</liferay-ui:search-container-row>

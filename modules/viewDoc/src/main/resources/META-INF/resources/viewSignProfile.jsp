@@ -18,9 +18,10 @@ request.setAttribute("genkeyData", genkeyData);
 String redirect = ParamUtil.getString(request, "backURL");
 %>
 
-<h3>Signer Profile</h3>
-
-<table>
+<div class="container">
+  <h3>Signer Profile:</h3>            
+  <table class="table table-hover">
+    <tbody>
 <tr>
 	<td>Signer ID:</td>
 	<td></td>
@@ -37,10 +38,6 @@ String redirect = ParamUtil.getString(request, "backURL");
 	<td>Signer Public Key:</td>
 	<td>${genkeyData.publickey_Data}</td>
 </tr>
-</table>
-
-<liferay-ui:error key="error-key" message="Verification failed! Public key does not match with signature." />
-<liferay-ui:error key="error-key-invalidECCPubKey" message="Error! This is invalid ECC public key format." />
-<liferay-ui:error key="error-key-null" message="Error! Public key field cannot be empty" />
-<liferay-ui:error key="error-key-nosign" message="This document has not been signed." />
-<liferay-ui:error key="error-key-invalidAction" message="Invalid action." />
+    </tbody>
+  </table>
+</div>

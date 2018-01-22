@@ -16,6 +16,7 @@
 	<aui:button name="submit" type="submit" value="Reset Key" last="true" 
 	onClick= "return confirm('Are you sure you want to reset the key? All previous documents that have been signed cannot be verify using the new public key. You need to resign the document with new pin.')"/>
 </aui:form>
+
 <liferay-ui:error key="error-key-keyExist" message="You already created your keys. You only can create one key." />
 <liferay-ui:error key="error-key-keyNoExist" message="No keys available." />
 <liferay-ui:error key="error-key-invalidPinFormat" message="Enter your 6 digits pin." />
