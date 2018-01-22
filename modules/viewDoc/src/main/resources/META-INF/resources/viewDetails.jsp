@@ -13,11 +13,6 @@
 <%@taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
 
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
 <!-- Start - This script and script for toggler button 
 
 <script src="https://cdn.alloyui.com/3.0.1/aui/aui-min.js"></script>
@@ -48,31 +43,23 @@ YUI().use(
 <!-- Start - Button styles  -->
 
 <style>
+
+@media (min-width: 1200px) {
+    .container{
+        max-width: 800px;
+    }
+}
+
 td{
 	padding:5px}
 	
 .btn {
-    border: none; /* Remove borders */
-    color: white; /* Add a text color */
-    padding: 14px 28px; /* Add some padding */
-    cursor: pointer; /* Add a pointer cursor on mouse-over */
+	border: none; /* Remove borders */
+	color: white; /* Add a text color */
+	padding: 8px 28px; /* Add some padding */
+	cursor: pointer; /* Add a pointer cursor on mouse-over */
 }
-
-.btngreen {background-color: #4CAF50;} /* Green */
-.btngreen:hover {background-color: #46a049;}
-
-.btnblue {background-color: #2196F3;} /* Blue */
-.btnblue:hover {background: #0b7dda;}
-
-.btnorange {background-color: #ff9800;} /* Orange */
-.btnorange:hover {background: #e68a00;}
-
-.btnred {background-color: #f44336;} /* Red */ 
-.btnred:hover {background: #da190b;}
-
-.btngray {background-color: #e7e7e7; color: black;} /* Gray */ 
-.btngray:hover {background: #ddd;}
-
+	
 </style>
 
 <!-- End - Button styles -->
@@ -84,7 +71,6 @@ EntDoc document = EntDocLocalServiceUtil.getEntDoc(docId);
 EntFileUpload fileup = EntFileUploadLocalServiceUtil.getEntFileUpload(fileId);
 request.setAttribute("document", document);
 request.setAttribute("fileup", fileup);
-String redirect = ParamUtil.getString(request, "backURL");
 %>
 
 		<liferay-portlet:renderURL varImpl="viewSignProfileURL">
@@ -94,8 +80,9 @@ String redirect = ParamUtil.getString(request, "backURL");
             <portlet:param name="fileId" value="<%=String.valueOf(fileup.getFileId())%>" />
         </portlet:resourceURL>
 
+
 <div class="container">
-  <h3>Request Details:</h3>            
+  <h3><span class="glyphicon glyphicon-briefcase"></span>&nbsp;Request Details:</h3>            
   <table class="table table-hover">
     <tbody>
 <tr>
@@ -135,7 +122,7 @@ String redirect = ParamUtil.getString(request, "backURL");
 </div>
 
 <div class="container">
-  <h3>Requester & Signer Details:</h3>            
+  <h3><span class="glyphicon glyphicon-user"></span>&nbsp;Requester & Signer Details:</h3>     
   <table class="table table-hover">
     <tbody>
 <tr>
@@ -148,7 +135,9 @@ String redirect = ParamUtil.getString(request, "backURL");
 </tr>
 <tr>
 	<td>Signer Name: </td>
-	<td>${document.sign_name} <a href="<%=viewSignProfileURL.toString() %>">[View profile]</a></td>
+	<td>${document.sign_name} 
+	<a href="<%=viewSignProfileURL.toString()%>" data-toggle="tooltip" title="View public key"><span class="glyphicon glyphicon-lock"></span></a>
+	</td>
 </tr>
 <tr>
 	<td>Signer Email:</td>
@@ -159,7 +148,7 @@ String redirect = ParamUtil.getString(request, "backURL");
 </div>
 
 <div class="container">
-  <h3>Uploaded Document:</h3>            
+  <h3><span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Uploaded Document:</h3>            
   <table class="table table-hover">
     <tbody>
 <tr>
@@ -169,7 +158,7 @@ String redirect = ParamUtil.getString(request, "backURL");
 <tr>
 	<td>Download:</td>
 	<td><aui:form action="<%=viewURL.toString() %>" method="post" name="name">
-	<button name="delDocument" type="submit">Download File</button>
+	<button class="btn btn-primary" name="delDocument" type="submit">Download File</button>
 	</aui:form></td>
 	
 </tr>
@@ -178,7 +167,7 @@ String redirect = ParamUtil.getString(request, "backURL");
 </div>
 
 <div class="container">
-  <h3>Other Details:</h3>            
+  <h3><span class="glyphicon glyphicon-briefcase"></span>&nbsp;Other Details:</h3>            
   <table class="table table-hover">
     <tbody>
 <tr>
@@ -195,7 +184,7 @@ String redirect = ParamUtil.getString(request, "backURL");
 </tr>
     </tbody>
   </table>
-</div>
+
 <br>
 
 <portlet:actionURL name="doAction" var="doAction" />
@@ -205,16 +194,19 @@ String redirect = ParamUtil.getString(request, "backURL");
 <td>
 	<aui:form action="<%=doAction%>" method="post" name="name">
 	<aui:input label="Action: " name="doAction" type="hidden" value="back" readOnly="true"/>
-	<aui:button cssClass="btngrey" name="back" type="submit" value="Back" last="true" />
+	<aui:input label="Doc Id: " name="docId" type="hidden" value="${document.docId}" readOnly="true"/>
+	<aui:input label="File Id: " name="fileId" type="hidden" value="${fileup.fileId}" readOnly="true" />
+	<aui:button name="back" type="submit" value="Back" last="true" />
 	</aui:form>
 </td>
 <td>
-
-	<aui:form action="<%=doAction%>" method="post" name="name">
-	<aui:input label="Action: " name="doAction" type="hidden" value="delete" readOnly="true"/>
-	<aui:input label="Doc Id: " name="docId" type="hidden" value="${document.docId}" readOnly="true"/>
-	<aui:button cssClass="btnred" name="delDocument" type="submit" value="Delete" last="true" />
-	</aui:form>
+	<button type="button" class="btn btn-danger" data-toggle="collapse" data-target="#delete">Delete</button>
+</td>
+<td>
+	<button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#updateDeadline">Change Deadline</button>
+</td>
+<td>
+	<button type="button" class="btn btn-success" data-toggle="collapse" data-target="#verify">Verify Signature</button>
 </td>
 <!-- 
 <td>
@@ -238,8 +230,18 @@ String redirect = ParamUtil.getString(request, "backURL");
 </tr>
 </table>
 
-<div class="content toggler-content-collapsed" id="myToggler">
+<div id="delete" class="collapse">
+<br>
+  <div class="alert alert-danger">Are you sure you want to delete this request?</div>
+	<aui:form action="<%=doAction%>" method="post" name="name">
+	<aui:input label="Action: " name="doAction" type="hidden" value="delete" readOnly="true"/>
+	<aui:input label="Doc Id: " name="docId" type="hidden" value="${document.docId}" readOnly="true"/>
+	<aui:button cssClass="btn btn-danger" name="delDocument" type="submit" value="Yes. Proceed." last="true" />
+	</aui:form>
+</div>
 
+<div id="updateDeadline" class="collapse">
+<br>
 <h3>Change Deadline:</h3>
 
 <aui:form action="<%=doAction%>" method="post" name="name">
@@ -250,10 +252,13 @@ String redirect = ParamUtil.getString(request, "backURL");
 	<aui:button name="update" type="submit" value="Update" last="true" />
 
 </aui:form>
-
 </div>
 
-<div class="content toggler-content-collapsed" id="myToggler2">
+<div id="verify" class="collapse">
+<br>
+  <div class="alert alert-info">
+  You need to have signer <strong>public key</strong> to verify the signature. <strong><a href="<%=viewSignProfileURL.toString()%>" data-toggle="tooltip" title="View public key"><span class="glyphicon glyphicon-lock"></span>&nbsp;Click Here</a></strong>
+  </div>
 
 <h3>Verify Signature:</h3>
 
@@ -262,10 +267,15 @@ String redirect = ParamUtil.getString(request, "backURL");
 	<aui:input label="Doc Id: " name="docId" type="hidden" value="${document.docId}" readOnly="true"/>
 	<aui:input label="File Id: " name="fileId" type="hidden" value="${fileup.fileId}" readOnly="true"/>
 	<aui:input label="Insert Signer Public Key: " name="input_pubkey" type="textarea"/>
-	<aui:button name="Verify" type="submit" value="Verify" last="true" />
+	<aui:button cssClass="btn btn-success" name="Verify" type="submit" value="Verify" last="true" />
 
 </aui:form>
+
 </div>
+
+</div>
+
+
 
 <liferay-ui:error key="error-key" message="Verification failed! Public key does not match with signature." />
 <liferay-ui:error key="error-key-invalidECCPubKey" message="Error! This is invalid ECC public key format." />

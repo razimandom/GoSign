@@ -34,6 +34,13 @@
 .txtorange {
 	color: orange
 }
+
+.btn {
+	border: none; /* Remove borders */
+	color: white; /* Add a text color */
+	padding: 8px 28px; /* Add some padding */
+	cursor: pointer; /* Add a pointer cursor on mouse-over */
+}
 </style>
 
 <!-- End - CSS Styles for text in table -->
@@ -45,22 +52,22 @@
 <liferay-ui:search-container
 	emptyResultsMessage="No uploaded document found."
 	iteratorURL="<%=iteratorURL%>" delta="10" deltaConfigurable="true">
-	
+
 
 	<liferay-ui:search-container-results>
 
 		<%
-		String remoteUserId = request.getRemoteUser();
-		long userId = Long.valueOf(remoteUserId);
-		//System.out.println(userId);
-		//long currentUserId = request.getAttribute("currentUserId");
-		List<EntDoc> docList = EntDocLocalServiceUtil.findByUserId(userId, -1, -1);
+			String remoteUserId = request.getRemoteUser();
+					long userId = Long.valueOf(remoteUserId);
+					//System.out.println(userId);
+					//long currentUserId = request.getAttribute("currentUserId");
+					List<EntDoc> docList = EntDocLocalServiceUtil.findByUserId(userId, -1, -1);
 
-		//List<Document> docList = DocumentLocalServiceUtil.getDocuments(-1, -1);
-		results = ListUtil.subList(docList, searchContainer.getStart(), searchContainer.getEnd());
-		//results = UserLocalServiceUtil.getUsers(searchContainer.getStart(), searchContainer.getEnd());
-		searchContainer.setTotal(docList.size());
-		searchContainer.setResults(results);
+					//List<Document> docList = DocumentLocalServiceUtil.getDocuments(-1, -1);
+					results = ListUtil.subList(docList, searchContainer.getStart(), searchContainer.getEnd());
+					//results = UserLocalServiceUtil.getUsers(searchContainer.getStart(), searchContainer.getEnd());
+					searchContainer.setTotal(docList.size());
+					searchContainer.setResults(results);
 		%>
 
 	</liferay-ui:search-container-results>
@@ -74,16 +81,16 @@
 			<portlet:param name="docId" value="${document.docId}" />
 			<portlet:param name="mvcPath" value="/viewDetails.jsp" />
 		</portlet:renderURL>
-		
+
 		<portlet:resourceURL var="viewURL">
-            <portlet:param name="dataId"
-                value="<%=String.valueOf(document.getDocId())%>" />
-        </portlet:resourceURL>
-		
-		<liferay-ui:search-container-column-text 
-		value="<%=String.valueOf(row.getPos() + 1)%>" name="No" />
-		
-		
+			<portlet:param name="dataId"
+				value="<%=String.valueOf(document.getDocId())%>" />
+		</portlet:resourceURL>
+
+		<liferay-ui:search-container-column-text
+			value="<%=String.valueOf(row.getPos() + 1)%>" name="No" />
+
+
 		<liferay-ui:search-container-column-text name="Req ID"
 			property="docId">
 		</liferay-ui:search-container-column-text>
@@ -113,29 +120,28 @@
 					name="Status" property="doc_status">
 				</liferay-ui:search-container-column-text>
 			</c:when>
-			<c:when
-				test="<%=document.getDoc_status().equals("Justify")%>">
+			<c:when test="<%=document.getDoc_status().equals("Justify")%>">
 				<liferay-ui:search-container-column-text cssClass="txtorange"
 					name="Status" property="doc_status">
 				</liferay-ui:search-container-column-text>
 			</c:when>
 		</c:choose>
 
-		<liferay-ui:search-container-column-text name="Action"
-			href="${viewDocURL}" value="View">
-		</liferay-ui:search-container-column-text>
-		
 		<portlet:actionURL var="doDelDoc" name="doDelDoc">
 			<portlet:param name="docId" value="${document.docId }" />
 			<portlet:param name="fileId" value="${document.fileId }" />
 		</portlet:actionURL>
-		
-		<liferay-ui:search-container-column-text name="Delete"
-			href="${doDelDoc}" value="Delete">
+
+		<liferay-ui:search-container-column-text name="Action">
+			<a href="${viewDocURL}" data-toggle="tooltip" title="View request"><span
+				class="glyphicon glyphicon-briefcase"></span></a>
+			    &nbsp;
+			    <a href="${doDelDoc}" data-toggle="tooltip" title="Delete" onclick="return confirm('Are you sure you want to delete?')"><span
+				class="glyphicon glyphicon-remove"></span></a>
 		</liferay-ui:search-container-column-text>
-		
-		</liferay-ui:search-container-row>
-		
+
+	</liferay-ui:search-container-row>
+
 	<liferay-ui:search-iterator searchContainer="<%=searchContainer%>" />
 
 </liferay-ui:search-container>

@@ -8,23 +8,47 @@
 <%@taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet" %>
 <%@page import="com._42Penguins.gosign.service.EntKeyLocalServiceUtil"%>
 <%@page import="com._42Penguins.gosign.model.EntKey"%>
+<%@page import="com._42Penguins.gosign.service.EntDocLocalServiceUtil"%>
+<%@page import="com._42Penguins.gosign.model.EntDoc"%>
 <%@taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
 
 <%
 long userId = ParamUtil.getLong(request, "signId");
 EntKey genkeyData = EntKeyLocalServiceUtil.getEntKey(20156);
+EntDoc docData = EntDocLocalServiceUtil.getEntDoc(35317);
+request.setAttribute("docData", docData);
 request.setAttribute("genkeyData", genkeyData);
 String redirect = ParamUtil.getString(request, "backURL");
 %>
 
+<style>
+
+@media (min-width: 1200px) {
+    .container{
+        max-width: 800px;
+    }
+}
+
+td{
+	padding:5px}
+	
+.btn {
+	border: none; /* Remove borders */
+	color: white; /* Add a text color */
+	padding: 8px 28px; /* Add some padding */
+	cursor: pointer; /* Add a pointer cursor on mouse-over */
+}
+	
+</style>
+
 <div class="container">
   <h3>Signer Profile:</h3>            
-  <table class="table table-hover">
+  <table>
     <tbody>
 <tr>
-	<td>Signer ID:</td>
-	<td></td>
+	<td width="250">Signer ID:</td>
+	<td>${docData.signId}</td>
 </tr>
 <tr>
 	<td>Signer Name:</td>
@@ -32,12 +56,15 @@ String redirect = ParamUtil.getString(request, "backURL");
 </tr>
 <tr>
 	<td>Signer Email:</td>
-	<td></td>
-</tr>
-<tr>
-	<td>Signer Public Key:</td>
-	<td>${genkeyData.publickey_Data}</td>
+	<td>${docData.sign_email}</td>
 </tr>
     </tbody>
   </table>
+  <br>
+ 	<aui:form action="#" method="post" name="name" enctype="multipart/form-data">
+	<aui:input label="Public Key: " name="pubKey" type="textarea" value="${genkeyData.getPublickey_Data()}" readonly="true" />
+	</aui:form>
+  	<div class="alert alert-info">
+    Copy public key above to verify document that has been signed to check if the signature is valid from correct person (signer).
+  	</div>
 </div>

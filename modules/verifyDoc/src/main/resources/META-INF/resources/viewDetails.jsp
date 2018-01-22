@@ -14,13 +14,6 @@
 <%@taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
 <portlet:defineObjects />
 
 <%
@@ -82,44 +75,8 @@ td {
 .btn {
 	border: none; /* Remove borders */
 	color: white; /* Add a text color */
-	padding: 14px 28px; /* Add some padding */
+	padding: 8px 28px; /* Add some padding */
 	cursor: pointer; /* Add a pointer cursor on mouse-over */
-}
-
-.btngreen {
-	background-color: #4CAF50;
-} /* Green */
-.btngreen:hover {
-	background-color: #46a049;
-}
-
-.btnblue {
-	background-color: #2196F3;
-} /* Blue */
-.btnblue:hover {
-	background: #0b7dda;
-}
-
-.btnorange {
-	background-color: #ff9800;
-} /* Orange */
-.btnorange:hover {
-	background: #e68a00;
-}
-
-.btnred {
-	background-color: #f44336;
-} /* Red */
-.btnred:hover {
-	background: #da190b;
-}
-
-.btngray {
-	background-color: #e7e7e7;
-	color: black;
-} /* Gray */
-.btngray:hover {
-	background: #ddd;
 }
 </style>
 
@@ -226,13 +183,31 @@ td {
 			</tr>
 		</tbody>
 	</table>
-</div>
 
-<div class="container">
-	<h3>Action:</h3>
-	<table>
-		<tr>
-			<td><aui:form action="<%=doSignAction%>" method="post"
+<br>
+
+  <div class="alert alert-warning">
+    <strong>Reminder!</strong> You cannot edit your response after you have rejected or signed the document.
+  </div>
+
+<td>
+	<button type="button" class="btn btn-primary">Back</button>
+</td>
+<td>
+	<button type="button" class="btn btn-danger" data-toggle="collapse" data-target="#delete">Reject</button>
+</td>
+<td>
+	<button type="button" class="btn btn-warning" data-toggle="collapse" data-target="#justify">Request Justification</button>
+</td>
+<td>
+	<button type="button" class="btn btn-success" data-toggle="collapse" data-target="#sign">Sign Document</button>
+</td>
+
+<div id="delete" class="collapse">
+
+<br>
+  <div class="alert alert-danger">Are you sure you want to reject this request?</div>
+  <aui:form action="<%=doSignAction%>" method="post"
 					name="name">
 					<aui:input label="Doc Id: " name="docId" type="hidden"
 						value="${document.docId}" readOnly="true" />
@@ -240,42 +215,16 @@ td {
 						value="${fileup.fileId}" readOnly="true" />
 					<aui:input label="Action: " name="doAction" type="hidden"
 						value="Reject" readOnly="true" />
-					<aui:button cssClass="btnred" name="reject" type="submit"
-						value="Reject" last="true"
-						onClick="return confirm('Are you sure to reject this request?')" />
-				</aui:form></td>
-			<td>
-				<button class="header btn btn-primary toggler-header-collapsed" css="btnorange" >Need Justification</button>
-			</td>
-			<td>
-				<button class="header btn btn-primary toggler-header-collapsed" css="btnorange" >Sign Document</button>
-			</td>
-		</tr>
-	</table>
+					<aui:button cssClass="btn btn-danger" name="reject" type="submit"
+						value="Yes. Reject this request." last="true" />
+				</aui:form>
+  
+  </div>
+	
 
-	<h3>Sign Document:</h3>
 
-	<aui:form action="<%=doSignAction%>" method="post" name="name"
-		enctype="multipart/form-data">
-		<aui:input label="Enter 6 pin: " name="userPin" type="type">
-			<aui:validator name="required" />
-			<aui:validator name="digits" />
-		</aui:input>
-		<aui:input label="Action: " name="doAction" type="hidden" value="Sign"
-			readOnly="true" />
-		<aui:input label="Doc Id: " name="docId" type="hidden"
-			value="${document.docId}" readOnly="true" />
-		<aui:input label="File Id: " name="fileId" type="hidden"
-			value="${fileup.fileId}" readOnly="true" />
-		<aui:input label="Doc Id: " name="doc_status" type="hidden"
-			value="${document.doc_status}" readOnly="true" />
-		<aui:button cssClass="btngreen" name="sign" type="submit"
-			value="Sign Document" last="true"
-			onClick="return confirm('Are you sure to sign this document?')" />
-	</aui:form>
-
-	<!--  <div class="content toggler-content-collapsed" id="myToggler">-->
-
+<div id="justify" class="collapse">
+<br>
 	<h3>Request for justification:</h3>
 
 	<portlet:actionURL name="updateDoc" var="updateDoc" />
@@ -297,6 +246,36 @@ td {
 	</aui:form>
 
 </div>
+
+
+
+<div id="sign" class="collapse">
+<br>
+	<h3>Sign Document:</h3>
+
+	<aui:form action="<%=doSignAction%>" method="post" name="name"
+		enctype="multipart/form-data">
+		<aui:input label="Enter 6 pin: " name="userPin" type="type">
+			<aui:validator name="required" />
+			<aui:validator name="digits" />
+		</aui:input>
+		<aui:input label="Action: " name="doAction" type="hidden" value="Sign"
+			readOnly="true" />
+		<aui:input label="Doc Id: " name="docId" type="hidden"
+			value="${document.docId}" readOnly="true" />
+		<aui:input label="File Id: " name="fileId" type="hidden"
+			value="${fileup.fileId}" readOnly="true" />
+		<aui:input label="Doc Id: " name="doc_status" type="hidden"
+			value="${document.doc_status}" readOnly="true" />
+		<aui:button cssClass="btn btn-success" name="sign" type="submit"
+			value="Sign Document" last="true"
+			onClick="return confirm('Are you sure to sign this document?')" />
+	</aui:form>
+
+</div>
+
+</div>
+
 
 <liferay-ui:error key="error-key-signFail"
 	message="Invalid pin! Your 6 digits pin does not match with registered pin." />

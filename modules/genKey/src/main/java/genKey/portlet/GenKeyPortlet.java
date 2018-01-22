@@ -254,7 +254,7 @@ public class GenKeyPortlet extends MVCPortlet {
 	
 	/*
 	 * 
-	 * Delete document method
+	 * Delete key method
 	 * 
 	 */
 	

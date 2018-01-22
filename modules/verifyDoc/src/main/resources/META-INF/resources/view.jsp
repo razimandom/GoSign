@@ -102,7 +102,6 @@
 		<liferay-ui:search-container-column-text value="<%=String.valueOf(row.getPos() + 1)%>" name="No" />
 		<liferay-ui:search-container-column-text name="Req ID" property="docId">
 		</liferay-ui:search-container-column-text>
-		<liferay-ui:search-container-column-user userId="${document.userId}" showDetails="false" name="User"></liferay-ui:search-container-column-user>
 		<liferay-ui:search-container-column-text name="Requested By" property="req_name">
 		</liferay-ui:search-container-column-text>
 		<liferay-ui:search-container-column-text name="Request Type" property="doc_type">
@@ -132,9 +131,11 @@
          </c:choose>
 		
 		
-		<liferay-ui:search-container-column-text name="Action" href="${viewDocURL}" value="View">
+		<liferay-ui:search-container-column-text name="Action">
+			<a href="${viewDocURL}" data-toggle="tooltip" title="View request"><span
+				class="glyphicon glyphicon-briefcase"></span></a>
+			    &nbsp;
 		</liferay-ui:search-container-column-text>
-
 	
 		</liferay-ui:search-container-row>
 		
