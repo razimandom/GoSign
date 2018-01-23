@@ -1,10 +1,10 @@
-package adminViewKey.portlet;
+package adminViewDoc.portlet;
 
-import adminViewKey.constants.AdminViewKeyPortletKeys;
+import adminViewDoc.constants.AdminViewDocPortletKeys;
 
 import com._42Penguins.gosign.model.EntDoc;
 import com._42Penguins.gosign.service.EntDocLocalServiceUtil;
-import com._42Penguins.gosign.service.EntKeyLocalServiceUtil;
+import com._42Penguins.gosign.service.EntFileUploadLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
@@ -27,34 +27,34 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true,
 	property = {
-		"com.liferay.portlet.display-category=admin.gosign",
+		"com.liferay.portlet.display-category=admin.goSign",
 		"com.liferay.portlet.instanceable=true",
-		"javax.portlet.display-name=adminViewKey Portlet",
+		"javax.portlet.display-name=adminViewDoc Portlet",
 		"javax.portlet.init-param.template-path=/",
 		"javax.portlet.init-param.view-template=/view.jsp",
-		"javax.portlet.name=" + AdminViewKeyPortletKeys.AdminViewKey,
+		"javax.portlet.name=" + AdminViewDocPortletKeys.AdminViewDoc,
 		"javax.portlet.resource-bundle=content.Language",
 		"javax.portlet.security-role-ref=power-user,user"
 	},
 	service = Portlet.class
 )
-public class AdminViewKeyPortlet extends MVCPortlet {
+public class AdminViewDocPortlet extends MVCPortlet {
 	
 	/**
 	 * Delete method
+	 * @param docId
 	 * @param actionRequest
 	 * @param actionResponse
 	 * @throws IOException
 	 * @throws PortletException
 	 */
 	
-	public void doDelKey(ActionRequest actionRequest, ActionResponse actionResponse) throws IOException, PortletException {
-		long userId = ParamUtil.getLong(actionRequest, "userId");
-		System.out.println(userId);
+	public void doDelDoc(ActionRequest actionRequest, ActionResponse actionResponse) throws IOException, PortletException {
+		long docId = ParamUtil.getLong(actionRequest, "docId");
 		try {
-			EntKeyLocalServiceUtil.deleteEntKey(userId);
-			System.out.println("Key user " + userId + "has been deleted");
-			SessionMessages.add(actionRequest, "request_processed", "Deleted key user " + userId);
+			EntDocLocalServiceUtil.deleteEntDoc(docId);
+			System.out.println("Document " + docId + "has been deleted");
+			SessionMessages.add(actionRequest, "request_processed", "Deleted request ID: " + docId);
 		} catch (PortalException | SystemException e) {
 			e.printStackTrace();
 		}
@@ -69,8 +69,7 @@ public class AdminViewKeyPortlet extends MVCPortlet {
 	 */
 
 	public void doBack(ActionRequest actionRequest, ActionResponse actionResponse) 
-			throws IOException, PortletException {
-		
+			throws IOException, PortletException {		
 		System.out.println("Go back to view page.");
 		actionResponse.setRenderParameter("mvcPath", "/view.jsp");
 		

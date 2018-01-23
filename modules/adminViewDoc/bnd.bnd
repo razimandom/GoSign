@@ -1,0 +1,4 @@
+Bundle-Name: adminViewDoc
+Bundle-SymbolicName: adminViewDoc
+Bundle-Version: 1.0.0
+Export-Package: adminViewDoc.constants

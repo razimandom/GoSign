@@ -15,8 +15,9 @@
 
 <%
 long userId = ParamUtil.getLong(request, "signId");
-EntKey genkeyData = EntKeyLocalServiceUtil.getEntKey(20156);
-EntDoc docData = EntDocLocalServiceUtil.getEntDoc(35317);
+long docId = ParamUtil.getLong(request, "docId");
+EntKey genkeyData = EntKeyLocalServiceUtil.getEntKey(userId);
+EntDoc docData = EntDocLocalServiceUtil.getEntDoc(docId);
 request.setAttribute("docData", docData);
 request.setAttribute("genkeyData", genkeyData);
 String redirect = ParamUtil.getString(request, "backURL");

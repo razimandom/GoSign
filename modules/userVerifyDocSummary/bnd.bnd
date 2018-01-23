@@ -1,0 +1,4 @@
+Bundle-Name: userVerifyDocSummary
+Bundle-SymbolicName: userVerifyDocSummary
+Bundle-Version: 1.0.0
+Export-Package: userVerifyDocSummary.constants

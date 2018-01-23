@@ -80,9 +80,12 @@ public class UploadDocPortlet extends MVCPortlet {
 		super.doView(renderRequest, renderResponse);
 	}
 	
+
+    /*
+	
 	/**
 	 * Auto complete form
-	 */
+	 *
 	
     @Override
     public void serveResource(ResourceRequest resourceRequest,
@@ -94,6 +97,7 @@ public class UploadDocPortlet extends MVCPortlet {
             }
         }
 	
+    
     public void getUsers(ResourceRequest resourceRequest, ResourceResponse resourceResponse) throws IOException, PortletException {
         JSONArray usersJSONArray = JSONFactoryUtil.createJSONArray();
         //ThemeDisplay themeDisplay = (ThemeDisplay) resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
@@ -125,7 +129,7 @@ public class UploadDocPortlet extends MVCPortlet {
         PrintWriter out = resourceResponse.getWriter();
         out.println(usersJSONArray.toString());
     }
-    
+    */
 
     /**
      * addDoc method to retrieve data from the form then set the data to db
@@ -261,7 +265,7 @@ public class UploadDocPortlet extends MVCPortlet {
 			doc.setDoc_title(doc_title);
 			doc.setReq_name(req_name);
 			doc.setReq_email(req_email);
-			doc.setSign_name("[Auto-generated after signer review this request]");
+			doc.setSign_name("[Auto-generated]");
 			doc.setSign_email(sign_email);
 			doc.setReq_dateCreated(req_dateCreated);
 			doc.setReq_timeCreated(req_timeCreated);

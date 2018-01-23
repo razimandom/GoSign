@@ -44,29 +44,6 @@
 <portlet:actionURL name="doSignAction" var="doSignAction" />
 <portlet:actionURL name="doBack" var="doBack" />
 
-<!-- This style need to put in css file later 
-
-<script type="text/javascript">
-
-YUI().use(
-  'aui-toggler',
-  function(Y) {
-    new Y.Toggler(
-      {
-        container: '#myToggler',
-        animated: true,
-        content: '.content',
-        expanded: false,
-        header: '.header'
-      }
-    );
-  }
-);
-
-</script>-->
-
-<!-- This table style need to be add in CSS file later -->
-
 <style type="text/css">
 td {
 	padding: 5px
@@ -82,7 +59,10 @@ td {
 
 
 <div class="container">
-	<h3>Request Details:</h3>
+	<h3>
+		<span class="glyphicon glyphicon-briefcase"></span>&nbsp;Request
+		Details:
+	</h3>
 	<table class="table table-hover">
 		<tbody>
 			<tr>
@@ -119,10 +99,11 @@ td {
 			</tr>
 		</tbody>
 	</table>
-</div>
 
-<div class="container">
-	<h3>Requester & Signer Details:</h3>
+	<h3>
+		<span class="glyphicon glyphicon-user"></span>&nbsp;Requester & Signer
+		Details:
+	</h3>
 	<table class="table table-hover">
 		<tbody>
 			<tr>
@@ -135,7 +116,8 @@ td {
 			</tr>
 			<tr>
 				<td>Signer Name:</td>
-				<td>${document.sign_name}</td>
+				<td>${document.sign_name}
+				</td>
 			</tr>
 			<tr>
 				<td>Signer Email:</td>
@@ -143,10 +125,11 @@ td {
 			</tr>
 		</tbody>
 	</table>
-</div>
 
-<div class="container">
-	<h3>Uploaded Document:</h3>
+	<h3>
+		<span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Uploaded
+		Document:
+	</h3>
 	<table class="table table-hover">
 		<tbody>
 			<tr>
@@ -157,16 +140,18 @@ td {
 				<td>Download:</td>
 				<td><aui:form action="<%=viewURL.toString()%>" method="post"
 						name="name">
-						<button name="delDocument" type="submit">Download File</button>
+						<button class="btn btn-primary" name="delDocument" type="submit">Download
+							File</button>
 					</aui:form></td>
 
 			</tr>
 		</tbody>
 	</table>
-</div>
 
-<div class="container">
-	<h3>Other Details:</h3>
+	<h3>
+		<span class="glyphicon glyphicon-briefcase"></span>&nbsp;Other
+		Details:
+	</h3>
 	<table class="table table-hover">
 		<tbody>
 			<tr>
@@ -184,95 +169,101 @@ td {
 		</tbody>
 	</table>
 
-<br>
+	<br>
 
-  <div class="alert alert-warning">
-    <strong>Reminder!</strong> You cannot edit your response after you have rejected or signed the document.
-  </div>
+	<div class="alert alert-warning">
+		<strong>Reminder!</strong> You cannot edit your response after you
+		have rejected or signed the document.
+	</div>
 
-<td>
-	<button type="button" class="btn btn-primary">Back</button>
-</td>
-<td>
-	<button type="button" class="btn btn-danger" data-toggle="collapse" data-target="#delete">Reject</button>
-</td>
-<td>
-	<button type="button" class="btn btn-warning" data-toggle="collapse" data-target="#justify">Request Justification</button>
-</td>
-<td>
-	<button type="button" class="btn btn-success" data-toggle="collapse" data-target="#sign">Sign Document</button>
-</td>
+	<td>
+		<button type="button" class="btn btn-primary">Back</button>
+	</td>
+	<td>
+		<button type="button" class="btn btn-danger" data-toggle="collapse"
+			data-target="#delete">Reject</button>
+	</td>
+	<td>
+		<button type="button" class="btn btn-warning" data-toggle="collapse"
+			data-target="#justify">Request Justification</button>
+	</td>
+	<td>
+		<button type="button" class="btn btn-success" data-toggle="collapse"
+			data-target="#sign">Sign Document</button>
+	</td>
 
-<div id="delete" class="collapse">
+	<div id="delete" class="collapse">
 
-<br>
-  <div class="alert alert-danger">Are you sure you want to reject this request?</div>
-  <aui:form action="<%=doSignAction%>" method="post"
-					name="name">
-					<aui:input label="Doc Id: " name="docId" type="hidden"
-						value="${document.docId}" readOnly="true" />
-					<aui:input label="File Id: " name="fileId" type="hidden"
-						value="${fileup.fileId}" readOnly="true" />
-					<aui:input label="Action: " name="doAction" type="hidden"
-						value="Reject" readOnly="true" />
-					<aui:button cssClass="btn btn-danger" name="reject" type="submit"
-						value="Yes. Reject this request." last="true" />
-				</aui:form>
-  
-  </div>
-	
+		<br>
+		<div class="alert alert-danger">
+			<span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;Are
+			you sure you want to reject this request?
+		</div>
+		<aui:form action="<%=doSignAction%>" method="post" name="name">
+			<aui:input label="Doc Id: " name="docId" type="hidden"
+				value="${document.docId}" readOnly="true" />
+			<aui:input label="File Id: " name="fileId" type="hidden"
+				value="${fileup.fileId}" readOnly="true" />
+			<aui:input label="Action: " name="doAction" type="hidden"
+				value="Reject" readOnly="true" />
+			<aui:button cssClass="btn btn-danger" name="reject" type="submit"
+				value="Yes. Reject this request." last="true" />
+		</aui:form>
 
-
-<div id="justify" class="collapse">
-<br>
-	<h3>Request for justification:</h3>
-
-	<portlet:actionURL name="updateDoc" var="updateDoc" />
-
-	<aui:form action="<%=doSignAction%>" method="post" name="name">
-		<aui:input label="Doc Id: " name="docId" type="hidden"
-			value="${document.docId}" readOnly="true" />
-		<aui:input label="File Id: " name="fileId" type="hidden"
-			value="${fileup.fileId}" readOnly="true" />
-		<aui:input label="Doc Id: " name="doc_status" type="hidden"
-			value="${document.doc_status}" readOnly="true" />
-		<aui:input label="Action: " name="doAction" type="hidden"
-			value="Justify" readOnly="true" />
-		<aui:input label="Add comments: " type="textarea"
-			name="justificationMsg"
-			value="Please provide more justification on this request." />
-		<aui:button name="req_justification" type="submit" value="Send Email"
-			last="true" onClick="return confirm('Proceed to send email?')" />
-	</aui:form>
-
-</div>
+	</div>
 
 
 
-<div id="sign" class="collapse">
-<br>
-	<h3>Sign Document:</h3>
+	<div id="justify" class="collapse">
+		<br>
+		<h3>Request for justification:</h3>
 
-	<aui:form action="<%=doSignAction%>" method="post" name="name"
-		enctype="multipart/form-data">
-		<aui:input label="Enter 6 pin: " name="userPin" type="type">
-			<aui:validator name="required" />
-			<aui:validator name="digits" />
-		</aui:input>
-		<aui:input label="Action: " name="doAction" type="hidden" value="Sign"
-			readOnly="true" />
-		<aui:input label="Doc Id: " name="docId" type="hidden"
-			value="${document.docId}" readOnly="true" />
-		<aui:input label="File Id: " name="fileId" type="hidden"
-			value="${fileup.fileId}" readOnly="true" />
-		<aui:input label="Doc Id: " name="doc_status" type="hidden"
-			value="${document.doc_status}" readOnly="true" />
-		<aui:button cssClass="btn btn-success" name="sign" type="submit"
-			value="Sign Document" last="true"
-			onClick="return confirm('Are you sure to sign this document?')" />
-	</aui:form>
+		<portlet:actionURL name="updateDoc" var="updateDoc" />
 
-</div>
+		<aui:form action="<%=doSignAction%>" method="post" name="name">
+			<aui:input label="Doc Id: " name="docId" type="hidden"
+				value="${document.docId}" readOnly="true" />
+			<aui:input label="File Id: " name="fileId" type="hidden"
+				value="${fileup.fileId}" readOnly="true" />
+			<aui:input label="Doc Id: " name="doc_status" type="hidden"
+				value="${document.doc_status}" readOnly="true" />
+			<aui:input label="Action: " name="doAction" type="hidden"
+				value="Justify" readOnly="true" />
+			<aui:input label="Add comments: " type="textarea"
+				name="justificationMsg"
+				value="Please provide more justification on this request." />
+			<aui:button name="req_justification" type="submit" value="Send Email"
+				last="true" onClick="return confirm('Proceed to send email?')" />
+		</aui:form>
+
+	</div>
+
+
+
+	<div id="sign" class="collapse">
+		<br>
+		<h3>Sign Document:</h3>
+
+		<aui:form action="<%=doSignAction%>" method="post" name="name"
+			enctype="multipart/form-data">
+			<aui:input label="Enter 6 pin: " name="userPin" type="type">
+				<aui:validator name="required" />
+				<aui:validator name="digits" />
+			</aui:input>
+			<aui:input label="Action: " name="doAction" type="hidden"
+				value="Sign" readOnly="true" />
+			<aui:input label="Doc Id: " name="docId" type="hidden"
+				value="${document.docId}" readOnly="true" />
+			<aui:input label="File Id: " name="fileId" type="hidden"
+				value="${fileup.fileId}" readOnly="true" />
+			<aui:input label="Doc Id: " name="doc_status" type="hidden"
+				value="${document.doc_status}" readOnly="true" />
+			<aui:button cssClass="btn btn-success" name="sign" type="submit"
+				value="Sign Document" last="true"
+				onClick="return confirm('Are you sure to sign this document?')" />
+		</aui:form>
+
+	</div>
 
 </div>
 

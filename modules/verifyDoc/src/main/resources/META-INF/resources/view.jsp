@@ -15,29 +15,6 @@
 <%@page import="com.liferay.portal.kernel.util.WebKeys"%>
 <%@page import="com.liferay.portal.kernel.theme.ThemeDisplay"%>
 
-<!-- Start - CSS Styles for text in table -->
-
-<style>
-.txtred{
-	color:red}
-	
-.txtgreen{
-    color:green
-}
-
-.txtgrey{
-    color:grey
-}
-
-.txtorange{
-    color:orange
-}
-
-	
-</style>
-
-<!-- End - CSS Styles for text in table -->
-
 <liferay-portlet:renderURL varImpl="iteratorURL"> 
 	<portlet:param name="mvcPath" value="/view.jsp"/>
 
@@ -112,23 +89,27 @@
 		</liferay-ui:search-container-column-text>
 		
 		<c:choose>
-                <c:when test="<%= document.getDoc_status().equals("Pending")%>">
-                        <liferay-ui:search-container-column-text cssClass="txtgrey" name="Status" property="doc_status">
-						  </liferay-ui:search-container-column-text>
-                </c:when>
-                <c:when test="<%= document.getDoc_status().equals("Signed") %>">
-                        <liferay-ui:search-container-column-text cssClass="txtgreen" name="Status" property="doc_status">
-						  </liferay-ui:search-container-column-text>
-                </c:when>
-                <c:when test="<%= document.getDoc_status().equals("Rejected") %>">
-                        <liferay-ui:search-container-column-text cssClass="txtred" name="Status" property="doc_status">
-						  </liferay-ui:search-container-column-text>
-                </c:when>
-                <c:when test="<%= document.getDoc_status().equals("Justify") %>">
-                        <liferay-ui:search-container-column-text cssClass="txtorange" name="Status" property="doc_status">
-						  </liferay-ui:search-container-column-text>
-                </c:when>
-         </c:choose>
+			<c:when test="<%=document.getDoc_status().equals("Pending")%>">
+				<liferay-ui:search-container-column-text cssClass="text-muted"
+					name="Status" property="doc_status">
+				</liferay-ui:search-container-column-text>
+			</c:when>
+			<c:when test="<%=document.getDoc_status().equals("Signed")%>">
+				<liferay-ui:search-container-column-text cssClass="text-success"
+					name="Status" property="doc_status">
+				</liferay-ui:search-container-column-text>
+			</c:when>
+			<c:when test="<%=document.getDoc_status().equals("Rejected")%>">
+				<liferay-ui:search-container-column-text cssClass="text-danger"
+					name="Status" property="doc_status">
+				</liferay-ui:search-container-column-text>
+			</c:when>
+			<c:when test="<%=document.getDoc_status().equals("Justify")%>">
+				<liferay-ui:search-container-column-text cssClass="text-warning"
+					name="Status" property="doc_status">
+				</liferay-ui:search-container-column-text>
+			</c:when>
+		</c:choose>
 		
 		
 		<liferay-ui:search-container-column-text name="Action">

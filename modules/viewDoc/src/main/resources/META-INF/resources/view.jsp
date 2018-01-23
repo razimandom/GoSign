@@ -16,35 +16,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet"%>
 
-<!-- Start - CSS Styles for text in table -->
-
-<style>
-.txtred {
-	color: red
-}
-
-.txtgreen {
-	color: green
-}
-
-.txtgrey {
-	color: grey
-}
-
-.txtorange {
-	color: orange
-}
-
-.btn {
-	border: none; /* Remove borders */
-	color: white; /* Add a text color */
-	padding: 8px 28px; /* Add some padding */
-	cursor: pointer; /* Add a pointer cursor on mouse-over */
-}
-</style>
-
-<!-- End - CSS Styles for text in table -->
-
 <liferay-portlet:renderURL varImpl="iteratorURL">
 	<portlet:param name="mvcPath" value="/view.jsp" />
 </liferay-portlet:renderURL>
@@ -52,7 +23,6 @@
 <liferay-ui:search-container
 	emptyResultsMessage="No uploaded document found."
 	iteratorURL="<%=iteratorURL%>" delta="10" deltaConfigurable="true">
-
 
 	<liferay-ui:search-container-results>
 
@@ -81,6 +51,11 @@
 			<portlet:param name="docId" value="${document.docId}" />
 			<portlet:param name="mvcPath" value="/viewDetails.jsp" />
 		</portlet:renderURL>
+		
+		<portlet:actionURL var="doDelDoc" name="doDelDoc">
+			<portlet:param name="docId" value="${document.docId }" />
+			<portlet:param name="fileId" value="${document.fileId }" />
+		</portlet:actionURL>
 
 		<portlet:resourceURL var="viewURL">
 			<portlet:param name="dataId"
@@ -106,31 +81,26 @@
 
 		<c:choose>
 			<c:when test="<%=document.getDoc_status().equals("Pending")%>">
-				<liferay-ui:search-container-column-text cssClass="txtgrey"
+				<liferay-ui:search-container-column-text cssClass="text-muted"
 					name="Status" property="doc_status">
 				</liferay-ui:search-container-column-text>
 			</c:when>
 			<c:when test="<%=document.getDoc_status().equals("Signed")%>">
-				<liferay-ui:search-container-column-text cssClass="txtgreen"
+				<liferay-ui:search-container-column-text cssClass="text-success"
 					name="Status" property="doc_status">
 				</liferay-ui:search-container-column-text>
 			</c:when>
 			<c:when test="<%=document.getDoc_status().equals("Rejected")%>">
-				<liferay-ui:search-container-column-text cssClass="txtred"
+				<liferay-ui:search-container-column-text cssClass="text-danger"
 					name="Status" property="doc_status">
 				</liferay-ui:search-container-column-text>
 			</c:when>
 			<c:when test="<%=document.getDoc_status().equals("Justify")%>">
-				<liferay-ui:search-container-column-text cssClass="txtorange"
+				<liferay-ui:search-container-column-text cssClass="text-warning"
 					name="Status" property="doc_status">
 				</liferay-ui:search-container-column-text>
 			</c:when>
 		</c:choose>
-
-		<portlet:actionURL var="doDelDoc" name="doDelDoc">
-			<portlet:param name="docId" value="${document.docId }" />
-			<portlet:param name="fileId" value="${document.fileId }" />
-		</portlet:actionURL>
 
 		<liferay-ui:search-container-column-text name="Action">
 			<a href="${viewDocURL}" data-toggle="tooltip" title="View request"><span

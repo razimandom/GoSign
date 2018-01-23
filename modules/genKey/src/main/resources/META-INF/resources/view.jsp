@@ -2,21 +2,29 @@
 
 <portlet:actionURL name="doAction" var="doAction" />
 
-<p><liferay-ui:message key="genKey.View.Instruction.caption"/></p>
+<div class="alert alert-warning">
+	You only can generate key once at a time.
+</div>
 
 <aui:form action="<%=doAction%>" method="post" name="name" enctype="multipart/form-data">
-	<aui:input label="Input 6 digits pin: " name="userPin" type="type" />
+	<aui:input label="Input 6 alpha-numeric pin (0-9, a-z): " name="userPin" type="type" />
 	<aui:input label="Action: " name="doAction" type="hidden" value="genkey" readOnly="true"/>
 	<aui:button name="submit" type="submit" value="Generate Key" last="true" />
+	<button type="button" class="btn btn-danger" data-toggle="collapse" data-target="#reset">Reset Key</button>
 </aui:form>
 <br>
-<p><liferay-ui:message key="genKey.View.Warning.caption"/></p>
+<div id="reset" class="collapse">
+<div class="alert alert-danger">
+	<strong>DO NOT</strong> reset the key unless you forgot your pin or keys have been exposed. All
+	signed document can no longer be verify using new key.
+</div>
+
 <aui:form action="<%=doAction%>" method="post" name="name" enctype="multipart/form-data">
 	<aui:input label="Action: " name="doAction" type="hidden" value="delkey" readOnly="true"/>
-	<aui:button name="submit" type="submit" value="Reset Key" last="true" 
-	onClick= "return confirm('Are you sure you want to reset the key? All previous documents that have been signed cannot be verify using the new public key. You need to resign the document with new pin.')"/>
+	<aui:button cssClass="btn btn-danger" name="submit" type="submit" value="Continue" last="true" 
+	onClick= "return confirm('Are you sure you want to reset the key?')"/>
 </aui:form>
-
+</div>
 <liferay-ui:error key="error-key-keyExist" message="You already created your keys. You only can create one key." />
 <liferay-ui:error key="error-key-keyNoExist" message="No keys available." />
 <liferay-ui:error key="error-key-invalidPinFormat" message="Enter your 6 digits pin." />

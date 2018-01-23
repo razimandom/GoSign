@@ -81,6 +81,8 @@
 	<portlet:param name="<%=Constants.CMD%>" value="get_users" />
 </portlet:resourceURL>
 
+<!--  
+
 <aui:script>
 	AUI()
 			.use(
@@ -124,6 +126,8 @@
 
 	
 </aui:script>
+
+-->
 
 <portlet:actionURL name="addDoc" var="addDoc" />
 
