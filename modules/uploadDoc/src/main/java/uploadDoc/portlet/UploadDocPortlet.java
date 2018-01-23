@@ -265,7 +265,6 @@ public class UploadDocPortlet extends MVCPortlet {
 			doc.setDoc_title(doc_title);
 			doc.setReq_name(req_name);
 			doc.setReq_email(req_email);
-			doc.setSign_name("[Auto-generated]");
 			doc.setSign_email(sign_email);
 			doc.setReq_dateCreated(req_dateCreated);
 			doc.setReq_timeCreated(req_timeCreated);

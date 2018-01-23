@@ -96,31 +96,34 @@ request.setAttribute("fileup", fileup);
 </tr>
     </tbody>
   </table>
+ 
 
-  <h3><span class="glyphicon glyphicon-user"></span>&nbsp;Requester & Signer Details:</h3>     
+ <h3><span class="glyphicon glyphicon-user"></span>&nbsp;Requester & Signer Profile:</h3>     
   <table class="table table-hover">
     <tbody>
 <tr>
-	<td width="250">Requester Name:</td>
-	<td>${document.req_name}</td>
-</tr>
-<tr>
-	<td >Requester Email:</td>
-	<td>${document.req_email}</td>
-</tr>
-<tr>
-	<td>Signer Name: </td>
-	<td>${document.sign_name}
+	<td width="250">Requester</td>
+	<td><liferay-ui:user-display
+        markupView="lexicon"
+        showUserDetails="true"
+        showUserName="true"
+		userId="${document.userId}"
+        userName="${document.req_name}"/>
 	</td>
-	
-	
 </tr>
 <tr>
-	<td>Signer Email:</td>
-	<td>${document.sign_email}</td>
+	<td>Signer:<liferay-ui:icon-help message="Signer profile will be display after review this request."/></td>
+	<td><liferay-ui:user-display
+        markupView="lexicon"
+        showUserDetails="true"
+        showUserName="true"
+        userId="${document.signId}"
+        userName="${document.sign_name}"/>
+	</td>
 </tr>
     </tbody>
   </table>
+  
 
   <h3><span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Uploaded Document:</h3>            
   <table class="table table-hover">
@@ -172,15 +175,17 @@ request.setAttribute("fileup", fileup);
 <td>
 	<button type="button" class="btn btn-danger" data-toggle="collapse" data-target="#delete">Delete</button>
 </td>
+<!-- 
 <td>
 	<button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#updateDeadline">Change Deadline</button>
 </td>
+ -->
 <td>
 	<aui:form action="<%=doAction%>" method="post" name="name">
 	<aui:input label="Action: " name="doAction" type="hidden" value="showkey" readOnly="true"/>
 	<aui:input label="Doc Id: " name="docId" type="hidden" value="${document.docId}" readOnly="true"/>
 	<aui:input label="File Id: " name="fileId" type="hidden" value="${fileup.fileId}" readOnly="true" />
-	<aui:button cssClass="btn btn-success" name="back" type="submit" value="Retrieve Public Key" last="true" />
+	<button class="btn btn-success" name="back" type="submit"><span class="glyphicon glyphicon-lock"></span>&nbsp;Retrieve Public Key</button>
 	</aui:form>
 </td>
 </tr>
@@ -211,8 +216,11 @@ request.setAttribute("fileup", fileup);
 
 
 <br>
+  <div class="alert alert-warning">
+  You need to have signer <strong>public key</strong> to verify the signature.
+  </div>
   <div class="alert alert-info">
-  You need to have signer <strong>public key</strong> to verify the signature. <strong><a class="collapsed" data-toggle="collapse" data-target="#showKey" title="View public key"><span class="glyphicon glyphicon-lock"></span>&nbsp;Click Here</a></strong>
+  Go to <strong>signer profile</strong> or click <strong><span class="glyphicon glyphicon-lock"></span>&nbsp;Retrieve Public Key</strong> to automatically retrieve the key.
   </div>
 
 <h3>Verify Signature:</h3>
@@ -231,5 +239,6 @@ request.setAttribute("fileup", fileup);
 <liferay-ui:error key="error-key" message="Verification failed! Public key does not match with signature." />
 <liferay-ui:error key="error-key-invalidECCPubKey" message="Error! This is invalid ECC public key format." />
 <liferay-ui:error key="error-key-null" message="Error! Public key field cannot be empty" />
-<liferay-ui:error key="error-key-nosign" message="This document has not been signed." />
+<liferay-ui:error key="error-key-nosign" message="This document has not been signed or already rejected." />
+<liferay-ui:error key="error-key-nokey" message="No key found! Signer has not generate the key yet." />
 <liferay-ui:error key="error-key-invalidAction" message="Invalid action." />

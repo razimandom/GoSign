@@ -70,37 +70,6 @@ public class ViewDocPortlet extends MVCPortlet {
 	 */
 	public void doAction(ActionRequest actionRequest, ActionResponse actionResponse) throws PortalException {
 		
-		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-		User currentUser = themeDisplay.getUser();
-		long userId = currentUser.getUserId();
-
-		try { 
-			
-			EntKey genkey = EntKeyLocalServiceUtil.getEntKey(userId);
-			String pubKey = genkey.getPublickey_Data();
-			String priKey = genkey.getPrivatekey_Data();
-			String keyError = "Error generating key. Please regenerate your key.";
-			
-			if (pubKey != null && priKey != null){
-				actionRequest.setAttribute("pubKey", pubKey);
-				actionRequest.setAttribute("priKey", priKey);
-			} else {
-				actionRequest.setAttribute("pubKey", keyError);
-				actionRequest.setAttribute("priKey", keyError);
-			} 
-			
-			actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
-
-		} catch (PortalException e) {
-			// TODO Auto-generated catch block
-			String noKey = "No key available. Please generate your key.";
-			actionRequest.setAttribute("pubKey", noKey);
-			actionRequest.setAttribute("priKey", noKey);
-			e.printStackTrace();
-			actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
-
-		}
-		
 		try {
 			
 			long docId = ParamUtil.getLong(actionRequest, "docId");
@@ -139,8 +108,38 @@ public class ViewDocPortlet extends MVCPortlet {
 				actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 				
 			} else if (doAction.equals(actionKey)){
-				//doUpdateDoc(actionRequest, actionResponse);
-				actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
+				
+				ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+				User currentUser = themeDisplay.getUser();
+				long userId = currentUser.getUserId();
+
+				try { 
+					
+					EntKey genkey = EntKeyLocalServiceUtil.getEntKey(userId);
+					String pubKey = genkey.getPublickey_Data();
+					String priKey = genkey.getPrivatekey_Data();
+					String keyError = "Error generating key. Please regenerate your key.";
+					
+					if (pubKey != null && priKey != null){
+						actionRequest.setAttribute("pubKey", pubKey);
+						actionRequest.setAttribute("priKey", priKey);
+						SessionMessages.add(actionRequest, "request_processed", "Found signer key! Please proceed to verify the signature.");
+					} else {
+						actionRequest.setAttribute("pubKey", keyError);
+						actionRequest.setAttribute("priKey", keyError);
+						
+					} 
+					actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
+				} catch (PortalException e) {
+					// TODO Auto-generated catch block
+					String noKey = "No key available. Signer has not generate the key.";
+					SessionErrors.add(actionRequest, "error-key-nokey");
+					actionRequest.setAttribute("pubKey", noKey);
+					actionRequest.setAttribute("priKey", noKey);
+					e.printStackTrace();
+					actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
+
+				}
 				
 			} else {
 				SessionErrors.add(actionRequest, "error-key-invalidAction");
@@ -165,7 +164,7 @@ public class ViewDocPortlet extends MVCPortlet {
 	 */
 	
 	public void doVerifySign(ActionRequest actionRequest, ActionResponse actionResponse) {
-
+			
 			//==> Retrieve data from input field
 			String encodedPubKey = ParamUtil.getString(actionRequest, "input_pubkey");
 			
@@ -187,6 +186,7 @@ public class ViewDocPortlet extends MVCPortlet {
 					EntDoc doc = EntDocLocalServiceUtil.getEntDoc(docId);
 					String encodedSign = doc.getDoc_signature();
 					String req_md5 = doc.getDoc_md5();
+					String sign_name = doc.getSign_name();
 					
 					//==> Decode signature and public key
 					System.out.println("Decoding signature and public key...");  
@@ -207,7 +207,7 @@ public class ViewDocPortlet extends MVCPortlet {
 					
 					//==>If else message after verify key
 					if(signature.verify(decodedSign)){
-						SessionMessages.add(actionRequest, "request_processed", "Verification completed! This is valid signature.");
+						SessionMessages.add(actionRequest, "request_processed", "Verification completed! This document has been signed by " + sign_name);
 					}else{
 						SessionErrors.add(actionRequest, "error-key");
 					}

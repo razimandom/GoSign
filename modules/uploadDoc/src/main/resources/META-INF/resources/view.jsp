@@ -14,8 +14,12 @@
 <%@ page import="com.liferay.portal.kernel.util.ListUtil"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet"%>
+<%@ page import="java.util.Date" %>
 
 <portlet:defineObjects />
+
+
+
 
 <!--  
 
@@ -76,6 +80,11 @@
 </style>
 
 -->
+
+<%    Date defaultDate = new Date(); 
+
+%>
+
 
 <portlet:resourceURL var="getUsers">
 	<portlet:param name="<%=Constants.CMD%>" value="get_users" />
@@ -150,16 +159,7 @@
 	
 	<aui:input label="Description: " type="textarea" name="doc_description" helpMessage="Justification or description of signature request"/>
 
-	
-	<aui:input label="Deadline: " name="doc_deadline" type="text" value="<%=request.getAttribute("currentDateTimeCreate") %>">
-	<aui:validator name="required"/>
-	</aui:input>
-	<!-- <aui:input id="<portlet:namespace />calendarDate" class="form-control" label="Deadline" name="doc_deadline" type="text" value="Click to select date"/> -->
-	
-	<!-- Below input using different input tag (not aui:input tag) to implement alloyui date picker trigger
-	<p class="deadlineTxt">Deadline:</p> 
-	<input name="doc_deadline" id="<portlet:namespace />calendarDate" class="form-control date" type="text" placeholder="dd-mm-yyyy" value="<%=request.getAttribute("currentDateTime") %>">
-	<br>-->
+	<liferay-ui:input-date name="doc_deadline" firstEnabledDate="<%=defaultDate%>">Deadline: </liferay-ui:input-date>
 	
 	<aui:select name="doc_type" label="Document Type: " inlineLabel="true">
 	<aui:option label="Offer Letter" value="Offer Letter" selected="true"></aui:option>
