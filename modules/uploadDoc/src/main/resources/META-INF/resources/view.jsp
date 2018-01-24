@@ -16,79 +16,14 @@
 <%@ taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet"%>
 <%@ page import="java.util.Date" %>
 
+
 <portlet:defineObjects />
-
-
-
-
-<!--  
-
-<link href="http://cdn.alloyui.com/2.5.0/aui-css/css/bootstrap.min.css"></link>
-<script src="http://cdn.alloyui.com/2.5.0/aui/aui-min.js"></script>
-
-            <script>
-            YUI().use(
-            		  'aui-datepicker',
-            		  function(Y) {
-            		    var datepicker = new Y.DatePicker(
-            		      {
-            		        trigger: '#<portlet:namespace />calendarDate',
-            		        mask: '%d-%m-%Y',
-            		        popover: {
-            		          toolbars: {
-            		            header: [[
-            		              {
-            		                icon:'icon-trash',
-            		                label: 'Clear',
-            		                on: {
-            		                  click: function() {
-            		                    datepicker.clearSelection();
-            		                  }
-            		                }
-            		              },
-            		              {
-            		                icon:'icon-globe',
-            		                label: 'Deadline date',
-            		                on: {
-            		                  click: function() {
-            		                    datepicker.clearSelection();
-            		                    datepicker.selectDates(new Date());
-            		                  }
-            		                }
-            		              }
-            		            ]]
-            		          },
-            		          zIndex: 1
-            		        }
-            		      }
-            		    );
-            		  }
-            		);
-            </script>
-                 
-<style>
-
-
-
-
-.deadlineTxt{
-	font-size:14px;
-	color:#869cad;
-}
-
-
-</style>
-
--->
-
-<%    Date defaultDate = new Date(); 
-
-%>
-
 
 <portlet:resourceURL var="getUsers">
 	<portlet:param name="<%=Constants.CMD%>" value="get_users" />
 </portlet:resourceURL>
+
+<%Date defaultDate = new Date();%>
 
 <!--  
 
@@ -142,7 +77,7 @@
 
 <aui:form action="<%=addDoc.toString()%>" method="post" name="name" enctype="multipart/form-data">
 	
-	<aui:input label="Complete URL (Auto): " name="currentCompURL" type="hidden" value="<%=request.getAttribute("currentCompURL") %>" readonly="true" />
+	<aui:input label="Complete URL (Auto): " name="currentCompURL" type="hidden" value="<%=request.getAttribute("currentCompURL")%>" readonly="true" />
 	
 	<aui:input label="Title: " name="doc_title" helpMessage="In brief about this document/request.">
 	<aui:validator name="required"/>
@@ -159,7 +94,7 @@
 	
 	<aui:input label="Description: " type="textarea" name="doc_description" helpMessage="Justification or description of signature request"/>
 
-	<liferay-ui:input-date name="doc_deadline" firstEnabledDate="<%=defaultDate%>">Deadline: </liferay-ui:input-date>
+	<label>Deadline:</label><liferay-ui:input-date name="doc_deadline" firstEnabledDate="<%=defaultDate%>" required="true"/><br>
 	
 	<aui:select name="doc_type" label="Document Type: " inlineLabel="true">
 	<aui:option label="Offer Letter" value="Offer Letter" selected="true"></aui:option>

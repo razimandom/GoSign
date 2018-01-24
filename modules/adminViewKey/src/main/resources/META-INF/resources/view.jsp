@@ -56,9 +56,6 @@
 		<liferay-ui:search-container-column-text name="Key Owner"
 			property="sign_name">
 		</liferay-ui:search-container-column-text>
-		<liferay-ui:search-container-column-text name="Status"
-			property="key_status">
-		</liferay-ui:search-container-column-text>
 		<liferay-ui:search-container-column-text name="Created On"
 			property="key_dateCreated">
 		</liferay-ui:search-container-column-text>

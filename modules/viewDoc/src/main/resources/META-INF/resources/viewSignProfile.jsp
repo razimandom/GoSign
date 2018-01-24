@@ -14,13 +14,16 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
 
 <%
-long userId = ParamUtil.getLong(request, "signId");
+long userId = ParamUtil.getLong(request, "userId");
 long docId = ParamUtil.getLong(request, "docId");
 EntKey genkeyData = EntKeyLocalServiceUtil.getEntKey(userId);
 EntDoc docData = EntDocLocalServiceUtil.getEntDoc(docId);
 request.setAttribute("docData", docData);
 request.setAttribute("genkeyData", genkeyData);
 String redirect = ParamUtil.getString(request, "backURL");
+
+
+
 %>
 
 <style>
@@ -44,28 +47,53 @@ td{
 </style>
 
 <div class="container">
-  <h3>Signer Profile:</h3>            
-  <table>
+  
+  	<table><tr><td>
+  	
+  	<liferay-ui:user-display
+        markupView="lexicon"
+        showUserDetails="false"
+        showUserName="false"
+		userId="${docData.userId}"
+        userName="${docData.sign_name}"/>
+  	
+  	</td>
+  	<td>
+  
+  <h3>Signer Profile:</h3></td></tr></table>            
+  <table class="table table-hover">
     <tbody>
 <tr>
-	<td width="250">Signer ID:</td>
+	<td width="100">User ID:</td>
 	<td>${docData.signId}</td>
 </tr>
 <tr>
-	<td>Signer Name:</td>
+	<td>Full Name:</td>
 	<td>${genkeyData.sign_name}</td>
 </tr>
 <tr>
-	<td>Signer Email:</td>
+	<td>Email:</td>
 	<td>${docData.sign_email}</td>
+</tr>
+<tr>
+	<td>Role:</td>
+	<td></td>
+</tr>
+<tr>
+	<td>Organization:</td>
+	<td></td>
 </tr>
     </tbody>
   </table>
-  <br>
+   <div class="alert alert-info">
+    Copy public key below to verify document that has been signed.
+  	</div>
+  <h3>Public Key: </h3>
  	<aui:form action="#" method="post" name="name" enctype="multipart/form-data">
 	<aui:input label="Public Key: " name="pubKey" type="textarea" value="${genkeyData.getPublickey_Data()}" readonly="true" />
 	</aui:form>
-  	<div class="alert alert-info">
-    Copy public key above to verify document that has been signed to check if the signature is valid from correct person (signer).
-  	</div>
+	
+	<input class="btn btn-primary" type=button value=" Back" onClick="javascript: window.history.go(-1)">
+	
 </div>
+

@@ -82,7 +82,6 @@ public class ViewDocPortlet extends MVCPortlet {
 			String actionVerify = "verify";
 			String actionUpdate = "update";
 			String actionDel = "delete";
-			String actionBack = "back";
 			String actionKey ="showkey";
 			
 			if (doAction.equals(actionVerify)){
@@ -99,9 +98,6 @@ public class ViewDocPortlet extends MVCPortlet {
 			} else if (doAction.equals(actionDel)){
 				doDelDoc(actionRequest, actionResponse);
 				actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
-				
-			} else if (doAction.equals(actionBack)){
-				doBack(actionRequest, actionResponse);
 				
 			} else if (doAction.equals(actionUpdate)){
 				doUpdateDoc(actionRequest, actionResponse);
@@ -259,22 +255,6 @@ public class ViewDocPortlet extends MVCPortlet {
 		} catch (PortalException | SystemException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	/**
-	 * Back Method
-	 * @param actionRequest
-	 * @param actionResponse
-	 * @throws IOException
-	 * @throws PortletException
-	 */
-
-	public void doBack(ActionRequest actionRequest, ActionResponse actionResponse) 
-			throws IOException, PortletException {
-		
-		System.out.println("Go back to view page.");
-		actionResponse.setRenderParameter("mvcPath", "/view.jsp");
-		
 	}
 	
 	/**

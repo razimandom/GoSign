@@ -42,7 +42,6 @@
 </portlet:renderURL>
 
 <portlet:actionURL name="doSignAction" var="doSignAction" />
-<portlet:actionURL name="doBack" var="doBack" />
 
 <style type="text/css">
 td {
@@ -177,7 +176,7 @@ td {
 	</div>
 
 	<td>
-		<button type="button" class="btn btn-primary">Back</button>
+		<input class="btn btn-primary" type=button value=" Back" onClick="javascript: window.history.go(-1)">
 	</td>
 	<td>
 		<button type="button" class="btn btn-danger" data-toggle="collapse"

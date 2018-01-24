@@ -49,6 +49,7 @@
 		<portlet:renderURL var="viewDocURL">
 			<portlet:param name="fileId" value="${document.fileId}" />
 			<portlet:param name="docId" value="${document.docId}" />
+			<portlet:param name="signId" value="${document.signId}" />
 			<portlet:param name="mvcPath" value="/viewDetails.jsp" />
 		</portlet:renderURL>
 		

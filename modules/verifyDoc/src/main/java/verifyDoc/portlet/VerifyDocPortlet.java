@@ -10,19 +10,14 @@ import com._42Penguins.gosign.service.EntFileUploadLocalServiceUtil;
 import com._42Penguins.gosign.service.EntKeyLocalServiceUtil;
 import com.liferay.mail.kernel.model.MailMessage;
 import com.liferay.mail.kernel.service.MailServiceUtil;
-import com.liferay.portal.kernel.dao.jdbc.OutputBlob;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
-
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.security.KeyFactory;
@@ -35,7 +30,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
-
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -47,7 +41,6 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
-import javax.portlet.ProcessAction;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
@@ -84,14 +77,6 @@ public class VerifyDocPortlet extends MVCPortlet {
 		renderRequest.setAttribute("currentEmail", currentUser.getEmailAddress());
 
 		super.doView(renderRequest, renderResponse);
-
-	}
-
-	public void doBack(ActionRequest actionRequest, ActionResponse actionResponse)
-			throws IOException, PortletException {
-
-		System.out.println("Go back to view page.");
-		actionResponse.setRenderParameter("mvcPath", "/view.jsp");
 
 	}
 	
