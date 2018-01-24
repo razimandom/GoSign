@@ -1,11 +1,9 @@
 <%@page import="com.liferay.portal.kernel.service.persistence.UserUtil"%>
 <%@page import="com.liferay.portal.kernel.service.UserLocalServiceUtil"%>
-
 <%@page import="javax.portlet.PortletException"%>
 <%@page import="com.liferay.portal.kernel.model.User"%>
 <%@ include file="/init.jsp"%>
 <%@page import="com.liferay.portal.kernel.language.LanguageUtil"%>
-
 <%@page import="java.util.List"%>
 <%@page import="com.liferay.portal.kernel.util.PortalUtil"%>
 <%@page import="com._42Penguins.gosign.service.EntDocLocalServiceUtil"%>
@@ -55,7 +53,6 @@
 		
 		<portlet:actionURL var="doDelDoc" name="doDelDoc">
 			<portlet:param name="docId" value="${document.docId }" />
-			<portlet:param name="fileId" value="${document.fileId }" />
 		</portlet:actionURL>
 
 		<portlet:resourceURL var="viewURL">

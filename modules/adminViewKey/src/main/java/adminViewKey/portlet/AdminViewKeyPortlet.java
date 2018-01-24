@@ -60,20 +60,4 @@ public class AdminViewKeyPortlet extends MVCPortlet {
 		}
 	}
 	
-	/**
-	 * Back Method
-	 * @param actionRequest
-	 * @param actionResponse
-	 * @throws IOException
-	 * @throws PortletException
-	 */
-
-	public void doBack(ActionRequest actionRequest, ActionResponse actionResponse) 
-			throws IOException, PortletException {
-		
-		System.out.println("Go back to view page.");
-		actionResponse.setRenderParameter("mvcPath", "/view.jsp");
-		
-	}
-	
 }

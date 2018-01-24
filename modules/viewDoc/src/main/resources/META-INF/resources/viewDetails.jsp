@@ -45,9 +45,7 @@ td {
 	long fileId = ParamUtil.getLong(request, "fileId");
 	long userId = ParamUtil.getLong(request, "signId");
 	EntDoc document = EntDocLocalServiceUtil.getEntDoc(docId);
-	EntKey keyData = EntKeyLocalServiceUtil.getEntKey(20156);
 	EntFileUpload fileup = EntFileUploadLocalServiceUtil.getEntFileUpload(fileId);
-	request.setAttribute("keyData", keyData);
 	request.setAttribute("document", document);
 	request.setAttribute("fileup", fileup);
 %>
@@ -73,6 +71,79 @@ td {
 
 
 <div class="container">
+
+
+	<h3>Status Completion:</h3>
+
+
+
+
+
+
+
+
+
+
+
+	<c:choose>
+		<c:when test="<%=document.getDoc_status().equals("Pending")%>">
+			<div class="progress">
+				<div class="progress-bar progress-bar-striped active "
+					role="progressbar" aria-valuenow="40" aria-valuemin="0"
+					aria-valuemax="100" style="width: 40%">40% - Pending</div>
+			</div>
+		</c:when>
+		<c:when test="<%=document.getDoc_status().equals("Signed")%>">
+			<div class="progress">
+				<div
+					class="progress-bar progress-bar-striped active progress-bar-success"
+					role="progressbar" aria-valuenow="40" aria-valuemin="0"
+					aria-valuemax="100" style="width: 70%">70% - Signed</div>
+			</div>
+		</c:when>
+		<c:when test="<%=document.getDoc_status().equals("Verified")%>">
+			<div class="progress">
+				<div
+					class="progress-bar progress-bar-striped active progress-bar-info"
+					role="progressbar" aria-valuenow="40" aria-valuemin="0"
+					aria-valuemax="100" style="width: 100%">100% - Verified</div>
+			</div>
+		</c:when>
+		<c:when test="<%=document.getDoc_status().equals("Justify")%>">
+			<div class="progress">
+				<div
+					class="progress-bar progress-bar-striped active progress-bar-warning"
+					role="progressbar" aria-valuenow="40" aria-valuemin="0"
+					aria-valuemax="100" style="width: 50%">50% - Need Justification</div>
+			</div>
+		</c:when>
+		<c:when test="<%=document.getDoc_status().equals("Rejected")%>">
+			<div class="progress">
+				<div
+					class="progress-bar progress-bar-striped active progress-bar-danger"
+					role="progressbar" aria-valuenow="40" aria-valuemin="0"
+					aria-valuemax="100" style="width: 100%">100% - Rejected</div>
+			</div>
+		</c:when>
+	</c:choose>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	<h3>
 		<span class="glyphicon glyphicon-briefcase"></span>&nbsp;Request
 		Details:
@@ -93,7 +164,20 @@ td {
 			</tr>
 			<tr>
 				<td>Status:</td>
-				<td>${document.doc_status}</td>
+				<td><c:choose>
+						<c:when test="<%=document.getDoc_status().equals("Pending")%>">
+							<div class="text-muted">Pending</div>
+						</c:when>
+						<c:when test="<%=document.getDoc_status().equals("Signed")%>">
+							<div class="text-success">Signed</div>
+						</c:when>
+						<c:when test="<%=document.getDoc_status().equals("Rejected")%>">
+							<div class="text-danger">Rejected</div>
+						</c:when>
+						<c:when test="<%=document.getDoc_status().equals("Justify")%>">
+							<div class="text-warning">Need Justification</div>
+						</c:when>
+					</c:choose></td>
 			</tr>
 			<tr>
 				<td>Date Created:</td>
@@ -124,9 +208,6 @@ td {
 			<tr>
 				<td width="250">Requester</td>
 				<td>
-
-					<a href="${viewReqProfileURL}" data-toggle="tooltip"
-					title="viewProfile">
 					<table>
 						<tr>
 							<td><liferay-ui:user-display markupView="lexicon"
@@ -134,8 +215,7 @@ td {
 									userId="${document.userId}" userName="${document.req_name}" /></td>
 							<td>${document.req_name}</td>
 						</tr>
-					</table></a>
-
+					</table>
 				</td>
 			</tr>
 			<tr>
@@ -143,9 +223,6 @@ td {
 						message="Signer profile will be display after review this request." />
 				</td>
 				<td>
-
-					<a href="${viewSignProfileURL}" data-toggle="tooltip"
-					title="viewProfile">
 					<table>
 						<tr>
 							<td><liferay-ui:user-display markupView="lexicon"
@@ -153,9 +230,7 @@ td {
 									userId="${document.signId}" userName="${document.sign_name}" /></td>
 							<td>${document.sign_name}</td>
 						</tr>
-					</table></a>
-
-
+					</table>
 				</td>
 			</tr>
 		</tbody>
@@ -209,8 +284,8 @@ td {
 
 	<table>
 		<tr>
-			<td>
-			<input class="btn btn-primary" type=button value=" Back" onClick="javascript: window.history.go(-1)">
+			<td><input class="btn btn-primary" type=button value=" Back"
+				onClick="javascript: window.history.go(-1)">
 			<td>
 				<button type="button" class="btn btn-danger" data-toggle="collapse"
 					data-target="#delete">Delete</button>
@@ -228,7 +303,8 @@ td {
 					<aui:input label="File Id: " name="fileId" type="hidden"
 						value="${fileup.fileId}" readOnly="true" />
 					<button class="btn btn-success" name="back" type="submit">
-						<span class="glyphicon glyphicon-lock"></span>&nbsp;Retrieve Public Key
+						<span class="glyphicon glyphicon-lock"></span>&nbsp;Retrieve
+						Public Key
 					</button>
 				</aui:form></td>
 		</tr>
@@ -245,6 +321,8 @@ td {
 				value="delete" readOnly="true" />
 			<aui:input label="Doc Id: " name="docId" type="hidden"
 				value="${document.docId}" readOnly="true" />
+			<aui:input label="File Id: " name="fileId" type="hidden"
+				value="${fileup.fileId}" readOnly="true" />
 			<aui:button cssClass="btn btn-danger" name="delDocument"
 				type="submit" value="Yes. Proceed." last="true" />
 		</aui:form>

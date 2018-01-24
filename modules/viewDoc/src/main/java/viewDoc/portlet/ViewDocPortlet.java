@@ -97,7 +97,7 @@ public class ViewDocPortlet extends MVCPortlet {
 				
 			} else if (doAction.equals(actionDel)){
 				doDelDoc(actionRequest, actionResponse);
-				actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
+				actionResponse.setRenderParameter("mvcPath", "/view.jsp");
 				
 			} else if (doAction.equals(actionUpdate)){
 				doUpdateDoc(actionRequest, actionResponse);

@@ -10,6 +10,7 @@
 <%@page import="com._42Penguins.gosign.model.EntKey"%>
 <%@page import="com._42Penguins.gosign.service.EntDocLocalServiceUtil"%>
 <%@page import="com._42Penguins.gosign.model.EntDoc"%>
+<%@page import="com.liferay.portal.kernel.model.User" %>
 <%@taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
 
@@ -21,9 +22,6 @@ EntDoc docData = EntDocLocalServiceUtil.getEntDoc(docId);
 request.setAttribute("docData", docData);
 request.setAttribute("genkeyData", genkeyData);
 String redirect = ParamUtil.getString(request, "backURL");
-
-
-
 %>
 
 <style>
@@ -74,14 +72,6 @@ td{
 <tr>
 	<td>Email:</td>
 	<td>${docData.sign_email}</td>
-</tr>
-<tr>
-	<td>Role:</td>
-	<td></td>
-</tr>
-<tr>
-	<td>Organization:</td>
-	<td></td>
 </tr>
     </tbody>
   </table>

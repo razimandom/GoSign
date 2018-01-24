@@ -34,8 +34,6 @@ td {
 
 <!-- End - Button styles -->
 
-<portlet:actionURL name="doBack" var="doBack" />
-
 <%
 	long userId = ParamUtil.getLong(request, "userId");
 	EntKey keyData = EntKeyLocalServiceUtil.getEntKey(userId);
@@ -50,7 +48,7 @@ td {
 	<table class="table table-hover">
 		<tbody>
 			<tr>
-				<td width="180">Signer ID:</td>
+				<td width="120">Signer ID:</td>
 				<td>${keyData.userId}</td>
 			</tr>
 			<tr>
@@ -59,7 +57,7 @@ td {
 			</tr>
 			<tr>
 				<td>Public Key:</td>
-				<td><textarea disabled rows="4" cols="50">${keyData.publickey_Data}</textarea></td>
+				<td><textarea class="form-control" readonly rows="4" cols="50">${keyData.publickey_Data}</textarea></td>
 			</tr>
 			<tr>
 				<td>Private Key:</td>
@@ -68,8 +66,7 @@ td {
 		</tbody>
 	</table>
 
-	<aui:form action="<%=doBack%>" method="post" name="name">
-		<aui:button name="back" type="submit" value="Back" last="true" />
-	</aui:form>
+	<input class="btn btn-primary" type=button value=" Back"
+				onClick="javascript: window.history.go(-1)">
 
 </div>
