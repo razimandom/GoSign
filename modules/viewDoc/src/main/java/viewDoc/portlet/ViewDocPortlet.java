@@ -1,7 +1,6 @@
 package viewDoc.portlet;
 
 import viewDoc.constants.ViewDocPortletKeys;
-
 import com._42Penguins.gosign.model.EntDoc;
 import com._42Penguins.gosign.model.EntFileUpload;
 import com._42Penguins.gosign.model.EntKey;
@@ -17,7 +16,6 @@ import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -31,16 +29,12 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.sql.Blob;
 import java.util.Base64;
-
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
-
 import org.osgi.service.component.annotations.Component;
 
 /**
@@ -351,6 +345,10 @@ public class ViewDocPortlet extends MVCPortlet {
         } catch (Exception e) {
  
         }
+    }
+    
+    public void doSendEmail(ActionRequest actionRequest, ActionResponse actionResponse) throws IOException, PortletException {
+
     }
 	
 	

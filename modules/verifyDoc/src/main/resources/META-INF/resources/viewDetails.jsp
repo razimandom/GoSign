@@ -58,6 +58,66 @@ td {
 
 
 <div class="container">
+	<h3>Status Completion:</h3>
+
+	<c:choose>
+		<c:when test="<%=document.getDoc_status().equals("Pending")%>">
+			<div class="progress">
+				<div class="progress-bar progress-bar-striped active "
+					role="progressbar" aria-valuenow="40" aria-valuemin="0"
+					aria-valuemax="100" style="width: 40%">40% - Pending</div>
+			</div>
+			<div class="alert alert-info">
+				Please <strong>review</strong> this signature request <strong>before ${document.doc_deadline}</strong>
+			</div>
+		</c:when>
+		<c:when test="<%=document.getDoc_status().equals("Signed")%>">
+			<div class="progress">
+				<div
+					class="progress-bar progress-bar-striped active progress-bar-success"
+					role="progressbar" aria-valuenow="40" aria-valuemin="0"
+					aria-valuemax="100" style="width: 70%">70% - Signed</div>
+			</div>
+			<div class="alert alert-success">
+				You have <strong>signed</strong> this document. Pending verification from signature requester.
+			</div>
+		</c:when>
+		<c:when test="<%=document.getDoc_status().equals("Verified")%>">
+			<div class="progress">
+				<div
+					class="progress-bar progress-bar-striped active progress-bar-info"
+					role="progressbar" aria-valuenow="40" aria-valuemin="0"
+					aria-valuemax="100" style="width: 100%">100% - Verified</div>
+			</div>
+			<div class="alert alert-info">
+				Signature has been verified by <strong>${document.req_name}</strong>. Task completed!
+			</div>
+		</c:when>
+		<c:when test="<%=document.getDoc_status().equals("Justify")%>">
+			<div class="progress">
+				<div
+					class="progress-bar progress-bar-striped active progress-bar-warning"
+					role="progressbar" aria-valuenow="40" aria-valuemin="0"
+					aria-valuemax="100" style="width: 50%">50% - Need
+					Justification</div>
+			</div>
+			<div class="alert alert-warning">
+				Pending <strong>justification</strong> from signature requester.
+			</div>
+		</c:when>
+		<c:when test="<%=document.getDoc_status().equals("Rejected")%>">
+			<div class="progress">
+				<div
+					class="progress-bar progress-bar-striped active progress-bar-danger"
+					role="progressbar" aria-valuenow="40" aria-valuemin="0"
+					aria-valuemax="100" style="width: 100%">100% - Rejected</div>
+			</div>
+			<div class="alert alert-danger">
+				You have <strong>rejected</strong> this request.
+			</div>
+		</c:when>
+	</c:choose>
+
 	<h3>
 		<span class="glyphicon glyphicon-briefcase"></span>&nbsp;Request
 		Details:
@@ -76,10 +136,25 @@ td {
 				<td>Type:</td>
 				<td>${document.doc_type}</td>
 			</tr>
+			
+			<!--  
 			<tr>
 				<td>Status:</td>
-				<td>${document.doc_status}</td>
-			</tr>
+				<td><c:choose>
+						<c:when test="<%=document.getDoc_status().equals("Pending")%>">
+							<div class="text-muted">Pending</div>
+						</c:when>
+						<c:when test="<%=document.getDoc_status().equals("Signed")%>">
+							<div class="text-success">Signed</div>
+						</c:when>
+						<c:when test="<%=document.getDoc_status().equals("Rejected")%>">
+							<div class="text-danger">Rejected</div>
+						</c:when>
+						<c:when test="<%=document.getDoc_status().equals("Justify")%>">
+							<div class="text-warning">Need Justification</div>
+						</c:when>
+					</c:choose></td>
+			</tr>-->
 			<tr>
 				<td>Date Created:</td>
 				<td>${document.req_dateCreated}</td>
@@ -99,31 +174,44 @@ td {
 		</tbody>
 	</table>
 
+
 	<h3>
 		<span class="glyphicon glyphicon-user"></span>&nbsp;Requester & Signer
-		Details:
+		Profile:
 	</h3>
 	<table class="table table-hover">
 		<tbody>
 			<tr>
-				<td width="250">Requester Name:</td>
-				<td>${document.req_name}</td>
-			</tr>
-			<tr>
-				<td>Requester Email:</td>
-				<td>${document.req_email}</td>
-			</tr>
-			<tr>
-				<td>Signer Name:</td>
-				<td>${document.sign_name}
+				<td width="250">Requester</td>
+				<td>
+					<table>
+						<tr>
+							<td><liferay-ui:user-display markupView="lexicon"
+									showUserDetails="false" showUserName="false"
+									userId="${document.userId}" userName="${document.req_name}" /></td>
+							<td>${document.req_name}</td>
+						</tr>
+					</table>
 				</td>
 			</tr>
 			<tr>
-				<td>Signer Email:</td>
-				<td>${document.sign_email}</td>
+				<td>Signer:<liferay-ui:icon-help
+						message="Signer profile will be display after review this request." />
+				</td>
+				<td>
+					<table>
+						<tr>
+							<td><liferay-ui:user-display markupView="lexicon"
+									showUserDetails="false" showUserName="false"
+									userId="${document.signId}" userName="${document.sign_name}" /></td>
+							<td>${document.sign_name}</td>
+						</tr>
+					</table>
+				</td>
 			</tr>
 		</tbody>
 	</table>
+
 
 	<h3>
 		<span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Uploaded
@@ -139,8 +227,10 @@ td {
 				<td>Download:</td>
 				<td><aui:form action="<%=viewURL.toString()%>" method="post"
 						name="name">
-						<button class="btn btn-primary" name="delDocument" type="submit">Download
-							File</button>
+						<button class="btn btn-primary" name="delDocument" type="submit">
+							<span class="glyphicon glyphicon-download-alt"></span>&nbsp;Download
+							File
+						</button>
 					</aui:form></td>
 
 			</tr>

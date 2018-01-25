@@ -17,6 +17,10 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@page import="com.liferay.portal.kernel.theme.ThemeDisplay"%>
 
+<%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
+<%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
+<%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %>
+
 <!-- Start - Button styles  -->
 
 <style>
@@ -37,6 +41,50 @@ td {
 	cursor: pointer; /* Add a pointer cursor on mouse-over */
 }
 </style>
+
+
+
+
+
+
+
+
+
+<portlet:defineObjects />
+<h1>Popup Demo</h1>
+<portlet:renderURL var="popupUrl" windowState="<%=LiferayWindowState.POP_UP.toString() %>">
+ <portlet:param name="mvcPath" value="/viewSignProfile.jsp"/>
+</portlet:renderURL>
+<div id="popup_id">
+ Click here
+</div>
+<aui:script use="liferay-util-window">
+A.one('#popup_id').on('click', function(event) {
+ Liferay.Util.openWindow({ dialog: { 
+ centered: true, 
+ height: 500, 
+ modal: true, 
+ width: 800 
+ }, 
+ id: '<portlet:namespace />dialog',
+ title: 'DemoPortlet', 
+ uri: '<%=popupUrl%>' 
+ }); 
+ });  </aui:script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <!-- End - Button styles -->
 
@@ -75,16 +123,6 @@ td {
 
 	<h3>Status Completion:</h3>
 
-
-
-
-
-
-
-
-
-
-
 	<c:choose>
 		<c:when test="<%=document.getDoc_status().equals("Pending")%>">
 			<div class="progress">
@@ -92,9 +130,10 @@ td {
 					role="progressbar" aria-valuenow="40" aria-valuemin="0"
 					aria-valuemax="100" style="width: 40%">40% - Pending</div>
 			</div>
-				<div class="alert alert-info">
-		Your signature request is <strong>still in progress</strong>. You will receive email after signer review your request.
-	</div>
+			<div class="alert alert-info">
+				Your signature request is <strong>still in progress</strong>. You
+				will receive email after signer review your request.
+			</div>
 		</c:when>
 		<c:when test="<%=document.getDoc_status().equals("Signed")%>">
 			<div class="progress">
@@ -103,9 +142,10 @@ td {
 					role="progressbar" aria-valuenow="40" aria-valuemin="0"
 					aria-valuemax="100" style="width: 70%">70% - Signed</div>
 			</div>
-				<div class="alert alert-success">
-		Your document has been signed by <strong>${document.sign_name}</strong>. Please proceed to <a href="#verifyId">verify the signature.</a>
-	</div>
+			<div class="alert alert-success">
+				Your document has been signed by <strong>${document.sign_name}</strong>.
+				Please proceed to <a href="#verifyId">verify the signature.</a>
+			</div>
 		</c:when>
 		<c:when test="<%=document.getDoc_status().equals("Verified")%>">
 			<div class="progress">
@@ -115,7 +155,8 @@ td {
 					aria-valuemax="100" style="width: 100%">100% - Verified</div>
 			</div>
 			<div class="alert alert-info">
-			  You have verified your document. This is valid signature signed by <strong>${document.sign_name}</strong>.
+				You have verified your document. This is valid signature signed by <strong>${document.sign_name}</strong>.
+				Task completed!
 			</div>
 		</c:when>
 		<c:when test="<%=document.getDoc_status().equals("Justify")%>">
@@ -123,10 +164,12 @@ td {
 				<div
 					class="progress-bar progress-bar-striped active progress-bar-warning"
 					role="progressbar" aria-valuenow="40" aria-valuemin="0"
-					aria-valuemax="100" style="width: 50%">50% - Need Justification</div>
+					aria-valuemax="100" style="width: 50%">50% - Need
+					Justification</div>
 			</div>
-			<div class="alert alert-danger">
-			  Please <strong>send email</strong> to signer to provide more justification on this request.
+			<div class="alert alert-warning">
+				Signer need more <strong>justification</strong> on this request.
+				Please contact signer for more details.
 			</div>
 		</c:when>
 		<c:when test="<%=document.getDoc_status().equals("Rejected")%>">
@@ -136,20 +179,12 @@ td {
 					role="progressbar" aria-valuenow="40" aria-valuemin="0"
 					aria-valuemax="100" style="width: 100%">100% - Rejected</div>
 			</div>
-						<div class="alert alert-danger">
-			  Your signature request has been <strong>rejected</strong>. If this is a mistake, you can recreate your request again.
+			<div class="alert alert-danger">
+				Your signature request has been <strong>rejected</strong>. If this
+				is a mistake, you can recreate your request again.
 			</div>
 		</c:when>
 	</c:choose>
-
-
-
-
-
-
-
-
-
 
 	<h3>
 		<span class="glyphicon glyphicon-briefcase"></span>&nbsp;Request
@@ -169,6 +204,8 @@ td {
 				<td>Type:</td>
 				<td>${document.doc_type}</td>
 			</tr>
+
+			<!--  
 			<tr>
 				<td>Status:</td>
 				<td><c:choose>
@@ -185,7 +222,7 @@ td {
 							<div class="text-warning">Need Justification</div>
 						</c:when>
 					</c:choose></td>
-			</tr>
+			</tr>-->
 			<tr>
 				<td>Date Created:</td>
 				<td>${document.req_dateCreated}</td>
@@ -214,16 +251,17 @@ td {
 		<tbody>
 			<tr>
 				<td width="250">Requester</td>
-				<td>
-					<table>
-						<tr>
-							<td><liferay-ui:user-display markupView="lexicon"
-									showUserDetails="false" showUserName="false"
-									userId="${document.userId}" userName="${document.req_name}" /></td>
-							<td>${document.req_name}</td>
-						</tr>
-					</table>
-				</td>
+				<td><a href="${viewReqProfileURL}" data-toggle="tooltip"
+					title="View Profile">
+						<table>
+							<tr>
+								<td><liferay-ui:user-display markupView="lexicon"
+										showUserDetails="false" showUserName="false"
+										userId="${document.userId}" userName="${document.req_name}" /></td>
+								<td>${document.req_name}</td>
+							</tr>
+						</table>
+				</a></td>
 			</tr>
 			<tr>
 				<td>Signer:<liferay-ui:icon-help
@@ -258,8 +296,10 @@ td {
 				<td>Download:</td>
 				<td><aui:form action="<%=viewURL.toString()%>" method="post"
 						name="name">
-						<button class="btn btn-primary" name="delDocument" type="submit"><span class="glyphicon glyphicon-download-alt"></span>&nbsp;Download
-							File</button>
+						<button class="btn btn-primary" name="delDocument" type="submit">
+							<span class="glyphicon glyphicon-download-alt"></span>&nbsp;Download
+							File
+						</button>
 					</aui:form></td>
 
 			</tr>
@@ -296,6 +336,14 @@ td {
 			<td>
 				<button type="button" class="btn btn-danger" data-toggle="collapse"
 					data-target="#delete">Delete</button>
+			</td>
+			<td>
+				<button type="button" class="btn btn-warning" data-toggle="collapse"
+					data-target="#email">
+					Send Email
+					<liferay-ui:icon-help
+						message="Send email to signer as reminder or if signer need more justification." />
+				</button>
 			</td>
 			<!-- 
 <td>
@@ -352,6 +400,22 @@ td {
 		</aui:form>
 	</div>
 
+	<div id="email" class="collapse">
+		<br>
+		<h3>Send Email:</h3>
+
+		<aui:form action="<%=doAction%>" method="post" name="name">
+			<aui:input label="Action: " name="doAction" type="hidden"
+				value="email" readOnly="true" />
+			<aui:input label="Doc Id: " name="docId" type="hidden"
+				value="${document.docId}" readOnly="true" />
+			<aui:input label="File Id: " name="fileId" type="hidden"
+				value="${fileup.fileId}" readOnly="true" />
+			<aui:input label="Comments: " name="comments" type="textarea" />
+			<aui:button name="update" type="submit" value="Submit" last="true" />
+		</aui:form>
+	</div>
+
 
 	<br>
 	<div class="alert alert-warning">
@@ -364,7 +428,7 @@ td {
 		automatically retrieve signer key.
 	</div>
 
-	<h3 id="verifyId"> Verify Signature:</h3>
+	<h3 id="verifyId">Verify Signature:</h3>
 
 	<aui:form action="<%=doAction%>" method="post" name="name">
 		<aui:input label="Action: " name="doAction" type="hidden"

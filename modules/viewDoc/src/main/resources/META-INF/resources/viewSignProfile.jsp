@@ -17,10 +17,10 @@
 <%
 long userId = ParamUtil.getLong(request, "userId");
 long docId = ParamUtil.getLong(request, "docId");
-EntKey genkeyData = EntKeyLocalServiceUtil.getEntKey(userId);
+//EntKey genkeyData = EntKeyLocalServiceUtil.getEntKey(userId);
 EntDoc docData = EntDocLocalServiceUtil.getEntDoc(docId);
 request.setAttribute("docData", docData);
-request.setAttribute("genkeyData", genkeyData);
+//request.setAttribute("genkeyData", genkeyData);
 String redirect = ParamUtil.getString(request, "backURL");
 %>
 

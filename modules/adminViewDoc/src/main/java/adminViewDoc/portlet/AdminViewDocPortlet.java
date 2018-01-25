@@ -2,18 +2,13 @@ package adminViewDoc.portlet;
 
 import adminViewDoc.constants.AdminViewDocPortletKeys;
 
-import com._42Penguins.gosign.model.EntDoc;
 import com._42Penguins.gosign.service.EntDocLocalServiceUtil;
-import com._42Penguins.gosign.service.EntFileUploadLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
-import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.ParamUtil;
-
 import java.io.IOException;
-
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
@@ -22,7 +17,7 @@ import javax.portlet.PortletException;
 import org.osgi.service.component.annotations.Component;
 
 /**
- * @author razim
+ * @author Raziman Dom
  */
 @Component(
 	immediate = true,
