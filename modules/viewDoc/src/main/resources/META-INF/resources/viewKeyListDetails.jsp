@@ -28,6 +28,15 @@
 }
 </style>
 
+<script>
+	function myFunction() {
+		var copyText = document.getElementById("myInput");
+		copyText.select();
+		document.execCommand("Copy");
+		alert("Successfully copied signer public key: " + copyText.value);
+	}
+</script>
+
 <!-- End - Button styles -->
 
 <%
@@ -36,33 +45,34 @@
 	request.setAttribute("keyData", keyData);
 %>
 
-<div class="container">
-	<h3>
-		<span class="glyphicon glyphicon-lock"></span>&nbsp;Signer Key
-		Details:
-	</h3>
-	<table class="table table-hover">
-		<tbody>
-			<tr>
-				<td width="120">Signer ID:</td>
-				<td>${keyData.userId}</td>
-			</tr>
-			<tr>
-				<td>Key Owner:</td>
-				<td>${keyData.sign_name}</td>
-			</tr>
-			<tr>
-				<td>Public Key:</td>
-				<td><textarea class="form-control" readonly rows="4" cols="50">${keyData.publickey_Data}</textarea></td>
-			</tr>
-			<tr>
-				<td>Private Key:</td>
-				<td><i>For security purpose, admin cannot view private key</i></td>
-			</tr>
-		</tbody>
-	</table>
+<div class="container panel panel-default">
 
-	<input class="btn btn-primary" type=button value=" Back"
-				onClick="javascript: window.history.go(-1)">
+	<div class="panel-body">
+		<h4>
+			<span class="glyphicon glyphicon-lock"></span>&nbsp;Signer Key
+			Details:
+		</h4>
+		<table class="table table-hover">
+			<tbody>
+				<tr>
+					<td width="120">Signer ID:</td>
+					<td>${keyData.userId}</td>
+				</tr>
+				<tr>
+					<td>Key Owner:</td>
+					<td>${keyData.sign_name}</td>
+				</tr>
+				<tr>
+					<td>Public Key:</td>
+					<td><textarea id="myInput" class="form-control" readonly rows="4" cols="50">${keyData.publickey_Data}</textarea></td>
+				</tr>
+			</tbody>
+		</table>
 
+		<input class="btn btn-primary" type=button value=" Back"
+			onClick="javascript: window.history.go(-1)"> 
+			
+		<button class="btn btn-success" onclick="myFunction()">Copy to Clipboard</button>
+
+	</div>
 </div>

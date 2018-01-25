@@ -476,7 +476,7 @@ public class VerifyDocPortlet extends MVCPortlet {
 			doc = EntDocLocalServiceUtil.updateEntDoc(doc);
 
 			/*
-			 * Function to send email for requestor
+			 * Function to send email for requester
 			 */
 
 			InternetAddress fromAddress = null;

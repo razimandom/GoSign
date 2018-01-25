@@ -18,8 +18,8 @@
 <%@page import="com.liferay.portal.kernel.theme.ThemeDisplay"%>
 
 <%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
-<%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
-<%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %>
+<%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet"%>
+<%@ taglib uri="http://liferay.com/tld/aui" prefix="aui"%>
 
 <!-- Start - Button styles  -->
 
@@ -42,50 +42,28 @@ td {
 }
 </style>
 
-
-
-
-
-
-
-
-
 <portlet:defineObjects />
-<h1>Popup Demo</h1>
-<portlet:renderURL var="popupUrl" windowState="<%=LiferayWindowState.POP_UP.toString() %>">
- <portlet:param name="mvcPath" value="/viewSignProfile.jsp"/>
+<portlet:renderURL var="popupUrl"
+	windowState="<%=LiferayWindowState.POP_UP.toString()%>">
+	<portlet:param name="mvcPath" value="/viewKeyList.jsp" />
 </portlet:renderURL>
-<div id="popup_id">
- Click here
-</div>
+
 <aui:script use="liferay-util-window">
-A.one('#popup_id').on('click', function(event) {
- Liferay.Util.openWindow({ dialog: { 
- centered: true, 
- height: 500, 
- modal: true, 
- width: 800 
- }, 
- id: '<portlet:namespace />dialog',
- title: 'DemoPortlet', 
- uri: '<%=popupUrl%>' 
- }); 
- });  </aui:script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	A.one('#popup_id').on('click', function(event) {
+		Liferay.Util.openWindow({
+			dialog : {
+				centered : true,
+				height : 600,
+				modal : true,
+				width : 500
+			},
+			id : '<portlet:namespace />dialog',
+			title : 'List of Registered Signer',
+			uri : '<%=popupUrl%>'
+		});
+	});
+</aui:script>
+	
 <!-- End - Button styles -->
 
 <%
@@ -250,18 +228,17 @@ A.one('#popup_id').on('click', function(event) {
 	<table class="table table-hover">
 		<tbody>
 			<tr>
-				<td width="250">Requester</td>
-				<td><a href="${viewReqProfileURL}" data-toggle="tooltip"
-					title="View Profile">
-						<table>
-							<tr>
-								<td><liferay-ui:user-display markupView="lexicon"
-										showUserDetails="false" showUserName="false"
-										userId="${document.userId}" userName="${document.req_name}" /></td>
-								<td>${document.req_name}</td>
-							</tr>
-						</table>
-				</a></td>
+				<td width="250">Requester:</td>
+				<td>
+					<table>
+						<tr>
+							<td><liferay-ui:user-display markupView="lexicon"
+									showUserDetails="false" showUserName="false"
+									userId="${document.userId}" userName="${document.req_name}" /></td>
+							<td>${document.req_name}</td>
+						</tr>
+					</table>
+				</td>
 			</tr>
 			<tr>
 				<td>Signer:<liferay-ui:icon-help
@@ -331,12 +308,24 @@ A.one('#popup_id').on('click', function(event) {
 
 	<table>
 		<tr>
-			<td><input class="btn btn-primary" type=button value=" Back"
-				onClick="javascript: window.history.go(-1)">
+			<td>
+			<aui:form action="<%=doAction%>" method="post" name="name">
+					<aui:input label="Action: " name="doAction" type="hidden"
+						value="back" readOnly="true" />
+					<aui:input label="Doc Id: " name="docId" type="hidden"
+						value="${document.docId}" readOnly="true" />
+					<aui:input label="File Id: " name="fileId" type="hidden"
+						value="${fileup.fileId}" readOnly="true" />
+					<aui:button name="back" type="submit" value="Back" last="true" />
+				</aui:form>
+			
+			<!-- <input class="btn btn-primary" type=button value=" Back"
+				onClick="javascript: window.history.go(-1)"> -->
 			<td>
 				<button type="button" class="btn btn-danger" data-toggle="collapse"
 					data-target="#delete">Delete</button>
 			</td>
+			<!-- 
 			<td>
 				<button type="button" class="btn btn-warning" data-toggle="collapse"
 					data-target="#email">
@@ -344,6 +333,16 @@ A.one('#popup_id').on('click', function(event) {
 					<liferay-ui:icon-help
 						message="Send email to signer as reminder or if signer need more justification." />
 				</button>
+			</td>
+			 -->
+			<td>
+
+				<div id="popup_id">
+					<button class="btn btn-success" name="delDocument" type="submit">
+						<span class="glyphicon glyphicon-user"></span>&nbsp;Signer List
+					</button>
+				</div>
+
 			</td>
 			<!-- 
 <td>
@@ -357,7 +356,7 @@ A.one('#popup_id').on('click', function(event) {
 						value="${document.docId}" readOnly="true" />
 					<aui:input label="File Id: " name="fileId" type="hidden"
 						value="${fileup.fileId}" readOnly="true" />
-					<button class="btn btn-success" name="back" type="submit">
+					<button class="btn btn-success" name="pubkey" type="submit">
 						<span class="glyphicon glyphicon-lock"></span>&nbsp;Retrieve
 						Public Key
 					</button>
@@ -423,9 +422,9 @@ A.one('#popup_id').on('click', function(event) {
 		signature.
 	</div>
 	<div class="alert alert-info">
-		Go to <strong>signer profile</strong> or click <strong><span
-			class="glyphicon glyphicon-lock"></span>&nbsp;Retrieve Public Key</strong> to
-		automatically retrieve signer key.
+		Go to <strong><span class="glyphicon glyphicon-user"></span>&nbsp;Signer
+			List</strong> or click <strong><span class="glyphicon glyphicon-lock"></span>&nbsp;Retrieve
+			Public Key</strong> to automatically retrieve signer key.
 	</div>
 
 	<h3 id="verifyId">Verify Signature:</h3>

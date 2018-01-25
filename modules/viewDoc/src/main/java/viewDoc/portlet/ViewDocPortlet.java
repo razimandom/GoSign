@@ -77,6 +77,7 @@ public class ViewDocPortlet extends MVCPortlet {
 			String actionUpdate = "update";
 			String actionDel = "delete";
 			String actionKey ="showkey";
+			String actionBack ="back";
 			
 			if (doAction.equals(actionVerify)){
 				
@@ -97,6 +98,9 @@ public class ViewDocPortlet extends MVCPortlet {
 				doUpdateDoc(actionRequest, actionResponse);
 				actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 				
+			} else if (doAction.equals(actionBack)){
+				actionResponse.setRenderParameter("mvcPath", "/view.jsp");
+				
 			} else if (doAction.equals(actionKey)){
 				
 				ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
@@ -106,6 +110,7 @@ public class ViewDocPortlet extends MVCPortlet {
 				try { 
 					
 					EntKey genkey = EntKeyLocalServiceUtil.getEntKey(userId);
+					String sign_name = genkey.getSign_name();
 					String pubKey = genkey.getPublickey_Data();
 					String priKey = genkey.getPrivatekey_Data();
 					String keyError = "Error generating key. Please regenerate your key.";
@@ -113,7 +118,7 @@ public class ViewDocPortlet extends MVCPortlet {
 					if (pubKey != null && priKey != null){
 						actionRequest.setAttribute("pubKey", pubKey);
 						actionRequest.setAttribute("priKey", priKey);
-						SessionMessages.add(actionRequest, "request_processed", "Found signer key! Please proceed to verify the signature.");
+						SessionMessages.add(actionRequest, "request_processed", "Found signer key! ("+ sign_name +") Please proceed to verify the signature.");
 					} else {
 						actionRequest.setAttribute("pubKey", keyError);
 						actionRequest.setAttribute("priKey", keyError);
