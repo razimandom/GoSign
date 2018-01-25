@@ -208,6 +208,8 @@ public class ViewDocPortlet extends MVCPortlet {
 						SessionErrors.add(actionRequest, "error-key");
 					}
 					
+					doStatusVerify(actionRequest, actionResponse);
+					
 				} catch (InvalidKeyException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -234,6 +236,33 @@ public class ViewDocPortlet extends MVCPortlet {
 			}
 			System.out.println("Verification completed!");
 			actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
+	}
+	
+	
+	public void doStatusVerify(ActionRequest actionRequest, ActionResponse actionResponse) {
+		
+		System.out.println("================Start updateDoc=================");
+		try{
+			System.out.println("Updating status...");
+			Long docId = ParamUtil.getLong(actionRequest, "docId");
+			String doc_status = "Verified";
+			
+			EntDoc doc = EntDocLocalServiceUtil.getEntDoc(docId);
+			doc.setDoc_status(doc_status);
+			actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
+			System.out.println("New status is " + doc_status);
+			System.out.println("Inserting data to DB");
+			
+			doc = EntDocLocalServiceUtil.updateEntDoc(doc);
+			
+			SessionMessages.add(actionRequest, "request_processed", "Status updated to verified.");
+			
+		} catch (Exception e){
+			System.out.println("Fail to update deadline...");
+			e.printStackTrace();
+		}
+		System.out.println("================End updateDoc=================");
+		
 	}
 	
 	/**

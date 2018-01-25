@@ -92,6 +92,9 @@ td {
 					role="progressbar" aria-valuenow="40" aria-valuemin="0"
 					aria-valuemax="100" style="width: 40%">40% - Pending</div>
 			</div>
+				<div class="alert alert-info">
+		Your signature request is <strong>still in progress</strong>. You will receive email after signer review your request.
+	</div>
 		</c:when>
 		<c:when test="<%=document.getDoc_status().equals("Signed")%>">
 			<div class="progress">
@@ -100,6 +103,9 @@ td {
 					role="progressbar" aria-valuenow="40" aria-valuemin="0"
 					aria-valuemax="100" style="width: 70%">70% - Signed</div>
 			</div>
+				<div class="alert alert-success">
+		Your document has been signed by <strong>${document.sign_name}</strong>. Please proceed to <a href="#verifyId">verify the signature.</a>
+	</div>
 		</c:when>
 		<c:when test="<%=document.getDoc_status().equals("Verified")%>">
 			<div class="progress">
@@ -107,6 +113,9 @@ td {
 					class="progress-bar progress-bar-striped active progress-bar-info"
 					role="progressbar" aria-valuenow="40" aria-valuemin="0"
 					aria-valuemax="100" style="width: 100%">100% - Verified</div>
+			</div>
+			<div class="alert alert-info">
+			  You have verified your document. This is valid signature signed by <strong>${document.sign_name}</strong>.
 			</div>
 		</c:when>
 		<c:when test="<%=document.getDoc_status().equals("Justify")%>">
@@ -116,6 +125,9 @@ td {
 					role="progressbar" aria-valuenow="40" aria-valuemin="0"
 					aria-valuemax="100" style="width: 50%">50% - Need Justification</div>
 			</div>
+			<div class="alert alert-danger">
+			  Please <strong>send email</strong> to signer to provide more justification on this request.
+			</div>
 		</c:when>
 		<c:when test="<%=document.getDoc_status().equals("Rejected")%>">
 			<div class="progress">
@@ -124,16 +136,11 @@ td {
 					role="progressbar" aria-valuenow="40" aria-valuemin="0"
 					aria-valuemax="100" style="width: 100%">100% - Rejected</div>
 			</div>
+						<div class="alert alert-danger">
+			  Your signature request has been <strong>rejected</strong>. If this is a mistake, you can recreate your request again.
+			</div>
 		</c:when>
 	</c:choose>
-
-
-
-
-
-
-
-
 
 
 
@@ -251,7 +258,7 @@ td {
 				<td>Download:</td>
 				<td><aui:form action="<%=viewURL.toString()%>" method="post"
 						name="name">
-						<button class="btn btn-primary" name="delDocument" type="submit">Download
+						<button class="btn btn-primary" name="delDocument" type="submit"><span class="glyphicon glyphicon-download-alt"></span>&nbsp;Download
 							File</button>
 					</aui:form></td>
 
@@ -354,10 +361,10 @@ td {
 	<div class="alert alert-info">
 		Go to <strong>signer profile</strong> or click <strong><span
 			class="glyphicon glyphicon-lock"></span>&nbsp;Retrieve Public Key</strong> to
-		automatically retrieve the key.
+		automatically retrieve signer key.
 	</div>
 
-	<h3>Verify Signature:</h3>
+	<h3 id="verifyId"> Verify Signature:</h3>
 
 	<aui:form action="<%=doAction%>" method="post" name="name">
 		<aui:input label="Action: " name="doAction" type="hidden"

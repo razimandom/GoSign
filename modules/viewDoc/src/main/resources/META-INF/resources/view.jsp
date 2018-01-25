@@ -50,9 +50,10 @@
 			<portlet:param name="signId" value="${document.signId}" />
 			<portlet:param name="mvcPath" value="/viewDetails.jsp" />
 		</portlet:renderURL>
-		
+
 		<portlet:actionURL var="doDelDoc" name="doDelDoc">
 			<portlet:param name="docId" value="${document.docId }" />
+			<portlet:param name="fileId" value="${document.fileId }" />
 		</portlet:actionURL>
 
 		<portlet:resourceURL var="viewURL">
@@ -98,13 +99,19 @@
 					name="Status" property="doc_status">
 				</liferay-ui:search-container-column-text>
 			</c:when>
+			<c:when test="<%=document.getDoc_status().equals("Verified")%>">
+				<liferay-ui:search-container-column-text cssClass="text-info"
+					name="Status" property="doc_status">
+				</liferay-ui:search-container-column-text>
+			</c:when>
 		</c:choose>
 
 		<liferay-ui:search-container-column-text name="Action">
 			<a href="${viewDocURL}" data-toggle="tooltip" title="View request"><span
 				class="glyphicon glyphicon-briefcase"></span></a>
 			    &nbsp;
-			    <a href="${doDelDoc}" data-toggle="tooltip" title="Delete" onclick="return confirm('Are you sure you want to delete?')"><span
+			    <a href="${doDelDoc}" data-toggle="tooltip" title="Delete"
+				onclick="return confirm('Are you sure you want to delete?')"><span
 				class="glyphicon glyphicon-remove"></span></a>
 		</liferay-ui:search-container-column-text>
 
