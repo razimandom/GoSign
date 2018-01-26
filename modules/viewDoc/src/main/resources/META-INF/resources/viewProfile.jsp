@@ -18,11 +18,7 @@
 
 <%
 long userId = ParamUtil.getLong(request, "userId");
-long docId = ParamUtil.getLong(request, "docId");
-EntDoc docData = EntDocLocalServiceUtil.getEntDoc(docId);
 User userData = UserLocalServiceUtil.getUser(userId);
-request.setAttribute("docData", docData);
-
 %>
 
 <style>
@@ -55,8 +51,8 @@ td{
         markupView="lexicon"
         showUserDetails="false"
         showUserName="false"
-		userId="${docData.userId}"
-        userName="${docData.sign_name}"/>
+		userId="<%=userData.getUserId()%>"
+        userName="<%=userData.getFullName()%>"/>
   	
   	</td>
 	</tr></table>   </div>  
@@ -64,23 +60,23 @@ td{
     <tbody>
 <tr>
 	<td width="150">User ID:</td>
-	<td>${docData.signId}</td>
+	<td><%=userData.getUserId()%></td>
 </tr>
 <tr>
 	<td>Full Name:</td>
-	<td>${docData.sign_name}</td>
+	<td><%=userData.getFullName()%></td>
 </tr>
 <tr>
 	<td>Email:</td>
-	<td>${docData.sign_email}</td>
+	<td><%=userData.getEmailAddress()%></td>
 </tr>
 <tr>
 	<td>Registered On:</td>
-	<td><%=userData.getLastLoginDate()%></td>
+	<td><%=userData.getCreateDate()%></td>
 </tr>
 <tr>
 	<td>Last Login:</td>
-	<td>${userData.getLastLoginDate()}</td>
+	<td><%=userData.getLastLoginDate()%></td>
 </tr>
     </tbody>
   </table>

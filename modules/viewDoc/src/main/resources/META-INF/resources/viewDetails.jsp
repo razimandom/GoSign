@@ -47,7 +47,6 @@ td {
 	padding: 5px 10px; /* Add some padding */
 	cursor: pointer; /* Add a pointer cursor on mouse-over */
 }
-
 </style>
 <!-- End - Button styles -->
 
@@ -124,6 +123,10 @@ td {
 	});
 </aui:script>
 	
+
+
+
+
 
 
 
@@ -279,13 +282,14 @@ td {
 			<tr>
 				<td width="250">Requester:</td>
 				<td>
-					
+
 					<table>
 						<tr>
 							<td>
-							<button id="popup_userReqProfile" class="btn btn-warning btn-icon" name="delDocument" type="submit">
-						    View Profile</button>
-						    </td>
+								<button id="popup_userReqProfile"
+									class="btn btn-warning btn-icon" name="delDocument"
+									type="submit">View Profile</button>
+							</td>
 							<td>${document.req_name}</td>
 						</tr>
 					</table>
@@ -295,17 +299,27 @@ td {
 				<td>Signer:<liferay-ui:icon-help
 						message="Signer profile will be display after review this request." />
 				</td>
-				<td>
-					<table>
-						<tr>
-							<td>
-							<button id="popup_userSignProfile" class="btn btn-warning btn-icon" name="delDocument" type="submit">
-						     View Profile</button>
-						    </td>
-							<td>${document.sign_name}</td>
-						</tr>
-					</table>
-				</td>
+				<td><c:choose>
+						<c:when test="<%=document.getDoc_status().equals("Pending")%>">
+							<div><i>Pending action from signer</i></div>
+						</c:when>
+						<c:otherwise>
+
+							<table>
+								<tr>
+									<td>
+
+										<button id="popup_userSignProfile"
+											class="btn btn-warning btn-icon" name="delDocument"
+											type="submit">View Profile</button>
+									</td>
+									<td>${document.sign_name}</td>
+								</tr>
+							</table>
+
+						</c:otherwise>
+
+					</c:choose></td>
 			</tr>
 		</tbody>
 	</table>
@@ -325,7 +339,8 @@ td {
 				<td>Download:</td>
 				<td><aui:form action="<%=viewURL.toString()%>" method="post"
 						name="name">
-						<button class="btn btn-primary btn-icon" name="delDocument" type="submit">
+						<button class="btn btn-primary btn-icon" name="delDocument"
+							type="submit">
 							<span class="glyphicon glyphicon-download-alt"></span>&nbsp;Download
 							File
 						</button>
@@ -360,8 +375,7 @@ td {
 
 	<table>
 		<tr>
-			<td>
-			<aui:form action="<%=doAction%>" method="post" name="name">
+			<td><aui:form action="<%=doAction%>" method="post" name="name">
 					<aui:input label="Action: " name="doAction" type="hidden"
 						value="back" readOnly="true" />
 					<aui:input label="Doc Id: " name="docId" type="hidden"
@@ -369,9 +383,7 @@ td {
 					<aui:input label="File Id: " name="fileId" type="hidden"
 						value="${fileup.fileId}" readOnly="true" />
 					<aui:button name="back" type="submit" value="Back" last="true" />
-				</aui:form>
-			
-			<!-- <input class="btn btn-primary" type=button value=" Back"
+				</aui:form> <!-- <input class="btn btn-primary" type=button value=" Back"
 				onClick="javascript: window.history.go(-1)"> -->
 			<td>
 				<button type="button" class="btn btn-danger" data-toggle="collapse"
