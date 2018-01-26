@@ -70,8 +70,6 @@ public class ViewDocPortlet extends MVCPortlet {
 			String doAction = ParamUtil.getString(actionRequest, "doAction");
 			EntDoc doc = EntDocLocalServiceUtil.getEntDoc(docId);
 			String encodedSign = doc.getDoc_signature();
-			System.out.println(encodedSign);
-			System.out.println(doAction);
 			
 			String actionVerify = "verify";
 			String actionUpdate = "update";
@@ -131,7 +129,7 @@ public class ViewDocPortlet extends MVCPortlet {
 					SessionErrors.add(actionRequest, "error-key-nokey");
 					actionRequest.setAttribute("pubKey", noKey);
 					actionRequest.setAttribute("priKey", noKey);
-					e.printStackTrace();
+					System.out.println("No key found for User ID: " + userId);
 					actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 
 				}

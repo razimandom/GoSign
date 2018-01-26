@@ -66,7 +66,7 @@ public class ViewKeyPortlet extends MVCPortlet {
 			String noKey = "No key available. Please generate your key.";
 			renderRequest.setAttribute("pubKey", noKey);
 			renderRequest.setAttribute("priKey", noKey);
-			e.printStackTrace();
+			System.out.println("No key found for user Id: " + userId);
 
 		}
 		super.doView(renderRequest, renderResponse);

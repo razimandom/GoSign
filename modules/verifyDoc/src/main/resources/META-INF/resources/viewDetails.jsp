@@ -4,17 +4,19 @@
 <%@page import="com.liferay.portal.kernel.util.ParamUtil"%>
 <%@page import="com.liferay.portal.kernel.util.PortalUtil"%>
 <%@page import="com.liferay.portal.kernel.util.ListUtil"%>
-<%@taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui"%>
-<%@taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet"%>
 <%@page import="com._42Penguins.gosign.service.EntDocLocalServiceUtil"%>
 <%@page import="com._42Penguins.gosign.model.EntDoc"%>
-<%@page
-	import="com._42Penguins.gosign.service.EntFileUploadLocalServiceUtil"%>
+<%@page import="com._42Penguins.gosign.service.EntKeyLocalServiceUtil"%>
+<%@page import="com._42Penguins.gosign.model.EntKey"%>
+<%@page import="com._42Penguins.gosign.service.EntFileUploadLocalServiceUtil"%>
 <%@page import="com._42Penguins.gosign.model.EntFileUpload"%>
+<%@page import="com.liferay.portal.kernel.theme.ThemeDisplay"%>
+<%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
+<%@taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui"%>
+<%@taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet"%>
 <%@taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
-<portlet:defineObjects />
+<%@taglib uri="http://liferay.com/tld/aui" prefix="aui"%>
 
 <%
 	long docId = ParamUtil.getLong(request, "docId");
@@ -26,10 +28,51 @@
 	String redirect = ParamUtil.getString(request, "backURL");
 %>
 
-<!--  
+<portlet:defineObjects />
 
-<script src="https://cdn.alloyui.com/3.0.1/aui/aui-min.js"></script>
-<link href="https://cdn.alloyui.com/3.0.1/aui-css/css/bootstrap.min.css"></link>-->
+<portlet:renderURL var="userReqProfileURL"
+	windowState="<%=LiferayWindowState.POP_UP.toString()%>">
+	<portlet:param name="userId" value="${document.userId}" />
+	<portlet:param name="docId" value="${document.docId}" />
+	<portlet:param name="mvcPath" value="/viewProfile.jsp" />
+</portlet:renderURL>
+
+<portlet:renderURL var="userSignProfileURL"
+	windowState="<%=LiferayWindowState.POP_UP.toString()%>">
+	<portlet:param name="userId" value="${document.signId}" />
+	<portlet:param name="docId" value="${document.docId}" />
+	<portlet:param name="mvcPath" value="/viewProfile.jsp" />
+</portlet:renderURL>
+
+<aui:script use="liferay-util-window">
+	A.one('#popup_userReqProfile').on('click', function(event) {
+		Liferay.Util.openWindow({
+			dialog : {
+				centered : true,
+				height : 600,
+				modal : true,
+				width : 500
+			},
+			id : '<portlet:namespace />dialog',
+			title : 'Requester Profile',
+			uri : '<%=userReqProfileURL%>'
+		});
+	});
+	A.one('#popup_userSignProfile').on('click', function(event) {
+		Liferay.Util.openWindow({
+			dialog : {
+				centered : true,
+				height : 600,
+				modal : true,
+				width : 500
+			},
+			id : '<portlet:namespace />dialog',
+			title : 'Signer Profile',
+			uri : '<%=userSignProfileURL%>'
+		});
+	});
+</aui:script>
+
 
 <portlet:resourceURL var="viewURL">
 	<portlet:param name="dataId"
@@ -182,13 +225,16 @@ td {
 	<table class="table table-hover">
 		<tbody>
 			<tr>
-				<td width="250">Requester</td>
+				<td width="250">Requester:</td>
 				<td>
+
 					<table>
 						<tr>
-							<td><liferay-ui:user-display markupView="lexicon"
-									showUserDetails="false" showUserName="false"
-									userId="${document.userId}" userName="${document.req_name}" /></td>
+							<td>
+								<button id="popup_userReqProfile"
+									class="btn btn-warning btn-icon" name="delDocument"
+									type="submit">View Profile</button>
+							</td>
 							<td>${document.req_name}</td>
 						</tr>
 					</table>
@@ -198,16 +244,27 @@ td {
 				<td>Signer:<liferay-ui:icon-help
 						message="Signer profile will be display after review this request." />
 				</td>
-				<td>
-					<table>
-						<tr>
-							<td><liferay-ui:user-display markupView="lexicon"
-									showUserDetails="false" showUserName="false"
-									userId="${document.signId}" userName="${document.sign_name}" /></td>
-							<td>${document.sign_name}</td>
-						</tr>
-					</table>
-				</td>
+				<td><c:choose>
+						<c:when test="<%=document.getDoc_status().equals("Pending")%>">
+							<i>Pending action from signer</i>
+						</c:when>
+						<c:otherwise>
+
+							<table>
+								<tr>
+									<td>
+
+										<button id="popup_userSignProfile"
+											class="btn btn-warning btn-icon" name="delDocument"
+											type="submit">View Profile</button>
+									</td>
+									<td>${document.sign_name}</td>
+								</tr>
+							</table>
+
+						</c:otherwise>
+
+					</c:choose></td>
 			</tr>
 		</tbody>
 	</table>
