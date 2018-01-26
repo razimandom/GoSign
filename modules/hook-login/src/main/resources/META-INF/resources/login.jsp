@@ -15,7 +15,7 @@
 --%>
 
 <%@ include file="/init.jsp" %>
-My Testing
+
 <c:choose>
 	<c:when test="<%= themeDisplay.isSignedIn() %>">
 

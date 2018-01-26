@@ -40,12 +40,46 @@ td {
 	padding: 8px 28px; /* Add some padding */
 	cursor: pointer; /* Add a pointer cursor on mouse-over */
 }
+
+.btn-icon {
+	border: none; /* Remove borders */
+	color: white; /* Add a text color */
+	padding: 5px 10px; /* Add some padding */
+	cursor: pointer; /* Add a pointer cursor on mouse-over */
+}
+
 </style>
+<!-- End - Button styles -->
+
+<%
+	long docId = ParamUtil.getLong(request, "docId");
+	long fileId = ParamUtil.getLong(request, "fileId");
+	long userId = ParamUtil.getLong(request, "signId");
+	EntDoc document = EntDocLocalServiceUtil.getEntDoc(docId);
+	EntFileUpload fileup = EntFileUploadLocalServiceUtil.getEntFileUpload(fileId);
+	request.setAttribute("document", document);
+	request.setAttribute("fileup", fileup);
+%>
 
 <portlet:defineObjects />
+
 <portlet:renderURL var="popupUrl"
 	windowState="<%=LiferayWindowState.POP_UP.toString()%>">
 	<portlet:param name="mvcPath" value="/viewKeyList.jsp" />
+</portlet:renderURL>
+
+<portlet:renderURL var="userReqProfileURL"
+	windowState="<%=LiferayWindowState.POP_UP.toString()%>">
+	<portlet:param name="userId" value="${document.userId}" />
+	<portlet:param name="docId" value="${document.docId}" />
+	<portlet:param name="mvcPath" value="/viewProfile.jsp" />
+</portlet:renderURL>
+
+<portlet:renderURL var="userSignProfileURL"
+	windowState="<%=LiferayWindowState.POP_UP.toString()%>">
+	<portlet:param name="userId" value="${document.signId}" />
+	<portlet:param name="docId" value="${document.docId}" />
+	<portlet:param name="mvcPath" value="/viewProfile.jsp" />
 </portlet:renderURL>
 
 <aui:script use="liferay-util-window">
@@ -62,19 +96,36 @@ td {
 			uri : '<%=popupUrl%>'
 		});
 	});
+	A.one('#popup_userReqProfile').on('click', function(event) {
+		Liferay.Util.openWindow({
+			dialog : {
+				centered : true,
+				height : 600,
+				modal : true,
+				width : 500
+			},
+			id : '<portlet:namespace />dialog',
+			title : 'Requester Profile',
+			uri : '<%=userReqProfileURL%>'
+		});
+	});
+	A.one('#popup_userSignProfile').on('click', function(event) {
+		Liferay.Util.openWindow({
+			dialog : {
+				centered : true,
+				height : 600,
+				modal : true,
+				width : 500
+			},
+			id : '<portlet:namespace />dialog',
+			title : 'Signer Profile',
+			uri : '<%=userSignProfileURL%>'
+		});
+	});
 </aui:script>
 	
-<!-- End - Button styles -->
 
-<%
-	long docId = ParamUtil.getLong(request, "docId");
-	long fileId = ParamUtil.getLong(request, "fileId");
-	long userId = ParamUtil.getLong(request, "signId");
-	EntDoc document = EntDocLocalServiceUtil.getEntDoc(docId);
-	EntFileUpload fileup = EntFileUploadLocalServiceUtil.getEntFileUpload(fileId);
-	request.setAttribute("document", document);
-	request.setAttribute("fileup", fileup);
-%>
+
 
 <portlet:actionURL name="doAction" var="doAction" />
 
@@ -95,9 +146,7 @@ td {
 		value="<%=String.valueOf(fileup.getFileId())%>" />
 </portlet:resourceURL>
 
-
 <div class="container">
-
 
 	<h3>Status Completion:</h3>
 
@@ -230,11 +279,13 @@ td {
 			<tr>
 				<td width="250">Requester:</td>
 				<td>
+					
 					<table>
 						<tr>
-							<td><liferay-ui:user-display markupView="lexicon"
-									showUserDetails="false" showUserName="false"
-									userId="${document.userId}" userName="${document.req_name}" /></td>
+							<td>
+							<button id="popup_userReqProfile" class="btn btn-warning btn-icon" name="delDocument" type="submit">
+						    View Profile</button>
+						    </td>
 							<td>${document.req_name}</td>
 						</tr>
 					</table>
@@ -247,9 +298,10 @@ td {
 				<td>
 					<table>
 						<tr>
-							<td><liferay-ui:user-display markupView="lexicon"
-									showUserDetails="false" showUserName="false"
-									userId="${document.signId}" userName="${document.sign_name}" /></td>
+							<td>
+							<button id="popup_userSignProfile" class="btn btn-warning btn-icon" name="delDocument" type="submit">
+						     View Profile</button>
+						    </td>
 							<td>${document.sign_name}</td>
 						</tr>
 					</table>
@@ -273,7 +325,7 @@ td {
 				<td>Download:</td>
 				<td><aui:form action="<%=viewURL.toString()%>" method="post"
 						name="name">
-						<button class="btn btn-primary" name="delDocument" type="submit">
+						<button class="btn btn-primary btn-icon" name="delDocument" type="submit">
 							<span class="glyphicon glyphicon-download-alt"></span>&nbsp;Download
 							File
 						</button>
