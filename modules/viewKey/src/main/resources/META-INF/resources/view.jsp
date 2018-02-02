@@ -3,6 +3,10 @@
 <%@page import="com._42Penguins.gosign.model.EntDoc"%>
 <portlet:defineObjects />
 
+<div class="portlet-header">
+  Your Generated Public & Private Key
+</div><br>
+
 <aui:form action="#" method="post" name="name" enctype="multipart/form-data">
     <p>Public key can be use to verify your signature after you have signed a document.<br>You can share your public key to other user.</p><br>
 	<aui:input label="Public Key: " name="pubKey" type="textarea" value="<%=request.getAttribute("pubKey") %>" readonly="true" />

@@ -1,0 +1,4 @@
+Bundle-Name: userViewDocSummary
+Bundle-SymbolicName: userViewDocSummary
+Bundle-Version: 1.0.0
+Export-Package: userViewDocSummary.constants

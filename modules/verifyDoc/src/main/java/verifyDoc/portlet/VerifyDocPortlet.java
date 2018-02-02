@@ -1,7 +1,6 @@
 package verifyDoc.portlet;
 
 import verifyDoc.constants.VerifyDocPortletKeys;
-
 import com._42Penguins.gosign.model.EntDoc;
 import com._42Penguins.gosign.model.EntFileUpload;
 import com._42Penguins.gosign.model.EntKey;
@@ -11,6 +10,8 @@ import com._42Penguins.gosign.service.EntKeyLocalServiceUtil;
 import com.liferay.mail.kernel.model.MailMessage;
 import com.liferay.mail.kernel.service.MailServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.servlet.SessionErrors;
@@ -66,6 +67,8 @@ import org.osgi.service.component.annotations.Component;
 	service = Portlet.class
 )
 public class VerifyDocPortlet extends MVCPortlet {
+	
+	private static Log _log = LogFactoryUtil.getLog(VerifyDocPortlet.class);
 	
 
 	@Override
@@ -136,6 +139,7 @@ public class VerifyDocPortlet extends MVCPortlet {
 		String statusSigned = "Signed";
 		String statusReject = "Rejected";
 		String statusJustify = "Justify";
+		String statusExpired = "Expired";
 		
 		String actionSign = "Sign";
 		String actionReject = "Reject";
@@ -156,7 +160,7 @@ public class VerifyDocPortlet extends MVCPortlet {
 					actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 				}
 
-			} else if (doc_status.equals(statusSigned) || doc_status.equals(statusReject)) {
+			} else if (doc_status.equals(statusSigned) || doc_status.equals(statusReject) || doc_status.equals(statusExpired)) {
 				SessionErrors.add(actionRequest, "error-key-statusFail");
 				actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 
@@ -170,7 +174,7 @@ public class VerifyDocPortlet extends MVCPortlet {
 			if (doc_status.equals(statusPending) || doc_status.equals(statusJustify)) {
 				doRejectDoc(currentUser, currentDate, currentTime, currentHomeURL, actionRequest, actionResponse);
 
-			} else if (doc_status.equals(statusSigned) || doc_status.equals(statusReject)) {
+			} else if (doc_status.equals(statusSigned) || doc_status.equals(statusReject) || doc_status.equals(statusExpired)) {
 				SessionErrors.add(actionRequest, "error-key-statusFail");
 				actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 
@@ -184,7 +188,7 @@ public class VerifyDocPortlet extends MVCPortlet {
 			if (doc_status.equals(statusPending) || doc_status.equals(statusJustify)) {
 				doJustifyDoc(currentUser, currentDate, currentTime, currentHomeURL, actionRequest, actionResponse);
 
-			} else if (doc_status.equals(statusSigned) || doc_status.equals(statusReject)) {
+			} else if (doc_status.equals(statusSigned) || doc_status.equals(statusReject) || doc_status.equals(statusExpired)) {
 				SessionErrors.add(actionRequest, "error-key-statusFail");
 				actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 

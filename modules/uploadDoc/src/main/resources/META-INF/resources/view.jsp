@@ -1,21 +1,20 @@
+<%@ include file="/init.jsp"%>
 <%@page import="com.liferay.portal.kernel.service.persistence.UserUtil"%>
 <%@page import="com.liferay.portal.kernel.service.UserLocalServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.util.Constants"%>
 <%@page import="javax.portlet.PortletException"%>
 <%@page import="com.liferay.portal.kernel.model.User"%>
-<%@ include file="/init.jsp"%>
 <%@page import="com.liferay.portal.kernel.language.LanguageUtil"%>
 <%@page import="java.util.List"%>
 <%@page import="com.liferay.portal.kernel.util.PortalUtil"%>
 <%@page import="com._42Penguins.gosign.service.EntDocLocalServiceUtil"%>
 <%@page import="com._42Penguins.gosign.model.EntDoc"%>
-<%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet"%>
-<%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui"%>
-<%@ page import="com.liferay.portal.kernel.util.ListUtil"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet"%>
-<%@ page import="java.util.Date" %>
-
+<%@page import="java.util.Date" %>
+<%@page import="com.liferay.portal.kernel.util.ListUtil"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet"%>
+<%@taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet"%>
+<%@taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui"%>
 
 <portlet:defineObjects />
 
@@ -73,6 +72,11 @@
 
 -->
 
+<div class="portlet-header">
+Submit Request
+</div>
+<br>
+
 <portlet:actionURL name="addDoc" var="addDoc" />
 
 <aui:form action="<%=addDoc.toString()%>" method="post" name="name" enctype="multipart/form-data">
@@ -106,3 +110,6 @@
 	<aui:button name="submit" type="submit" value="Submit" last="true" />
 
 </aui:form>
+
+<liferay-ui:error key="error-submit"
+	message="Failed to submit request." />

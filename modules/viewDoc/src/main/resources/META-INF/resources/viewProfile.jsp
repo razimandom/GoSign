@@ -15,6 +15,8 @@
 <%@taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
 <%@page import="com.liferay.portal.kernel.model.User" %>
+<%@page import="java.time.LocalDateTime" %>
+<%@page import="java.time.format.DateTimeFormatter" %>
 
 <%
 long userId = ParamUtil.getLong(request, "userId");
@@ -27,16 +29,6 @@ User userData = UserLocalServiceUtil.getUser(userId);
     .container{
         max-width: 800px;
     }
-}
-
-td{
-	padding:5px}
-	
-.btn {
-	border: none; /* Remove borders */
-	color: white; /* Add a text color */
-	padding: 8px 28px; /* Add some padding */
-	cursor: pointer; /* Add a pointer cursor on mouse-over */
 }
 	
 </style>

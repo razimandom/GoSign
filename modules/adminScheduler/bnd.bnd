@@ -1,0 +1,4 @@
+Bundle-Name: adminScheduler
+Bundle-SymbolicName: adminScheduler
+Bundle-Version: 1.0.0
+Export-Package: adminScheduler.constants

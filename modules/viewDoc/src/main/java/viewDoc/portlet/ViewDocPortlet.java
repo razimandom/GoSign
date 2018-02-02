@@ -9,6 +9,8 @@ import com._42Penguins.gosign.service.EntFileUploadLocalServiceUtil;
 import com._42Penguins.gosign.service.EntKeyLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.servlet.SessionErrors;
@@ -33,6 +35,8 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 import org.osgi.service.component.annotations.Component;
@@ -56,20 +60,31 @@ import org.osgi.service.component.annotations.Component;
 )
 public class ViewDocPortlet extends MVCPortlet {	
 	
+	private static Log _log = LogFactoryUtil.getLog(ViewDocPortlet.class);
+	
+	@Override
+	public void doView(RenderRequest renderRequest, RenderResponse renderResponse)
+			throws IOException, PortletException {
+
+		super.doView(renderRequest, renderResponse);
+
+	}
+	
 	/**
 	 * Action method. Redirect action from user to certain action.
 	 * @param actionRequest
 	 * @param actionResponse
 	 * @throws PortalException
 	 */
+	
 	public void doAction(ActionRequest actionRequest, ActionResponse actionResponse) throws PortalException {
 		
 		try {
 			
 			long docId = ParamUtil.getLong(actionRequest, "docId");
 			String doAction = ParamUtil.getString(actionRequest, "doAction");
-			EntDoc doc = EntDocLocalServiceUtil.getEntDoc(docId);
-			String encodedSign = doc.getDoc_signature();
+			EntDoc docData = EntDocLocalServiceUtil.getEntDoc(docId);
+			String encodedSign = docData.getDoc_signature();
 			
 			String actionVerify = "verify";
 			String actionUpdate = "update";
@@ -78,21 +93,25 @@ public class ViewDocPortlet extends MVCPortlet {
 			String actionBack ="back";
 			
 			if (doAction.equals(actionVerify)){
-				
+				_log.info("Verifying signature...");
 				if(encodedSign.isEmpty()){
-					System.out.println("No signature");
+					_log.info("No signature found");
 					SessionErrors.add(actionRequest, "error-key-nosign");
 					actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 					
 				}else{
+					_log.info("Signature found. Verifying...");
 					doVerifySign(actionRequest, actionResponse);
+					_log.info("Verified");
 				}
 				
 			} else if (doAction.equals(actionDel)){
+				_log.info("Deleting document");
 				doDelDoc(actionRequest, actionResponse);
 				actionResponse.setRenderParameter("mvcPath", "/view.jsp");
 				
 			} else if (doAction.equals(actionUpdate)){
+				_log.info("Updating document");
 				doUpdateDoc(actionRequest, actionResponse);
 				actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 				
@@ -100,6 +119,7 @@ public class ViewDocPortlet extends MVCPortlet {
 				actionResponse.setRenderParameter("mvcPath", "/view.jsp");
 				
 			} else if (doAction.equals(actionKey)){
+				_log.info("Retrieving signer key");
 				
 				ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
 				User currentUser = themeDisplay.getUser();
@@ -111,15 +131,15 @@ public class ViewDocPortlet extends MVCPortlet {
 					String sign_name = genkey.getSign_name();
 					String pubKey = genkey.getPublickey_Data();
 					String priKey = genkey.getPrivatekey_Data();
-					String keyError = "Error generating key. Please regenerate your key.";
+					//String keyError = "Error generating key. Please regenerate your key.";
 					
 					if (pubKey != null && priKey != null){
 						actionRequest.setAttribute("pubKey", pubKey);
 						actionRequest.setAttribute("priKey", priKey);
 						SessionMessages.add(actionRequest, "request_processed", "Found signer key! ("+ sign_name +") Please proceed to verify the signature.");
 					} else {
-						actionRequest.setAttribute("pubKey", keyError);
-						actionRequest.setAttribute("priKey", keyError);
+						//actionRequest.setAttribute("pubKey", keyError);
+						//actionRequest.setAttribute("priKey", keyError);
 						
 					} 
 					actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
@@ -129,7 +149,7 @@ public class ViewDocPortlet extends MVCPortlet {
 					SessionErrors.add(actionRequest, "error-key-nokey");
 					actionRequest.setAttribute("pubKey", noKey);
 					actionRequest.setAttribute("priKey", noKey);
-					System.out.println("No key found for User ID: " + userId);
+					_log.info("No key found for User ID: " + userId);
 					actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 
 				}
@@ -151,7 +171,7 @@ public class ViewDocPortlet extends MVCPortlet {
 	}
 	
 	/**
-	 * Very signature method
+	 * Verify signature method
 	 * @param actionRequest
 	 * @param actionResponse
 	 */
@@ -176,10 +196,10 @@ public class ViewDocPortlet extends MVCPortlet {
 					//==> Retrieve data from database for current user from document table
 					System.out.println("Retrieving data from database..."); 
 					long docId = ParamUtil.getLong(actionRequest, "docId");
-					EntDoc doc = EntDocLocalServiceUtil.getEntDoc(docId);
-					String encodedSign = doc.getDoc_signature();
-					String req_md5 = doc.getDoc_md5();
-					String sign_name = doc.getSign_name();
+					EntDoc docData = EntDocLocalServiceUtil.getEntDoc(docId);
+					String encodedSign = docData.getDoc_signature();
+					String req_md5 = docData.getDoc_md5();
+					String sign_name = docData.getSign_name();
 					
 					//==> Decode signature and public key
 					System.out.println("Decoding signature and public key...");  
@@ -234,6 +254,13 @@ public class ViewDocPortlet extends MVCPortlet {
 			System.out.println("Verification completed!");
 			actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 	}
+	
+	
+	/**
+	 * Verify signature method
+	 * @param actionRequest
+	 * @param actionResponse
+	 */
 	
 	
 	public void doStatusVerify(ActionRequest actionRequest, ActionResponse actionResponse) {
@@ -300,13 +327,13 @@ public class ViewDocPortlet extends MVCPortlet {
 			//Long fileId = ParamUtil.getLong(actionRequest, "docId");
 			String doc_deadline = ParamUtil.getString(actionRequest, "doc_deadline");
 			
-			EntDoc doc = EntDocLocalServiceUtil.getEntDoc(docId);
-			doc.setDoc_deadline(doc_deadline);
+			EntDoc docData = EntDocLocalServiceUtil.getEntDoc(docId);
+			docData.setDoc_deadline(doc_deadline);
 			actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 			System.out.println("New deadline is " + doc_deadline);
 			System.out.println("Inserting data to DB");
 			
-			doc = EntDocLocalServiceUtil.updateEntDoc(doc);
+			docData = EntDocLocalServiceUtil.updateEntDoc(docData);
 			
 			SessionMessages.add(actionRequest, "request_processed", "Updated.");
 			
@@ -318,8 +345,9 @@ public class ViewDocPortlet extends MVCPortlet {
 	}
 	
 	/**
-     * Here serveResource method is used for displaying blob data
-     */
+	 * Function to upload blob data
+	 */
+	
     @Override
     public void serveResource(ResourceRequest resourceRequest,
             ResourceResponse resourceResponse) throws IOException,
@@ -349,6 +377,14 @@ public class ViewDocPortlet extends MVCPortlet {
  
         }
     }
+    
+    /**
+     * Function to send email
+     * @param actionRequest
+     * @param actionResponse
+     * @throws IOException
+     * @throws PortletException
+     */
     
     public void doSendEmail(ActionRequest actionRequest, ActionResponse actionResponse) throws IOException, PortletException {
 

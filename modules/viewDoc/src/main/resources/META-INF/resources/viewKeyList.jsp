@@ -26,7 +26,6 @@
 					searchContainer.setTotal(keyList.size());
 					searchContainer.setResults(results);
 		%>
-
 	</liferay-ui:search-container-results>
 
 	<liferay-ui:search-container-row
@@ -66,5 +65,5 @@
 
 </liferay-ui:search-container>
 
-
+</div>
 </div>

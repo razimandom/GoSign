@@ -11,7 +11,7 @@
 <%@taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<!-- Start - Button styles  -->
+<!-- 
 
 <style>
 @media ( min-width : 1200px) {
@@ -20,21 +20,16 @@
 	}
 }
 
-.btn {
-	border: none; /* Remove borders */
-	color: white; /* Add a text color */
-	padding: 8px 28px; /* Add some padding */
-	cursor: pointer; /* Add a pointer cursor on mouse-over */
-}
-</style>
 
-<!-- End - Button styles -->
+-->
 
 <%
 	long userId = ParamUtil.getLong(request, "userId");
 	EntKey keyData = EntKeyLocalServiceUtil.getEntKey(userId);
 	request.setAttribute("keyData", keyData);
 %>
+
+<portlet:actionURL name="doBack" var="doBack" />
 
 <div class="container">
 	<h3>
@@ -62,7 +57,7 @@
 		</tbody>
 	</table>
 
-	<input class="btn btn-primary" type=button value=" Back"
-				onClick="javascript: window.history.go(-1)">
-
+	<aui:form action="<%=doBack%>" method="post" name="name">
+		<aui:button name="back" type="submit" value="Back" last="true" />
+	</aui:form>
 </div>

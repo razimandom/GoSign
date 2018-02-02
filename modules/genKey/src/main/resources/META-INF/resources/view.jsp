@@ -2,15 +2,19 @@
 
 <portlet:actionURL name="doAction" var="doAction" />
 
+<div class="portlet-header" align="center">
+  Generate Key
+</div><br>
+
 <div class="alert alert-warning">
-	You only can generate key once at a time.
+	<span class="glyphicon glyphicon-exclamation-sign"></span> You only can generate key once at a time.
 </div>
 
 <aui:form action="<%=doAction%>" method="post" name="name" enctype="multipart/form-data">
 	<aui:input label="Input 6 alpha-numeric pin (0-9, a-z): " name="userPin" type="type" />
 	<aui:input label="Action: " name="doAction" type="hidden" value="genkey" readOnly="true"/>
-	<aui:button name="submit" type="submit" value="Generate Key" last="true" />
-	<button type="button" class="btn btn-danger" data-toggle="collapse" data-target="#reset">Reset Key</button>
+	<aui:button class="btn btn-primary" name="submit" type="submit" value="Generate Key" last="true" />
+	<button type="button" class="btn btn-danger" data-toggle="collapse" data-target="#reset"><span class="glyphicon glyphicon-retweet"></span>&nbsp;Reset Key</button>
 </aui:form>
 <br>
 <div id="reset" class="collapse">

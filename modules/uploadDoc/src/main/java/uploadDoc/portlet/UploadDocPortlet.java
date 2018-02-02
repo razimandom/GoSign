@@ -10,9 +10,12 @@ import com.liferay.mail.kernel.model.MailMessage;
 import com.liferay.mail.kernel.service.MailServiceUtil;
 import com.liferay.portal.kernel.dao.jdbc.OutputBlob;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.PortletURLUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.upload.UploadRequest;
@@ -50,6 +53,8 @@ import org.osgi.service.component.annotations.Component;
 		"javax.portlet.name=" + UploadDocPortletKeys.UploadDoc, "javax.portlet.resource-bundle=content.Language",
 		"javax.portlet.security-role-ref=power-user,user" }, service = Portlet.class)
 public class UploadDocPortlet extends MVCPortlet { 
+	
+	private static Log _log = LogFactoryUtil.getLog(UploadDocPortlet.class);
 
 	/**
 	 * doView method to get information of current logged user
@@ -61,7 +66,7 @@ public class UploadDocPortlet extends MVCPortlet {
 		
 		String currentCompURL = PortletURLUtil.getCurrent(renderRequest, renderResponse).toString();
 		renderRequest.setAttribute("currentCompURL", currentCompURL);
-		
+
 		super.doView(renderRequest, renderResponse);
 	}
 	
@@ -127,91 +132,100 @@ public class UploadDocPortlet extends MVCPortlet {
 
 	@ProcessAction(name = "addDoc")
 	public void addDoc(ActionRequest actionRequest, ActionResponse actionResponse)
-			throws IOException, PortletException, NoSuchAlgorithmException {
+			throws IOException {
 		
-		/*
-		 * Fetch current date and time
-		 */
+		System.out.println("###################################################");
+		System.out.println("#                                                 #");
+		System.out.println("#              Upload Document log                #");
+		System.out.println("#              Author: Raziman Dom                #");
+		System.out.println("#                                                 #");
+		System.out.println("###################################################");
 		
-		ZoneId zoneIdMYS = ZoneId.of("Asia/Kuala_Lumpur");
-		LocalDateTime localDateTime = LocalDateTime.now(zoneIdMYS);
-		DateTimeFormatter formatterTimeStamp = DateTimeFormatter.ofPattern("ddMMyyyy-HHmmss-A-N");
-		DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		
-		/*
-		 * Fetch current user data
-		 */
-		
-		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-		User currentUser = themeDisplay.getUser();
-		
-		String currentHomeURL = themeDisplay.getURLHome();		
-		String currentTimeStamp = localDateTime.format(formatterTimeStamp);
-		String currentDate = localDateTime.format(formatterDate);	
-		String currentCompURL = ParamUtil.getString(actionRequest, "currentCompURL");
-		
-		/**
-		 * Initialize and retrieve data from upload form
-		 */
-		
-		long docId = CounterLocalServiceUtil.increment();
-		long currentUserId = currentUser.getUserId();
-		long fileId = CounterLocalServiceUtil.increment();
-		String req_name = currentUser.getFullName();
-		String req_email = currentUser.getEmailAddress();
-		String req_dateCreated = currentDate;
-		String req_timeCreated = currentTimeStamp;
-		String sign_email = ParamUtil.getString(actionRequest, "sign_email");
-		String doc_title = ParamUtil.getString(actionRequest, "doc_title");
-		String doc_description = ParamUtil.getString(actionRequest, "doc_description");
-		String doc_deadline = ParamUtil.getString(actionRequest, "doc_deadline");
-		String doc_type = ParamUtil.getString(actionRequest, "doc_type");
-		
-		/**
-		 * Generate MD5 based on docId and timestamp. Format: docId-currentTimeStamp
-		 */
-		
-		String docIDString = Long.toString(docId);
-		String docIdTimestamp = docIDString + "-" + currentTimeStamp;	
-	    MessageDigest docIdTimestampMD5 = MessageDigest.getInstance("MD5");
-	    docIdTimestampMD5.update(docIdTimestamp.getBytes(),0,docIdTimestamp.length());
-	    String docIdMD5String = new BigInteger(1,docIdTimestampMD5.digest()).toString(16);
+		try {
+			
+			/*
+			 * Fetch current date and time
+			 */
+			
+			_log.info("Fetching current date");
+			ZoneId zoneIdMYS = ZoneId.of("Asia/Kuala_Lumpur");
+			LocalDateTime localDateTime = LocalDateTime.now(zoneIdMYS);
+			DateTimeFormatter formatterTimeStamp = DateTimeFormatter.ofPattern("ddMMyyyy-HHmmss-A-N");
+			DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+			_log.info("Current date: " + localDateTime);
+			
+			/*
+			 * Fetch current user data
+			 */
+			
+			_log.info("Fetching data of current logged user");
+			ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+			User currentUser = themeDisplay.getUser();
+			
+			String currentHomeURL = themeDisplay.getURLHome();		
+			String currentTimeStamp = localDateTime.format(formatterTimeStamp);
+			String currentDate = localDateTime.format(formatterDate);	
+			String currentCompURL = ParamUtil.getString(actionRequest, "currentCompURL");
+			
+			/*
+			 * Initialize and retrieve data from upload form
+			 */
+			
+			_log.info("Fetching data from submitted form");
+			long docId = CounterLocalServiceUtil.increment();
+			long currentUserId = currentUser.getUserId();
+			long fileId = CounterLocalServiceUtil.increment();
+			String req_name = currentUser.getFullName();
+			String req_email = currentUser.getEmailAddress();
+			String req_dateCreated = currentDate;
+			String req_timeCreated = currentTimeStamp;
+			String sign_email = ParamUtil.getString(actionRequest, "sign_email");
+			String doc_title = ParamUtil.getString(actionRequest, "doc_title");
+			String doc_description = ParamUtil.getString(actionRequest, "doc_description");
+			String doc_deadline = ParamUtil.getString(actionRequest, "doc_deadline");
+			String doc_type = ParamUtil.getString(actionRequest, "doc_type");
+			_log.info("Created data for docID: " + docId);
+			
+			/*
+			 * Generate MD5 based on docId and timestamp. Format: docId-currentTimeStamp
+			 */
+			
+			_log.info("Generating MD5 file");
+			String docIDString = Long.toString(docId);
+			String docIdTimestamp = docIDString + "-" + currentTimeStamp;	
+			MessageDigest docIdTimestampMD5 = MessageDigest.getInstance("MD5");
+			docIdTimestampMD5.update(docIdTimestamp.getBytes(),0,docIdTimestamp.length());
+			String docIdMD5String = new BigInteger(1,docIdTimestampMD5.digest()).toString(16);
+			_log.info("MD5 generated");
+			
+			/*
+			 * Upload file
+			 */
+			
+			_log.info("Uploading file to database");
+			UploadRequest uploadRequest = PortalUtil.getUploadPortletRequest(actionRequest);
+			String uploadedFileName = uploadRequest.getFileName("file");
+			File file = uploadRequest.getFile("file");
+			InputStream inputStream = new FileInputStream(file);
+			OutputBlob blobData = new OutputBlob(inputStream, file.length());
 
-		/**
-		 * Upload file
-		 */
-	    
-		UploadRequest uploadRequest = PortalUtil.getUploadPortletRequest(actionRequest);
-		String uploadedFileName = uploadRequest.getFileName("file");
-		File file = uploadRequest.getFile("file");
-		InputStream inputStream = new FileInputStream(file);
-		OutputBlob blobData = new OutputBlob(inputStream, file.length());
+			/*
+			 * Call doInsertDB action method
+			 */
+			
+			doInsertDB(
+					docId, fileId, doc_title, req_name, req_email, sign_email,
+					req_dateCreated, req_timeCreated, doc_deadline, doc_type,
+					docIdMD5String, doc_description, currentUserId,
+					uploadedFileName, blobData, file, currentCompURL, currentHomeURL,
+					actionRequest, actionResponse);
 
-		/**
-		 * Call doInsertDB action method
-		 */
-
-		doInsertDB(
-				docId, fileId, doc_title, req_name, req_email, sign_email,
-				req_dateCreated, req_timeCreated, doc_deadline, doc_type,
-				docIdMD5String, doc_description, currentUserId,
-				uploadedFileName, blobData, file, 
-				actionRequest, actionResponse);
-
-		/**
-		 * Call doSendEmail action method
-		 */
-		
-		doSendEmail(
-				docId, doc_title, doc_type, req_name, req_email, sign_email, 
-				doc_deadline, req_dateCreated, currentCompURL, currentHomeURL, 
-				actionRequest, actionResponse);
-
-		/*
-		 * Success message
-		 */
-		
-		SessionMessages.add(actionRequest, "request_processed", "Signature request sent!");
+			
+		} catch (Exception e) {
+			_log.trace("Signature request submission failed");
+			SessionErrors.add(actionRequest, "error-submit");
+			e.printStackTrace();
+		}
 		
 	}
 	
@@ -239,12 +253,12 @@ public class UploadDocPortlet extends MVCPortlet {
 	public void doInsertDB(
 			long docId, long fileId, String doc_title, String req_name, String req_email, String sign_email,
 			String req_dateCreated, String req_timeCreated, String doc_deadline, String doc_type, String docIdMD5String, String doc_description,
-			long currentUserId, String uploadedFileName, OutputBlob blobData, File file,
+			long currentUserId, String uploadedFileName, OutputBlob blobData, File file, String currentCompURL, String currentHomeURL,
 			ActionRequest actionRequest, ActionResponse actionResponse){
 		
 		try {
-
-			System.out.println("Adding data to database...");
+			_log.info("Inserting data to database");
+			
 			EntDoc doc = EntDocLocalServiceUtil.createEntDoc(docId);
 			EntFileUpload fileup = EntFileUploadLocalServiceUtil.createEntFileUpload(fileId);
 			doc.setDoc_title(doc_title);
@@ -267,16 +281,28 @@ public class UploadDocPortlet extends MVCPortlet {
 			fileup = EntFileUploadLocalServiceUtil.addEntFileUpload(fileup);
 			doc = EntDocLocalServiceUtil.addEntDoc(doc);
 
-			System.out.println("Data added to database");
-			System.out.println("======================== End ======================");
-
-			// actionResponse.setRenderParameter("mvcPath", "/details.jsp");
+			_log.info("Data added to database");
+			
+			/*
+			 * Call doSendEmail action method
+			 */
+			
+			doSendEmail(
+					docId, doc_title, doc_type, req_name, req_email, sign_email, 
+					doc_deadline, req_dateCreated, currentCompURL, currentHomeURL, 
+					actionRequest, actionResponse);
 
 		} catch (SystemException e) {
-			System.out.println("Failed to insert data to database");
+			_log.trace("Failed to insert data to database");
+			SessionErrors.add(actionRequest, "error-submit");
 			e.printStackTrace();
-			System.out.println("======================== End ======================");
 
+		} catch (IOException e) {
+			SessionErrors.add(actionRequest, "error-submit");
+			e.printStackTrace();
+		} catch (PortletException e) {
+			SessionErrors.add(actionRequest, "error-submit");
+			e.printStackTrace();
 		}
 		
 	}
@@ -307,6 +333,12 @@ public class UploadDocPortlet extends MVCPortlet {
 		
 		try {
 			
+			/*
+			 * Send email to requester
+			 */
+			
+			_log.info("Sending email requester");
+			
 			InternetAddress fromAddress = null;
 			InternetAddress toAddress = null;
 			
@@ -317,8 +349,6 @@ public class UploadDocPortlet extends MVCPortlet {
 			mailMessage.setTo(toAddress);
 			mailMessage.setFrom(fromAddress);
 			mailMessage.setSubject("Signature Request Successfully Submitted.");
-			
-			//mailMessage.setBody(body);
 			
 			mailMessage.setBody(""
 					
@@ -342,26 +372,24 @@ public class UploadDocPortlet extends MVCPortlet {
 			
 			mailMessage.setHTMLFormat(true);
 			MailServiceUtil.sendEmail(mailMessage);
-			System.out.println("Email has been sent to requestor!");
+			_log.info("Email sent to requester");
 			
-		} catch (AddressException e) {
-			e.printStackTrace();
-		}
-		
-		
-		try {
+			/*
+			 * Send email to signer
+			 */
+
+			_log.info("Sending email signer");
+			InternetAddress fromAddressSigner = null;
+			InternetAddress toAddressSigner = null;
 			
-			InternetAddress fromAddress = null;
-			InternetAddress toAddress = null;
+			fromAddressSigner = new InternetAddress("noreply@42penguins.com");
+			toAddressSigner = new InternetAddress(sign_email);
+			MailMessage mailMessageSigner = new MailMessage();
 			
-			fromAddress = new InternetAddress("noreply@42penguins.com");
-			toAddress = new InternetAddress(sign_email);
-			MailMessage mailMessage = new MailMessage();
-			
-			mailMessage.setTo(toAddress);
-			mailMessage.setFrom(fromAddress);
-			mailMessage.setSubject("New Request for Signature");
-			mailMessage.setBody("" 
+			mailMessageSigner.setTo(toAddressSigner);
+			mailMessageSigner.setFrom(fromAddressSigner);
+			mailMessageSigner.setSubject("New Request for Signature");
+			mailMessageSigner.setBody("" 
 					
 					+ "<font face=\"arial\" size=\"2\">"
 					+ "<p>Dear Signer, </p> "
@@ -382,11 +410,21 @@ public class UploadDocPortlet extends MVCPortlet {
 					+ "<a href=\"" + currentHomeURL + "\"> " + currentHomeURL
 					+ "</a></p>" + "</font>");
 
-			mailMessage.setHTMLFormat(true);
-			MailServiceUtil.sendEmail(mailMessage);
-			System.out.println("Email has been sent to signer!");
-
+			mailMessageSigner.setHTMLFormat(true);
+			MailServiceUtil.sendEmail(mailMessageSigner);
+			_log.info("Email sent to signer");
+			
+			/*
+			 * Success message
+			 */
+			
+			_log.info("Signature request submission completed");
+			
+			SessionMessages.add(actionRequest, "request_processed", "Signature request sent!");
+			
 	} catch (AddressException e) {
+		_log.trace("Failed send email");
+		SessionErrors.add(actionRequest, "error-submit");
 		e.printStackTrace();
 	}
 	}

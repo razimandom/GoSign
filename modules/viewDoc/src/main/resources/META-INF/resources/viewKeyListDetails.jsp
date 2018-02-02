@@ -19,13 +19,6 @@
 		max-width: 600px;
 	}
 }
-
-.btn {
-	border: none; /* Remove borders */
-	color: white; /* Add a text color */
-	padding: 8px 28px; /* Add some padding */
-	cursor: pointer; /* Add a pointer cursor on mouse-over */
-}
 </style>
 
 <script>

@@ -6,8 +6,6 @@
 <%@page import="com.liferay.portal.kernel.util.ListUtil"%>
 <%@page import="com._42Penguins.gosign.service.EntDocLocalServiceUtil"%>
 <%@page import="com._42Penguins.gosign.model.EntDoc"%>
-<%@page import="com._42Penguins.gosign.service.EntKeyLocalServiceUtil"%>
-<%@page import="com._42Penguins.gosign.model.EntKey"%>
 <%@page import="com._42Penguins.gosign.service.EntFileUploadLocalServiceUtil"%>
 <%@page import="com._42Penguins.gosign.model.EntFileUpload"%>
 <%@page import="com.liferay.portal.kernel.theme.ThemeDisplay"%>
@@ -21,10 +19,10 @@
 <%
 	long docId = ParamUtil.getLong(request, "docId");
 	long fileId = ParamUtil.getLong(request, "fileId");
-	EntDoc document = EntDocLocalServiceUtil.getEntDoc(docId);
-	EntFileUpload fileup = EntFileUploadLocalServiceUtil.getEntFileUpload(fileId);
-	request.setAttribute("document", document);
-	request.setAttribute("fileup", fileup);
+	EntDoc docData = EntDocLocalServiceUtil.getEntDoc(docId);
+	EntFileUpload fileData = EntFileUploadLocalServiceUtil.getEntFileUpload(fileId);
+	request.setAttribute("docData", docData);
+	request.setAttribute("fileData", fileData);
 	String redirect = ParamUtil.getString(request, "backURL");
 %>
 
@@ -32,15 +30,15 @@
 
 <portlet:renderURL var="userReqProfileURL"
 	windowState="<%=LiferayWindowState.POP_UP.toString()%>">
-	<portlet:param name="userId" value="${document.userId}" />
-	<portlet:param name="docId" value="${document.docId}" />
+	<portlet:param name="userId" value="${docData.userId}" />
+	<portlet:param name="docId" value="${docData.docId}" />
 	<portlet:param name="mvcPath" value="/viewProfile.jsp" />
 </portlet:renderURL>
 
 <portlet:renderURL var="userSignProfileURL"
 	windowState="<%=LiferayWindowState.POP_UP.toString()%>">
-	<portlet:param name="userId" value="${document.signId}" />
-	<portlet:param name="docId" value="${document.docId}" />
+	<portlet:param name="userId" value="${docData.signId}" />
+	<portlet:param name="docId" value="${docData.docId}" />
 	<portlet:param name="mvcPath" value="/viewProfile.jsp" />
 </portlet:renderURL>
 
@@ -76,11 +74,11 @@
 
 <portlet:resourceURL var="viewURL">
 	<portlet:param name="dataId"
-		value="<%=String.valueOf(fileup.getFileId())%>" />
+		value="<%=String.valueOf(fileData.getFileId())%>" />
 </portlet:resourceURL>
 <portlet:renderURL var="updateDocURL">
 
-	<portlet:param name="docId" value="${document.docId}" />
+	<portlet:param name="docId" value="${docData.docId}" />
 	<portlet:param name="mvcPath" value="/updateDoc.jsp" />
 </portlet:renderURL>
 
@@ -104,17 +102,17 @@ td {
 	<h3>Status Completion:</h3>
 
 	<c:choose>
-		<c:when test="<%=document.getDoc_status().equals("Pending")%>">
+		<c:when test="<%=docData.getDoc_status().equals("Pending")%>">
 			<div class="progress">
 				<div class="progress-bar progress-bar-striped active "
 					role="progressbar" aria-valuenow="40" aria-valuemin="0"
 					aria-valuemax="100" style="width: 40%">40% - Pending</div>
 			</div>
 			<div class="alert alert-info">
-				Please <strong>review</strong> this signature request <strong>before ${document.doc_deadline}</strong>
+				Please <strong>review</strong> this signature request <strong>before ${docData.doc_deadline}</strong>
 			</div>
 		</c:when>
-		<c:when test="<%=document.getDoc_status().equals("Signed")%>">
+		<c:when test="<%=docData.getDoc_status().equals("Signed")%>">
 			<div class="progress">
 				<div
 					class="progress-bar progress-bar-striped active progress-bar-success"
@@ -125,7 +123,7 @@ td {
 				You have <strong>signed</strong> this document. Pending verification from signature requester.
 			</div>
 		</c:when>
-		<c:when test="<%=document.getDoc_status().equals("Verified")%>">
+		<c:when test="<%=docData.getDoc_status().equals("Verified")%>">
 			<div class="progress">
 				<div
 					class="progress-bar progress-bar-striped active progress-bar-info"
@@ -133,10 +131,10 @@ td {
 					aria-valuemax="100" style="width: 100%">100% - Verified</div>
 			</div>
 			<div class="alert alert-info">
-				Signature has been verified by <strong>${document.req_name}</strong>. Task completed!
+				Signature has been verified by <strong>${docData.req_name}</strong>. Task completed!
 			</div>
 		</c:when>
-		<c:when test="<%=document.getDoc_status().equals("Justify")%>">
+		<c:when test="<%=docData.getDoc_status().equals("Justify")%>">
 			<div class="progress">
 				<div
 					class="progress-bar progress-bar-striped active progress-bar-warning"
@@ -148,7 +146,7 @@ td {
 				Pending <strong>justification</strong> from signature requester.
 			</div>
 		</c:when>
-		<c:when test="<%=document.getDoc_status().equals("Rejected")%>">
+		<c:when test="<%=docData.getDoc_status().equals("Rejected")%>">
 			<div class="progress">
 				<div
 					class="progress-bar progress-bar-striped active progress-bar-danger"
@@ -157,6 +155,17 @@ td {
 			</div>
 			<div class="alert alert-danger">
 				You have <strong>rejected</strong> this request.
+			</div>
+		</c:when>
+				<c:when test="<%=docData.getDoc_status().equals("Expired")%>">
+			<div class="progress">
+				<div
+					class="progress-bar progress-bar-striped active progress-bar-dark"
+					role="progressbar" aria-valuenow="40" aria-valuemin="0"
+					aria-valuemax="100" style="width: 100%">100% - Expired</div>
+			</div>
+			<div class="alert alert-dark">
+				This signature request already <strong>expired</strong>. You did not respond before the deadline.
 			</div>
 		</c:when>
 	</c:choose>
@@ -169,50 +178,50 @@ td {
 		<tbody>
 			<tr>
 				<td width="250">Request ID:</td>
-				<td>${document.docId}</td>
+				<td>${docData.docId}</td>
 			</tr>
 			<tr>
 				<td>Request Title:</td>
-				<td>${document.doc_title}</td>
+				<td>${docData.doc_title}</td>
 			</tr>
 			<tr>
 				<td>Type:</td>
-				<td>${document.doc_type}</td>
+				<td>${docData.doc_type}</td>
 			</tr>
 			
 			<!--  
 			<tr>
 				<td>Status:</td>
 				<td><c:choose>
-						<c:when test="<%=document.getDoc_status().equals("Pending")%>">
+						<c:when test="<%=docData.getDoc_status().equals("Pending")%>">
 							<div class="text-muted">Pending</div>
 						</c:when>
-						<c:when test="<%=document.getDoc_status().equals("Signed")%>">
+						<c:when test="<%=docData.getDoc_status().equals("Signed")%>">
 							<div class="text-success">Signed</div>
 						</c:when>
-						<c:when test="<%=document.getDoc_status().equals("Rejected")%>">
+						<c:when test="<%=docData.getDoc_status().equals("Rejected")%>">
 							<div class="text-danger">Rejected</div>
 						</c:when>
-						<c:when test="<%=document.getDoc_status().equals("Justify")%>">
+						<c:when test="<%=docData.getDoc_status().equals("Justify")%>">
 							<div class="text-warning">Need Justification</div>
 						</c:when>
 					</c:choose></td>
 			</tr>-->
 			<tr>
 				<td>Date Created:</td>
-				<td>${document.req_dateCreated}</td>
+				<td>${docData.req_dateCreated}</td>
 			</tr>
 			<tr>
 				<td>Date Modified:</td>
-				<td>${document.req_dateModified}</td>
+				<td>${docData.req_dateModified}</td>
 			</tr>
 			<tr>
 				<td>Deadline:</td>
-				<td>${document.doc_deadline}</td>
+				<td>${docData.doc_deadline}</td>
 			</tr>
 			<tr>
 				<td>Description/Justification:</td>
-				<td>${document.doc_description}</td>
+				<td>${docData.doc_description}</td>
 			</tr>
 		</tbody>
 	</table>
@@ -235,7 +244,7 @@ td {
 									class="btn btn-warning btn-icon" name="delDocument"
 									type="submit">View Profile</button>
 							</td>
-							<td>${document.req_name}</td>
+							<td>${docData.req_name}</td>
 						</tr>
 					</table>
 				</td>
@@ -245,7 +254,7 @@ td {
 						message="Signer profile will be display after review this request." />
 				</td>
 				<td><c:choose>
-						<c:when test="<%=document.getDoc_status().equals("Pending")%>">
+						<c:when test="<%=docData.getDoc_status().equals("Pending")%>">
 							<i>Pending action from signer</i>
 						</c:when>
 						<c:otherwise>
@@ -258,7 +267,7 @@ td {
 											class="btn btn-warning btn-icon" name="delDocument"
 											type="submit">View Profile</button>
 									</td>
-									<td>${document.sign_name}</td>
+									<td>${docData.sign_name}</td>
 								</tr>
 							</table>
 
@@ -278,7 +287,7 @@ td {
 		<tbody>
 			<tr>
 				<td width="250">File Name:</td>
-				<td>${fileup.file_name}</td>
+				<td>${fileData.file_name}</td>
 			</tr>
 			<tr>
 				<td>Download:</td>
@@ -302,15 +311,15 @@ td {
 		<tbody>
 			<tr>
 				<td width="250">Request MD5:</td>
-				<td>${document.doc_md5}</td>
+				<td>${docData.doc_md5}</td>
 			</tr>
 			<tr>
 				<td>Time Created:</td>
-				<td>${document.req_timeCreated}</td>
+				<td>${docData.req_timeCreated}</td>
 			</tr>
 			<tr>
 				<td>Time Modified:</td>
-				<td>${document.req_timeModified}</td>
+				<td>${docData.req_timeModified}</td>
 			</tr>
 		</tbody>
 	</table>
@@ -347,9 +356,9 @@ td {
 		</div>
 		<aui:form action="<%=doSignAction%>" method="post" name="name">
 			<aui:input label="Doc Id: " name="docId" type="hidden"
-				value="${document.docId}" readOnly="true" />
+				value="${docData.docId}" readOnly="true" />
 			<aui:input label="File Id: " name="fileId" type="hidden"
-				value="${fileup.fileId}" readOnly="true" />
+				value="${fileData.fileId}" readOnly="true" />
 			<aui:input label="Action: " name="doAction" type="hidden"
 				value="Reject" readOnly="true" />
 			<aui:button cssClass="btn btn-danger" name="reject" type="submit"
@@ -368,11 +377,11 @@ td {
 
 		<aui:form action="<%=doSignAction%>" method="post" name="name">
 			<aui:input label="Doc Id: " name="docId" type="hidden"
-				value="${document.docId}" readOnly="true" />
+				value="${docData.docId}" readOnly="true" />
 			<aui:input label="File Id: " name="fileId" type="hidden"
-				value="${fileup.fileId}" readOnly="true" />
+				value="${fileData.fileId}" readOnly="true" />
 			<aui:input label="Doc Id: " name="doc_status" type="hidden"
-				value="${document.doc_status}" readOnly="true" />
+				value="${docData.doc_status}" readOnly="true" />
 			<aui:input label="Action: " name="doAction" type="hidden"
 				value="Justify" readOnly="true" />
 			<aui:input label="Add comments: " type="textarea"
@@ -399,11 +408,11 @@ td {
 			<aui:input label="Action: " name="doAction" type="hidden"
 				value="Sign" readOnly="true" />
 			<aui:input label="Doc Id: " name="docId" type="hidden"
-				value="${document.docId}" readOnly="true" />
+				value="${docData.docId}" readOnly="true" />
 			<aui:input label="File Id: " name="fileId" type="hidden"
-				value="${fileup.fileId}" readOnly="true" />
+				value="${fileData.fileId}" readOnly="true" />
 			<aui:input label="Doc Id: " name="doc_status" type="hidden"
-				value="${document.doc_status}" readOnly="true" />
+				value="${docData.doc_status}" readOnly="true" />
 			<aui:button cssClass="btn btn-success" name="sign" type="submit"
 				value="Sign Document" last="true"
 				onClick="return confirm('Are you sure to sign this document?')" />
@@ -412,6 +421,7 @@ td {
 	</div>
 
 </div>
+<br>
 
 
 <liferay-ui:error key="error-key-signFail"
@@ -419,6 +429,6 @@ td {
 <liferay-ui:error key="error-key-invalidPinFormat"
 	message="Error! Please enter your 6 digits pin." />
 <liferay-ui:error key="error-key-statusFail"
-	message="Unable to process your request. This document has been rejected or signed." />
+	message="Unable to process your request. This document has been rejected, signed, or expired." />
 <liferay-ui:error key="error-key-statusInvalid"
 	message="Error! Action does not exist! Please contact system admin." />

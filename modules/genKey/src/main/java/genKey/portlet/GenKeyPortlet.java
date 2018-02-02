@@ -2,8 +2,6 @@ package genKey.portlet;
 
 import genKey.constants.GenKeyPortletKeys;
 import com._42Penguins.gosign.model.EntKey;
-import com._42Penguins.gosign.service.EntDocLocalServiceUtil;
-import com._42Penguins.gosign.service.EntFileUploadLocalServiceUtil;
 import com._42Penguins.gosign.service.EntKeyLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;

@@ -1,0 +1,4 @@
+Bundle-Name: schedulerDeadline
+Bundle-SymbolicName: schedulerDeadline
+Bundle-Version: 1.0.0
+Export-Package: schedulerDeadline.constants

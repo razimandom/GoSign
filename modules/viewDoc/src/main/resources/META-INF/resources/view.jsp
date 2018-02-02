@@ -1,22 +1,26 @@
+<%@ include file="/init.jsp"%>
+<%@page import="java.util.List"%>
 <%@page import="com.liferay.portal.kernel.service.persistence.UserUtil"%>
 <%@page import="com.liferay.portal.kernel.service.UserLocalServiceUtil"%>
 <%@page import="javax.portlet.PortletException"%>
 <%@page import="com.liferay.portal.kernel.model.User"%>
-<%@ include file="/init.jsp"%>
 <%@page import="com.liferay.portal.kernel.language.LanguageUtil"%>
-<%@page import="java.util.List"%>
 <%@page import="com.liferay.portal.kernel.util.PortalUtil"%>
 <%@page import="com._42Penguins.gosign.service.EntDocLocalServiceUtil"%>
 <%@page import="com._42Penguins.gosign.model.EntDoc"%>
-<%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet"%>
-<%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui"%>
-<%@ page import="com.liferay.portal.kernel.util.ListUtil"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet"%>
+<%@page import="com.liferay.portal.kernel.util.ListUtil"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet"%>
+<%@taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet"%>
+<%@taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui"%>
 
 <liferay-portlet:renderURL varImpl="iteratorURL">
 	<portlet:param name="mvcPath" value="/view.jsp" />
 </liferay-portlet:renderURL>
+
+<div class="portlet-header">
+  List of Submitted Request
+</div>
 
 <liferay-ui:search-container
 	emptyResultsMessage="No uploaded document found."
@@ -27,13 +31,8 @@
 		<%
 			String remoteUserId = request.getRemoteUser();
 					long userId = Long.valueOf(remoteUserId);
-					//System.out.println(userId);
-					//long currentUserId = request.getAttribute("currentUserId");
 					List<EntDoc> docList = EntDocLocalServiceUtil.findByUserId(userId, -1, -1);
-
-					//List<Document> docList = DocumentLocalServiceUtil.getDocuments(-1, -1);
 					results = ListUtil.subList(docList, searchContainer.getStart(), searchContainer.getEnd());
-					//results = UserLocalServiceUtil.getUsers(searchContainer.getStart(), searchContainer.getEnd());
 					searchContainer.setTotal(docList.size());
 					searchContainer.setResults(results);
 		%>
@@ -80,7 +79,7 @@
 
 		<c:choose>
 			<c:when test="<%=document.getDoc_status().equals("Pending")%>">
-				<liferay-ui:search-container-column-text cssClass="text-muted"
+				<liferay-ui:search-container-column-text cssClass="text-primary"
 					name="Status" property="doc_status">
 				</liferay-ui:search-container-column-text>
 			</c:when>
@@ -91,6 +90,11 @@
 			</c:when>
 			<c:when test="<%=document.getDoc_status().equals("Rejected")%>">
 				<liferay-ui:search-container-column-text cssClass="text-danger"
+					name="Status" property="doc_status">
+				</liferay-ui:search-container-column-text>
+			</c:when>
+			<c:when test="<%=document.getDoc_status().equals("Expired")%>">
+				<liferay-ui:search-container-column-text cssClass="text-muted"
 					name="Status" property="doc_status">
 				</liferay-ui:search-container-column-text>
 			</c:when>
@@ -120,4 +124,3 @@
 	<liferay-ui:search-iterator searchContainer="<%=searchContainer%>" />
 
 </liferay-ui:search-container>
-

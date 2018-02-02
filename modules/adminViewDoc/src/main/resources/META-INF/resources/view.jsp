@@ -7,9 +7,9 @@
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet"%>
 <%@ taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet"%>
 
-<p>
-	<liferay-ui:message key="adminViewDoc.caption" />
-</p>
+<div class="portlet-header">
+  List of Submitted Request
+</div><br>
 
 <div class="alert alert-info">
 	<span class="glyphicon glyphicon-bullhorn"></span>&nbsp; <strong>Info!</strong>

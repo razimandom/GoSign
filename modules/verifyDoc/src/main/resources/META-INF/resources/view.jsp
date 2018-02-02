@@ -20,6 +20,8 @@
 
 </liferay-portlet:renderURL>
 
+<div class="portlet-header">List of Pending Signature</div>
+
 <liferay-ui:search-container
 	emptyResultsMessage="No pending signature required."
 	headerNames="Doc ID, Requestor Name, Requestor Email"
@@ -28,36 +30,14 @@
 	<liferay-ui:search-container-results>
 
 		<%
-			//ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-
-					//String signEmail = themeDisplay.getUser().getDisplayEmailAddress();
-					//System.out.println(signEmail);
-
-					//String remoteUserId = request.getRemoteUser();
-					//long userId = Long.valueOf(remoteUserId);
-					//System.out.println(userId);
-
-					//User userEmail = (User) request.getAttribute(currentEmail);
-					//System.out.println(userEmail);
-
-					String currentUserEmail = (String) request.getAttribute("currentEmail");
-
-					//String email = user.getEmailAddress
-					//long currentUserId = request.getAttribute("currentUserId");
-					List<EntDoc> docList = EntDocLocalServiceUtil.findBySignEmail(currentUserEmail, -1, -1);
-					//List<Document> docList = DocumentLocalServiceUtil.findBySignId(currentUserId, -1, -1);
-
-					//List<Document> docList = DocumentLocalServiceUtil.getDocuments(-1, -1);
-					results = ListUtil.subList(docList, searchContainer.getStart(), searchContainer.getEnd());
-					//results = UserLocalServiceUtil.getUsers(searchContainer.getStart(), searchContainer.getEnd());
-					searchContainer.setTotal(docList.size());
-					searchContainer.setResults(results);
+			String currentUserEmail = (String) request.getAttribute("currentEmail");
+			List<EntDoc> docList = EntDocLocalServiceUtil.findBySignEmail(currentUserEmail, -1, -1);
+			results = ListUtil.subList(docList, searchContainer.getStart(), searchContainer.getEnd());
+			searchContainer.setTotal(docList.size());
+			searchContainer.setResults(results);
 		%>
 
-
 	</liferay-ui:search-container-results>
-
-
 
 	<liferay-ui:search-container-row
 		className="com._42Penguins.gosign.model.EntDoc" modelVar="document"
@@ -90,7 +70,7 @@
 
 		<c:choose>
 			<c:when test="<%=document.getDoc_status().equals("Pending")%>">
-				<liferay-ui:search-container-column-text cssClass="text-muted"
+				<liferay-ui:search-container-column-text cssClass="text-info"
 					name="Status" property="doc_status">
 				</liferay-ui:search-container-column-text>
 			</c:when>
@@ -101,6 +81,11 @@
 			</c:when>
 			<c:when test="<%=document.getDoc_status().equals("Rejected")%>">
 				<liferay-ui:search-container-column-text cssClass="text-danger"
+					name="Status" property="doc_status">
+				</liferay-ui:search-container-column-text>
+			</c:when>
+			<c:when test="<%=document.getDoc_status().equals("Expired")%>">
+				<liferay-ui:search-container-column-text cssClass="text-muted"
 					name="Status" property="doc_status">
 				</liferay-ui:search-container-column-text>
 			</c:when>

@@ -7,9 +7,9 @@
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet"%>
 <%@ taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet"%>
 
-<p>
-	<liferay-ui:message key="adminViewKey.caption" />
-</p>
+<div class="portlet-header">
+  List of Generated Key
+</div><br>
 
 <div class="alert alert-danger">
 	<span class="glyphicon glyphicon-exclamation-sign">&nbsp;</span><strong>WARNING!
