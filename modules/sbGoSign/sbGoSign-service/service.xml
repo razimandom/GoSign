@@ -28,6 +28,7 @@
 		<column name="req_timeModified" type="String"></column>
 		
 			<!-- Finder methods -->
+        <column name="req_accepted" type="boolean"></column>
 
 	<finder name="FindUserId" return-type="Collection">
 		<finder-column name="userId" />

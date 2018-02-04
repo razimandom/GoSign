@@ -112,10 +112,10 @@
 
 		<liferay-ui:search-container-column-text name="Action">
 			<a href="${viewDocURL}" data-toggle="tooltip" title="View request"><span
-				class="glyphicon glyphicon-briefcase"></span></a>
+				class="glyphicon glyphicon-folder-open"></span></a>
 			    &nbsp;
 			    <a href="${doDelDoc}" data-toggle="tooltip" title="Delete"
-				onclick="return confirm('Are you sure you want to delete?')"><span
+				onclick="return confirm('Are you sure you want to delete this request?')"><span
 				class="glyphicon glyphicon-remove"></span></a>
 		</liferay-ui:search-container-column-text>
 

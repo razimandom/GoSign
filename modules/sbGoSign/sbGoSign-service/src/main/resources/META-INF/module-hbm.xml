@@ -27,6 +27,7 @@
 		<property name="req_dateModified" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="req_timeCreated" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="req_timeModified" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="req_accepted" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 	</class>
 	<class name="com._42Penguins.gosign.model.impl.EntFileUploadImpl" table="fileupload_data">
 		<id name="fileId" type="long">

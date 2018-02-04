@@ -63,7 +63,7 @@ public class EntDocCacheModel implements CacheModel<EntDoc>, Externalizable {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(39);
+		StringBundler sb = new StringBundler(41);
 
 		sb.append("{docId=");
 		sb.append(docId);
@@ -103,6 +103,8 @@ public class EntDocCacheModel implements CacheModel<EntDoc>, Externalizable {
 		sb.append(req_timeCreated);
 		sb.append(", req_timeModified=");
 		sb.append(req_timeModified);
+		sb.append(", req_accepted=");
+		sb.append(req_accepted);
 		sb.append("}");
 
 		return sb.toString();
@@ -222,6 +224,8 @@ public class EntDocCacheModel implements CacheModel<EntDoc>, Externalizable {
 			entDocImpl.setReq_timeModified(req_timeModified);
 		}
 
+		entDocImpl.setReq_accepted(req_accepted);
+
 		entDocImpl.resetOriginalValues();
 
 		return entDocImpl;
@@ -251,6 +255,8 @@ public class EntDocCacheModel implements CacheModel<EntDoc>, Externalizable {
 		req_dateModified = objectInput.readUTF();
 		req_timeCreated = objectInput.readUTF();
 		req_timeModified = objectInput.readUTF();
+
+		req_accepted = objectInput.readBoolean();
 	}
 
 	@Override
@@ -368,6 +374,8 @@ public class EntDocCacheModel implements CacheModel<EntDoc>, Externalizable {
 		else {
 			objectOutput.writeUTF(req_timeModified);
 		}
+
+		objectOutput.writeBoolean(req_accepted);
 	}
 
 	public long docId;
@@ -389,4 +397,5 @@ public class EntDocCacheModel implements CacheModel<EntDoc>, Externalizable {
 	public String req_dateModified;
 	public String req_timeCreated;
 	public String req_timeModified;
+	public boolean req_accepted;
 }

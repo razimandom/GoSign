@@ -21,6 +21,7 @@
 		<field name="req_dateModified" type="String" />
 		<field name="req_timeCreated" type="String" />
 		<field name="req_timeModified" type="String" />
+		<field name="req_accepted" type="boolean" />
 	</model>
 	<model name="com._42Penguins.gosign.model.EntFileUpload">
 		<field name="fileId" type="long" />

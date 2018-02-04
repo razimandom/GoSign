@@ -48,6 +48,7 @@ import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
 import org.osgi.service.component.annotations.Component;
+import javax.portlet.ProcessAction;
 
 /**
  * @author Raziman Dom
@@ -70,19 +71,6 @@ public class VerifyDocPortlet extends MVCPortlet {
 	
 	private static Log _log = LogFactoryUtil.getLog(VerifyDocPortlet.class);
 	
-
-	@Override
-	public void doView(RenderRequest renderRequest, RenderResponse renderResponse)
-			throws IOException, PortletException {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
-		User currentUser = themeDisplay.getUser();
-		renderRequest.setAttribute("currentEmail", currentUser.getEmailAddress());
-
-		super.doView(renderRequest, renderResponse);
-
-	}
-	
 	/**
 	 * Action to get input action from user. All action will be redirect to sign/reject/justify
 	 * @param actionRequest
@@ -92,7 +80,7 @@ public class VerifyDocPortlet extends MVCPortlet {
 	 * @throws PortalException
 	 */
 
-	public void doSignAction(ActionRequest actionRequest, ActionResponse actionResponse)
+	public void doActionMethod(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, PortalException {
 		
 		/*
@@ -137,6 +125,7 @@ public class VerifyDocPortlet extends MVCPortlet {
 		
 		String statusPending = "Pending";
 		String statusSigned = "Signed";
+		String statusVerified = "Verified";
 		String statusReject = "Rejected";
 		String statusJustify = "Justify";
 		String statusExpired = "Expired";
@@ -150,54 +139,82 @@ public class VerifyDocPortlet extends MVCPortlet {
 		 */
 		
 		if (doAction.equals(actionSign)) {
-
+			
+			_log.info("###################################################");
+			_log.info("#                                                 #");
+			_log.info("#                Sign Document log                #");
+			_log.info("#                                                 #");
+			_log.info("###################################################");
+			_log.info("START: Sign Document Function");
+			
 			if (doc_status.equals(statusPending) || doc_status.equals(statusJustify)) {
-
+				
+				_log.info("Validating user's 6 pin");
 				if (userPin.length() == userPinLength) {
 					doSignDoc(userPin, currentUser, currentDate, currentTime, currentHomeURL, actionRequest, actionResponse);
 				} else {
+					_log.error("Invalid pin format");
 					SessionErrors.add(actionRequest, "error-key-invalidPinFormat");
 					actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 				}
 
-			} else if (doc_status.equals(statusSigned) || doc_status.equals(statusReject) || doc_status.equals(statusExpired)) {
+			} else if (doc_status.equals(statusSigned) || doc_status.equals(statusReject) || doc_status.equals(statusExpired) || doc_status.equals(statusVerified)) {
+				_log.warn("Cannot sign document that has been signed/rejected/expired/verified");
 				SessionErrors.add(actionRequest, "error-key-statusFail");
 				actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 
 			} else {
+				_log.error("Unable to identify requested action");
 				SessionErrors.add(actionRequest, "error-key-statusInvalid");
 				actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 			}
 
 		} else if (doAction.equals(actionReject)) {
-
+			_log.info("###################################################");
+			_log.info("#                                                 #");
+			_log.info("#              Reject Document log                #");
+			_log.info("#                                                 #");
+			_log.info("###################################################");
+			_log.info("START: Reject Document Function");
+			
 			if (doc_status.equals(statusPending) || doc_status.equals(statusJustify)) {
 				doRejectDoc(currentUser, currentDate, currentTime, currentHomeURL, actionRequest, actionResponse);
 
-			} else if (doc_status.equals(statusSigned) || doc_status.equals(statusReject) || doc_status.equals(statusExpired)) {
+			} else if (doc_status.equals(statusSigned) || doc_status.equals(statusReject) || doc_status.equals(statusExpired) || doc_status.equals(statusVerified)) {
+				_log.warn("Cannot reject document that has been signed/rejected/expired/verified");
 				SessionErrors.add(actionRequest, "error-key-statusFail");
 				actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 
 			} else {
+				_log.error("Unable to identify requested action");
 				SessionErrors.add(actionRequest, "error-key-statusInvalid");
 				actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 			}
 
 		} else if (doAction.equals(actionJustify)) {
-
+			_log.info("###################################################");
+			_log.info("#                                                 #");
+			_log.info("#       Request Justification Document log        #");
+			_log.info("#                                                 #");
+			_log.info("###################################################");
+			_log.info("START: Request Justification Document Function");
+			
 			if (doc_status.equals(statusPending) || doc_status.equals(statusJustify)) {
 				doJustifyDoc(currentUser, currentDate, currentTime, currentHomeURL, actionRequest, actionResponse);
-
-			} else if (doc_status.equals(statusSigned) || doc_status.equals(statusReject) || doc_status.equals(statusExpired)) {
+				
+			} else if (doc_status.equals(statusSigned) || doc_status.equals(statusReject) || doc_status.equals(statusExpired) || doc_status.equals(statusVerified)) {
+				_log.warn("Cannot request justification for document that has been signed/rejected/expired/verified");
 				SessionErrors.add(actionRequest, "error-key-statusFail");
 				actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 
 			} else {
+				_log.error("Unable to identify requested action");
 				SessionErrors.add(actionRequest, "error-key-statusInvalid");
 				actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 			}
 
 		} else {
+			_log.error("Unknown action");
 			SessionErrors.add(actionRequest, "error-key-statusInvalid");
 			actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 		}
@@ -211,16 +228,12 @@ public class VerifyDocPortlet extends MVCPortlet {
 	public void doSignDoc(String userPin, User currentUser, String currentDate, String currentTime, String currentHomeURL, ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException {
 
-		System.out.println("================>>> START - doSignDoc");
-
 		try {
-
-			System.out.println("\n================>>> START: Decrypting private key using AES 128 bit\n");
 
 			/*
 			 *  Retrieve data from database for current user from EntKey entity
 			 */
-			System.out.println("Retrieving data from database...");
+			_log.info("Fetching key data from database");
 			long userId = currentUser.getUserId();
 			EntKey genkey = EntKeyLocalServiceUtil.getEntKey(userId);
 			String encodedEncryptedPriKey = genkey.getPrivatekey_Data();
@@ -231,6 +244,7 @@ public class VerifyDocPortlet extends MVCPortlet {
 			/*
 			 *  Retrieve data from database for current user from EntDoc entity
 			 */
+			_log.info("Fetching document data from database");
 			long docId = ParamUtil.getLong(actionRequest, "docId");
 			EntDoc doc = EntDocLocalServiceUtil.getEntDoc(docId);
 			long signId = userId;
@@ -247,16 +261,15 @@ public class VerifyDocPortlet extends MVCPortlet {
 			/*
 			 * Decode private key, salt, and vector
 			 */
-			System.out.println("Decoding encrypted private key...");
+			_log.info("Decoding encrypted private key, salt & vector");
 			byte[] decodedEncryptedPriKey = Base64.getDecoder().decode(encodedEncryptedPriKey);
-			System.out.println("Decoding Salt...");
 			byte[] decodedSalt = Base64.getDecoder().decode(encodedSalt);
-			System.out.println("Decoding Vector...");
 			byte[] decodedVector = Base64.getDecoder().decode(encodedVector);
 
 			/*
 			 * Generating AES key
 			 */
+			_log.info("Generating AES key for decryption");
 			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
 			KeySpec mykeySpec = new PBEKeySpec(userPin.toCharArray(), decodedSalt, 200000, 128);
 			SecretKey tmp = factory.generateSecret(mykeySpec);
@@ -266,34 +279,25 @@ public class VerifyDocPortlet extends MVCPortlet {
 			/*
 			 * Create and initiate decryption using AES key
 			 */
-			System.out.println("Initiate decryption alogrithm...");
+			_log.info("Initiate AES decryption");
 			dcipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-			// System.out.println("Algorithm to decrypt private key: " +
-			// dcipher);
-			dcipher.init(Cipher.DECRYPT_MODE, mySecretkey, vector);
-			// System.out.println("Secret key: " + mySecretkey);
+			dcipher.init(Cipher.DECRYPT_MODE, mySecretkey, vector);;
 
 			/*
 			 * Decrypt private key and get String
 			 */
-			System.out.println("Decrypting private key...");
+			_log.info("Decrypting private key");
 			String decodedDecryptedPriKey = new String(dcipher.doFinal(decodedEncryptedPriKey));
-			// System.out.println("Decrypted PrivateKey:
-			// "+decodedDecryptedPriKey);
 			byte[] FinaldecodedDecryptedPriKey = Base64.getDecoder().decode(decodedDecryptedPriKey);
-
-			System.out.println("\n================>>> END: Decrypting private key using AES 128 bit\n");
-
-			System.out.println("\n================>>> START - SIGN DOCUMENT\n");
 
 			/*
 			 * Get raw private key for signing
 			 */
+			_log.info("Start signing document");
 			KeyFactory kf = KeyFactory.getInstance("EC"); // or "EC" or whatever
 			PrivateKey rawPrivateKey = kf.generatePrivate(new PKCS8EncodedKeySpec(FinaldecodedDecryptedPriKey));
-			// System.out.println("Raw Private Key: "+rawPrivateKey);
 
-			System.out.println("Signing MD5...");
+			_log.info("Signing document MD5");
 			Signature signature = Signature.getInstance("SHA1withECDSA");
 			byte[] bytes = doc_md5.getBytes("UTF8");
 			signature.initSign(rawPrivateKey);
@@ -301,15 +305,11 @@ public class VerifyDocPortlet extends MVCPortlet {
 			byte[] digitalSignature = signature.sign();
 			String encodedSignature = Base64.getEncoder().encodeToString(digitalSignature);
 
-			System.out.println("Sign completed!");
-
-			System.out.println("\n================>>> END - SIGN DOCUMENT\n");
-
 			/*
 			 * Insert data to database
 			 */
 			
-			System.out.println("Inserting data to DB...");
+			_log.info("Inserting data to database");
 			doc.setReq_dateModified(req_dateModified);
 			doc.setReq_timeModified(req_timeModified);
 			doc.setDoc_signature(encodedSignature);
@@ -320,8 +320,9 @@ public class VerifyDocPortlet extends MVCPortlet {
 			doc = EntDocLocalServiceUtil.updateEntDoc(doc);
 
 			/*
-			 * Function to send email for requestor
+			 * Function to send email for requester
 			 */
+			_log.info("Sending email to requester");
 
 			InternetAddress fromAddress = null;
 			InternetAddress toAddress = null;
@@ -349,19 +350,19 @@ public class VerifyDocPortlet extends MVCPortlet {
 
 			mailMessage.setHTMLFormat(true);
 			MailServiceUtil.sendEmail(mailMessage);
-			System.out.println("Email has been sent to requestor!");
+			
+			_log.info("COMPLETED: Signed document: " + docId);
 			SessionMessages.add(actionRequest, "request_processed",
-					"Document has been signed! A notification email has been sent to requestor.");
+					"Document has been signed! A notification email has been sent to requester.");
 			actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 
 		} catch (Exception e) {
-			System.out.println("Failed to sign document...");
+			_log.error("Unable to sign the document.");
 			e.printStackTrace();
 			SessionErrors.add(actionRequest, "error-key-signFail");
 			actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 		}
 
-		System.out.println("\n================>>> END - doSignDoc\n");
 
 	}
 	/*
@@ -371,11 +372,8 @@ public class VerifyDocPortlet extends MVCPortlet {
 	public void doRejectDoc(User currentUser, String currentDate, String currentTime, String currentHomeURL, ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, PortalException {
 
-		System.out.println("================Start doRejectDoc=================");
 
-		// ==> Retrieve some data from database for current user from document
-		// table
-		System.out.println("Retrieving data from database...");
+		_log.info("Fetching data from database");
 		
 		long docId = ParamUtil.getLong(actionRequest, "docId");
 		long signId = (currentUser.getUserId());
@@ -390,20 +388,21 @@ public class VerifyDocPortlet extends MVCPortlet {
 
 		try {
 			
+			_log.info("Rejecting document");
+			
 			doc.setSignId(signId);
 			doc.setSign_name(sign_name);
 			doc.setReq_dateModified(req_dateModified);
 			doc.setReq_timeModified(req_timeModified);
 			doc.setDoc_status(doc_status);
-			System.out.println("Status updated: " + doc_status);
-			System.out.println("Inserting data to DB");
-
 			doc = EntDocLocalServiceUtil.updateEntDoc(doc);
 
 			/*
-			 * Function to send email for requestor
+			 * Function to send email for requester
 			 */
-
+			
+			_log.info("Sending email to requester");
+			
 			InternetAddress fromAddress = null;
 			InternetAddress toAddress = null;
 
@@ -429,18 +428,18 @@ public class VerifyDocPortlet extends MVCPortlet {
 
 			mailMessage.setHTMLFormat(true);
 			MailServiceUtil.sendEmail(mailMessage);
-			System.out.println("Email has been sent to requestor!");
+			_log.info("Email has been sent to requester!");
+			_log.info("COMPLETED: Rejected document: " + docId);
 			SessionMessages.add(actionRequest, "request_processed", "You have rejected the signature request.");
 			actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 
 		} catch (Exception e) {
-			System.out.println("Fail to reject document...");
+			_log.error("Fail to reject document");
 			e.printStackTrace();
 			SessionErrors.add(actionRequest, "error-key-statusFail");
 			actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 		}
 
-		System.out.println("================End doRejectDoc=================");
 	}
 
 	/*
@@ -450,11 +449,7 @@ public class VerifyDocPortlet extends MVCPortlet {
 	public void doJustifyDoc(User currentUser, String currentDate, String currentTime, String currentHomeURL, ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, PortalException {
 
-		System.out.println("================Start doReqJustification=================");
-
-		// ==> Retrieve some data from database for current user from document
-		// table
-		System.out.println("Retrieving data from database...");
+		_log.info("Retrieving data from database");
 		long docId = ParamUtil.getLong(actionRequest, "docId");
 		long signId = (currentUser.getUserId());
 		EntDoc doc = EntDocLocalServiceUtil.getEntDoc(docId);
@@ -468,21 +463,24 @@ public class VerifyDocPortlet extends MVCPortlet {
 
 		try {
 			
+			_log.info("Requesting document justification");
+			
 			doc.setSignId(signId);
 			doc.setReq_timeModified(req_timeModified);
 			doc.setReq_dateModified(req_dateModified);
 			doc.setSign_name(sign_name);
 			doc.setDoc_status(doc_status);
 			actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
-			System.out.println("Status updated: " + doc_status);
-			System.out.println("Inserting data to DB");
+			_log.info("Inserting data to DB");
 
 			doc = EntDocLocalServiceUtil.updateEntDoc(doc);
 
 			/*
 			 * Function to send email for requester
 			 */
-
+			
+			_log.info("Sending email to requester");
+			
 			InternetAddress fromAddress = null;
 			InternetAddress toAddress = null;
 
@@ -522,26 +520,69 @@ public class VerifyDocPortlet extends MVCPortlet {
 
 			mailMessage.setHTMLFormat(true);
 			MailServiceUtil.sendEmail(mailMessage);
-			System.out.println("Email has been sent to requestor!");
+			_log.info("Email has been sent to requester!");
+			_log.info("COMPLETED: Requested justification document: " + docId);
 			SessionMessages.add(actionRequest, "request_processed",
-					"Email has been sent to requestor to request for more justification.");
+					"Email has been sent to requester to request for more justification.");
 			actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 
 		} catch (Exception e) {
-			System.out.println("Fail to sign document...");
+			_log.error("Fail to request document justification");
 			e.printStackTrace();
 			SessionErrors.add(actionRequest, "error-key-statusFail");
 			actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 		}
 
-		System.out.println("================End doReqJustification=================");
 	}
 	
+	/*
+	 * Accept document method to fetch signer ID
+	 */
+	
+	@ProcessAction(name = "doAcceptAction")
+	public void doAcceptAction(ActionRequest actionRequest, ActionResponse actionResponse)
+			throws IOException, PortletException, PortalException {
+		
+		_log.info("###################################################");
+		_log.info("#                                                 #");
+		_log.info("#                Accept Document log              #");
+		_log.info("#                                                 #");
+		_log.info("###################################################");
+		_log.info("START: Accept Document Function");
+		
+		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		User currentUser = themeDisplay.getUser();
+		long docId = ParamUtil.getLong(actionRequest, "docId");
+		long signId = (currentUser.getUserId());
+		String sign_name = currentUser.getFullName();
+	
+			try {
+				
+				_log.info("Accepting document");
+					
+				EntDoc doc = EntDocLocalServiceUtil.getEntDoc(docId);
+				doc.setSignId(signId);
+				doc.setSign_name(sign_name);
+				doc.setReq_accepted(true);
+		
+				doc = EntDocLocalServiceUtil.updateEntDoc(doc);
+				
+				_log.info("COMPLETED: Accepted document: " + docId);
+				SessionMessages.add(actionRequest, "request_accepted",
+							"You have accepted this signature request.");
+		
+				} catch (Exception e) {
+					_log.error("Fail to accept document");
+					e.printStackTrace();
+					SessionErrors.add(actionRequest, "error-accept-fail");
+					actionResponse.setRenderParameter("mvcPath", "/view.jsp");
+				}
+
+		
+	}
 
 	/*
-	 * 
 	 * serveResource method is used for displaying blob data
-	 *
 	 */
 
 	@Override
@@ -571,5 +612,11 @@ public class VerifyDocPortlet extends MVCPortlet {
 
 		}
 	}
+	
+	
+	/*
+	@ProcessAction(name = "doAcceptAction")
+	public void doAcceptAction(ActionRequest actionRequest, ActionResponse actionResponse) {
+	}*/
 	
 }

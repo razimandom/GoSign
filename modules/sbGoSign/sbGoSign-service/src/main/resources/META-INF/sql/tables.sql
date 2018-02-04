@@ -17,7 +17,8 @@ create table document_data (
 	req_dateCreated VARCHAR(75) null,
 	req_dateModified VARCHAR(75) null,
 	req_timeCreated VARCHAR(75) null,
-	req_timeModified VARCHAR(75) null
+	req_timeModified VARCHAR(75) null,
+	req_accepted BOOLEAN
 );
 
 create table fileupload_data (

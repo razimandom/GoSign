@@ -6,7 +6,8 @@
 <%@page import="com.liferay.portal.kernel.util.ListUtil"%>
 <%@page import="com._42Penguins.gosign.service.EntDocLocalServiceUtil"%>
 <%@page import="com._42Penguins.gosign.model.EntDoc"%>
-<%@page import="com._42Penguins.gosign.service.EntFileUploadLocalServiceUtil"%>
+<%@page
+	import="com._42Penguins.gosign.service.EntFileUploadLocalServiceUtil"%>
 <%@page import="com._42Penguins.gosign.model.EntFileUpload"%>
 <%@page import="com.liferay.portal.kernel.theme.ThemeDisplay"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
@@ -70,6 +71,8 @@
 		});
 	});
 </aui:script>
+	
+
 
 
 <portlet:resourceURL var="viewURL">
@@ -82,7 +85,7 @@
 	<portlet:param name="mvcPath" value="/updateDoc.jsp" />
 </portlet:renderURL>
 
-<portlet:actionURL name="doSignAction" var="doSignAction" />
+<portlet:actionURL name="doActionMethod" var="doActionMethod" />
 
 <style type="text/css">
 td {
@@ -109,7 +112,8 @@ td {
 					aria-valuemax="100" style="width: 40%">40% - Pending</div>
 			</div>
 			<div class="alert alert-info">
-				Please <strong>review</strong> this signature request <strong>before ${docData.doc_deadline}</strong>
+				Please <strong>review</strong> this signature request <strong>before
+					${docData.doc_deadline}</strong>
 			</div>
 		</c:when>
 		<c:when test="<%=docData.getDoc_status().equals("Signed")%>">
@@ -120,7 +124,8 @@ td {
 					aria-valuemax="100" style="width: 70%">70% - Signed</div>
 			</div>
 			<div class="alert alert-success">
-				You have <strong>signed</strong> this document. Pending verification from signature requester.
+				You have <strong>signed</strong> this document. Pending verification
+				from signature requester.
 			</div>
 		</c:when>
 		<c:when test="<%=docData.getDoc_status().equals("Verified")%>">
@@ -131,7 +136,8 @@ td {
 					aria-valuemax="100" style="width: 100%">100% - Verified</div>
 			</div>
 			<div class="alert alert-info">
-				Signature has been verified by <strong>${docData.req_name}</strong>. Task completed!
+				Signature has been verified by <strong>${docData.req_name}</strong>.
+				Task completed!
 			</div>
 		</c:when>
 		<c:when test="<%=docData.getDoc_status().equals("Justify")%>">
@@ -157,7 +163,7 @@ td {
 				You have <strong>rejected</strong> this request.
 			</div>
 		</c:when>
-				<c:when test="<%=docData.getDoc_status().equals("Expired")%>">
+		<c:when test="<%=docData.getDoc_status().equals("Expired")%>">
 			<div class="progress">
 				<div
 					class="progress-bar progress-bar-striped active progress-bar-dark"
@@ -165,7 +171,8 @@ td {
 					aria-valuemax="100" style="width: 100%">100% - Expired</div>
 			</div>
 			<div class="alert alert-dark">
-				This signature request already <strong>expired</strong>. You did not respond before the deadline.
+				This signature request already <strong>expired</strong>. You did not
+				respond before the deadline.
 			</div>
 		</c:when>
 	</c:choose>
@@ -188,7 +195,7 @@ td {
 				<td>Type:</td>
 				<td>${docData.doc_type}</td>
 			</tr>
-			
+
 			<!--  
 			<tr>
 				<td>Status:</td>
@@ -250,14 +257,10 @@ td {
 				</td>
 			</tr>
 			<tr>
-				<td>Signer:<liferay-ui:icon-help
-						message="Signer profile will be display after review this request." />
+				<td>Signer:
 				</td>
 				<td><c:choose>
-						<c:when test="<%=docData.getDoc_status().equals("Pending")%>">
-							<i>Pending action from signer</i>
-						</c:when>
-						<c:otherwise>
+						<c:when test="<%=docData.getReq_accepted() == true%>">
 
 							<table>
 								<tr>
@@ -265,12 +268,15 @@ td {
 
 										<button id="popup_userSignProfile"
 											class="btn btn-warning btn-icon" name="delDocument"
-											type="submit">View Profile</button>
+											type="submit">
+											View Profile</button>
 									</td>
 									<td>${docData.sign_name}</td>
 								</tr>
 							</table>
-
+						</c:when>
+						<c:otherwise>
+							<i>Signer has not accept this request yet</i>
 						</c:otherwise>
 
 					</c:choose></td>
@@ -331,20 +337,19 @@ td {
 		have rejected or signed the document.
 	</div>
 
-	<td>
-		<input class="btn btn-primary" type=button value=" Back" onClick="javascript: window.history.go(-1)">
-	</td>
+	<td><input class="btn btn-primary" type=button value=" Back"
+		onClick="javascript: window.history.go(-1)"></td>
 	<td>
 		<button type="button" class="btn btn-danger" data-toggle="collapse"
 			data-target="#delete">Reject</button>
 	</td>
 	<td>
 		<button type="button" class="btn btn-warning" data-toggle="collapse"
-			data-target="#justify">Request Justification</button>
+			data-target="#justify"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;Request Justification</button>
 	</td>
 	<td>
 		<button type="button" class="btn btn-success" data-toggle="collapse"
-			data-target="#sign">Sign Document</button>
+			data-target="#sign"><span class="glyphicon glyphicon-edit"></span>&nbsp;Sign Document</button>
 	</td>
 
 	<div id="delete" class="collapse">
@@ -354,7 +359,7 @@ td {
 			<span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;Are
 			you sure you want to reject this request?
 		</div>
-		<aui:form action="<%=doSignAction%>" method="post" name="name">
+		<aui:form action="<%=doActionMethod%>" method="post" name="name">
 			<aui:input label="Doc Id: " name="docId" type="hidden"
 				value="${docData.docId}" readOnly="true" />
 			<aui:input label="File Id: " name="fileId" type="hidden"
@@ -375,7 +380,7 @@ td {
 
 		<portlet:actionURL name="updateDoc" var="updateDoc" />
 
-		<aui:form action="<%=doSignAction%>" method="post" name="name">
+		<aui:form action="<%=doActionMethod%>" method="post" name="name">
 			<aui:input label="Doc Id: " name="docId" type="hidden"
 				value="${docData.docId}" readOnly="true" />
 			<aui:input label="File Id: " name="fileId" type="hidden"
@@ -399,7 +404,7 @@ td {
 		<br>
 		<h3>Sign Document:</h3>
 
-		<aui:form action="<%=doSignAction%>" method="post" name="name"
+		<aui:form action="<%=doActionMethod%>" method="post" name="name"
 			enctype="multipart/form-data">
 			<aui:input label="Enter 6 pin: " name="userPin" type="type">
 				<aui:validator name="required" />
@@ -429,6 +434,6 @@ td {
 <liferay-ui:error key="error-key-invalidPinFormat"
 	message="Error! Please enter your 6 digits pin." />
 <liferay-ui:error key="error-key-statusFail"
-	message="Unable to process your request. This document has been rejected, signed, or expired." />
+	message="Unable to process your request. This document has been rejected, signed, verified, or expired." />
 <liferay-ui:error key="error-key-statusInvalid"
 	message="Error! Action does not exist! Please contact system admin." />

@@ -100,7 +100,7 @@ Submit Request
 	<aui:validator name="maxLength">30</aui:validator>
 	</aui:input>
 	
-	<aui:input label="Upload File: " type="file" name="file" helpMessage="Upload document that need to be sign digitally">
+	<aui:input label="Upload File: " type="file" name="file" helpMessage="Maximum file size 10MB">
 	<aui:validator name="required"/>
 	<aui:validator name="acceptFiles">'pdf,rar,zip,doc,docx,xlsx,xls'</aui:validator>
 	</aui:input>

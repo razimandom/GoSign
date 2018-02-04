@@ -355,6 +355,27 @@ public interface EntDocModel extends BaseModel<EntDoc> {
 	 */
 	public void setReq_timeModified(String req_timeModified);
 
+	/**
+	 * Returns the req_accepted of this ent doc.
+	 *
+	 * @return the req_accepted of this ent doc
+	 */
+	public boolean getReq_accepted();
+
+	/**
+	 * Returns <code>true</code> if this ent doc is req_accepted.
+	 *
+	 * @return <code>true</code> if this ent doc is req_accepted; <code>false</code> otherwise
+	 */
+	public boolean isReq_accepted();
+
+	/**
+	 * Sets whether this ent doc is req_accepted.
+	 *
+	 * @param req_accepted the req_accepted of this ent doc
+	 */
+	public void setReq_accepted(boolean req_accepted);
+
 	@Override
 	public boolean isNew();
 

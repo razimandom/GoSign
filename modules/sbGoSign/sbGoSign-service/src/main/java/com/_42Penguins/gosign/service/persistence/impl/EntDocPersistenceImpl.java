@@ -1435,6 +1435,7 @@ public class EntDocPersistenceImpl extends BasePersistenceImpl<EntDoc>
 		entDocImpl.setReq_dateModified(entDoc.getReq_dateModified());
 		entDocImpl.setReq_timeCreated(entDoc.getReq_timeCreated());
 		entDocImpl.setReq_timeModified(entDoc.getReq_timeModified());
+		entDocImpl.setReq_accepted(entDoc.isReq_accepted());
 
 		return entDocImpl;
 	}

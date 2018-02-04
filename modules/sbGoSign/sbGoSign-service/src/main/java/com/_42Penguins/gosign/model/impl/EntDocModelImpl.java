@@ -87,7 +87,8 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 			{ "req_dateCreated", Types.VARCHAR },
 			{ "req_dateModified", Types.VARCHAR },
 			{ "req_timeCreated", Types.VARCHAR },
-			{ "req_timeModified", Types.VARCHAR }
+			{ "req_timeModified", Types.VARCHAR },
+			{ "req_accepted", Types.BOOLEAN }
 		};
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP = new HashMap<String, Integer>();
 
@@ -111,9 +112,10 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 		TABLE_COLUMNS_MAP.put("req_dateModified", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("req_timeCreated", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("req_timeModified", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("req_accepted", Types.BOOLEAN);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table document_data (docId LONG not null primary key,fileId LONG,userId LONG,signId LONG,req_name VARCHAR(75) null,req_email VARCHAR(75) null,sign_name VARCHAR(75) null,sign_email VARCHAR(75) null,doc_title VARCHAR(75) null,doc_type VARCHAR(75) null,doc_md5 VARCHAR(75) null,doc_status VARCHAR(75) null,doc_deadline VARCHAR(75) null,doc_description VARCHAR(75) null,doc_signature VARCHAR(75) null,req_dateCreated VARCHAR(75) null,req_dateModified VARCHAR(75) null,req_timeCreated VARCHAR(75) null,req_timeModified VARCHAR(75) null)";
+	public static final String TABLE_SQL_CREATE = "create table document_data (docId LONG not null primary key,fileId LONG,userId LONG,signId LONG,req_name VARCHAR(75) null,req_email VARCHAR(75) null,sign_name VARCHAR(75) null,sign_email VARCHAR(75) null,doc_title VARCHAR(75) null,doc_type VARCHAR(75) null,doc_md5 VARCHAR(75) null,doc_status VARCHAR(75) null,doc_deadline VARCHAR(75) null,doc_description VARCHAR(75) null,doc_signature VARCHAR(75) null,req_dateCreated VARCHAR(75) null,req_dateModified VARCHAR(75) null,req_timeCreated VARCHAR(75) null,req_timeModified VARCHAR(75) null,req_accepted BOOLEAN)";
 	public static final String TABLE_SQL_DROP = "drop table document_data";
 	public static final String ORDER_BY_JPQL = " ORDER BY entDoc.docId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY document_data.docId ASC";
@@ -165,6 +167,7 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 		model.setReq_dateModified(soapModel.getReq_dateModified());
 		model.setReq_timeCreated(soapModel.getReq_timeCreated());
 		model.setReq_timeModified(soapModel.getReq_timeModified());
+		model.setReq_accepted(soapModel.getReq_accepted());
 
 		return model;
 	}
@@ -248,6 +251,7 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 		attributes.put("req_dateModified", getReq_dateModified());
 		attributes.put("req_timeCreated", getReq_timeCreated());
 		attributes.put("req_timeModified", getReq_timeModified());
+		attributes.put("req_accepted", getReq_accepted());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
 		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
@@ -369,6 +373,12 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 
 		if (req_timeModified != null) {
 			setReq_timeModified(req_timeModified);
+		}
+
+		Boolean req_accepted = (Boolean)attributes.get("req_accepted");
+
+		if (req_accepted != null) {
+			setReq_accepted(req_accepted);
 		}
 	}
 
@@ -694,6 +704,23 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 		_req_timeModified = req_timeModified;
 	}
 
+	@JSON
+	@Override
+	public boolean getReq_accepted() {
+		return _req_accepted;
+	}
+
+	@JSON
+	@Override
+	public boolean isReq_accepted() {
+		return _req_accepted;
+	}
+
+	@Override
+	public void setReq_accepted(boolean req_accepted) {
+		_req_accepted = req_accepted;
+	}
+
 	public long getColumnBitmask() {
 		return _columnBitmask;
 	}
@@ -744,6 +771,7 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 		entDocImpl.setReq_dateModified(getReq_dateModified());
 		entDocImpl.setReq_timeCreated(getReq_timeCreated());
 		entDocImpl.setReq_timeModified(getReq_timeModified());
+		entDocImpl.setReq_accepted(getReq_accepted());
 
 		entDocImpl.resetOriginalValues();
 
@@ -947,12 +975,14 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 			entDocCacheModel.req_timeModified = null;
 		}
 
+		entDocCacheModel.req_accepted = getReq_accepted();
+
 		return entDocCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(39);
+		StringBundler sb = new StringBundler(41);
 
 		sb.append("{docId=");
 		sb.append(getDocId());
@@ -992,6 +1022,8 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 		sb.append(getReq_timeCreated());
 		sb.append(", req_timeModified=");
 		sb.append(getReq_timeModified());
+		sb.append(", req_accepted=");
+		sb.append(getReq_accepted());
 		sb.append("}");
 
 		return sb.toString();
@@ -999,7 +1031,7 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(61);
+		StringBundler sb = new StringBundler(64);
 
 		sb.append("<model><model-name>");
 		sb.append("com._42Penguins.gosign.model.EntDoc");
@@ -1081,6 +1113,10 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 			"<column><column-name>req_timeModified</column-name><column-value><![CDATA[");
 		sb.append(getReq_timeModified());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>req_accepted</column-name><column-value><![CDATA[");
+		sb.append(getReq_accepted());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -1113,6 +1149,7 @@ public class EntDocModelImpl extends BaseModelImpl<EntDoc>
 	private String _req_dateModified;
 	private String _req_timeCreated;
 	private String _req_timeModified;
+	private boolean _req_accepted;
 	private long _columnBitmask;
 	private EntDoc _escapedModel;
 }

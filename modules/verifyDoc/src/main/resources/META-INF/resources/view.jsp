@@ -28,9 +28,12 @@
 	iteratorURL="<%=iteratorURL%>" delta="10" deltaConfigurable="true">
 
 	<liferay-ui:search-container-results>
-
+	 
 		<%
-			String currentUserEmail = (String) request.getAttribute("currentEmail");
+			String remoteUserId = request.getRemoteUser();
+			long userId = Long.valueOf(remoteUserId);
+			User userData = UserLocalServiceUtil.getUser(userId);
+			String currentUserEmail = userData.getEmailAddress();
 			List<EntDoc> docList = EntDocLocalServiceUtil.findBySignEmail(currentUserEmail, -1, -1);
 			results = ListUtil.subList(docList, searchContainer.getStart(), searchContainer.getEnd());
 			searchContainer.setTotal(docList.size());
@@ -49,6 +52,13 @@
 			<portlet:param name="fileId" value="${document.fileId}" />
 			<portlet:param name="mvcPath" value="/viewDetails.jsp" />
 		</portlet:renderURL>
+		
+		<portlet:actionURL name="doAcceptAction" var="doAcceptAction">
+			<portlet:param name="docId" value="${document.docId}" />
+			<portlet:param name="userId" value="${document.userId}" />
+			<portlet:param name="fileId" value="${document.fileId}" />
+			<portlet:param name="mvcPath" value="/viewDetails.jsp" />
+		</portlet:actionURL>
 
 		<liferay-ui:search-container-column-text
 			value="<%=String.valueOf(row.getPos() + 1)%>" name="No" />
@@ -70,7 +80,7 @@
 
 		<c:choose>
 			<c:when test="<%=document.getDoc_status().equals("Pending")%>">
-				<liferay-ui:search-container-column-text cssClass="text-info"
+				<liferay-ui:search-container-column-text cssClass="text-primary"
 					name="Status" property="doc_status">
 				</liferay-ui:search-container-column-text>
 			</c:when>
@@ -101,11 +111,19 @@
 			</c:when>
 		</c:choose>
 
-
+		
 		<liferay-ui:search-container-column-text name="Action">
-			<a href="${viewDocURL}" data-toggle="tooltip" title="View request"><span
-				class="glyphicon glyphicon-briefcase"></span></a>
-			    &nbsp;
+			
+			<c:choose>
+			<c:when test="<%=document.getReq_accepted() == true %>">
+				<a href="${viewDocURL}" data-toggle="tooltip" title="View request"><span
+					class="glyphicon glyphicon-folder-open"></span></a>
+			</c:when>
+			<c:when test="<%=document.getReq_accepted() == false %>">
+				<a href="${doAcceptAction}" data-toggle="tooltip" title="Accept request"><span
+					class="glyphicon glyphicon-folder-close" onclick="return confirm('Open and accept this signature request?')"></span></a>
+			</c:when>
+			</c:choose>
 		</liferay-ui:search-container-column-text>
 
 	</liferay-ui:search-container-row>
@@ -113,3 +131,6 @@
 	<liferay-ui:search-iterator searchContainer="<%=searchContainer%>" />
 
 </liferay-ui:search-container>
+
+<liferay-ui:error key="error-accept-fail"
+	message="System unable to accept this request" />

@@ -297,9 +297,7 @@
 							<td>
 								<button id="popup_userReqProfile"
 									class="btn btn-warning btn-icon" name="delDocument"
-									type="submit">
-									<span class="glyphicon glyphicon-user"></span>&nbsp;View
-									Profile
+									type="submit">View Profile
 								</button>
 							</td>
 							<td>${docData.req_name}</td>
@@ -309,29 +307,24 @@
 			</tr>
 			<tr>
 				<td>Signer:<liferay-ui:icon-help
-						message="Signer profile will be display after review this request." />
+						message="Signer profile will be display after signer accept this request." />
 				</td>
 				<td><c:choose>
-						<c:when test="<%=docData.getDoc_status().equals("Pending")%>">
-							<i>Pending action from signer</i>
-						</c:when>
-						<c:otherwise>
-
+						<c:when test="<%=docData.getReq_accepted() == true%>">
 							<table>
 								<tr>
 									<td>
 
 										<button id="popup_userSignProfile"
 											class="btn btn-warning btn-icon" name="delDocument"
-											type="submit">
-											<span class="glyphicon glyphicon-user"></span>&nbsp;View
-											Profile
-										</button>
+											type="submit">View Profile</button>
 									</td>
 									<td>${docData.sign_name}</td>
 								</tr>
 							</table>
-
+						</c:when>
+						<c:otherwise>
+							<i>Signer has not accept this request yet</i>
 						</c:otherwise>
 
 					</c:choose></td>

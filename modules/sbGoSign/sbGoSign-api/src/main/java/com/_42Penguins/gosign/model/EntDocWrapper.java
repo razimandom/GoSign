@@ -75,6 +75,7 @@ public class EntDocWrapper implements EntDoc, ModelWrapper<EntDoc> {
 		attributes.put("req_dateModified", getReq_dateModified());
 		attributes.put("req_timeCreated", getReq_timeCreated());
 		attributes.put("req_timeModified", getReq_timeModified());
+		attributes.put("req_accepted", getReq_accepted());
 
 		return attributes;
 	}
@@ -194,6 +195,12 @@ public class EntDocWrapper implements EntDoc, ModelWrapper<EntDoc> {
 		if (req_timeModified != null) {
 			setReq_timeModified(req_timeModified);
 		}
+
+		Boolean req_accepted = (Boolean)attributes.get("req_accepted");
+
+		if (req_accepted != null) {
+			setReq_accepted(req_accepted);
+		}
 	}
 
 	@Override
@@ -204,6 +211,16 @@ public class EntDocWrapper implements EntDoc, ModelWrapper<EntDoc> {
 	@Override
 	public EntDoc toUnescapedModel() {
 		return new EntDocWrapper(_entDoc.toUnescapedModel());
+	}
+
+	/**
+	* Returns the req_accepted of this ent doc.
+	*
+	* @return the req_accepted of this ent doc
+	*/
+	@Override
+	public boolean getReq_accepted() {
+		return _entDoc.getReq_accepted();
 	}
 
 	@Override
@@ -219,6 +236,16 @@ public class EntDocWrapper implements EntDoc, ModelWrapper<EntDoc> {
 	@Override
 	public boolean isNew() {
 		return _entDoc.isNew();
+	}
+
+	/**
+	* Returns <code>true</code> if this ent doc is req_accepted.
+	*
+	* @return <code>true</code> if this ent doc is req_accepted; <code>false</code> otherwise
+	*/
+	@Override
+	public boolean isReq_accepted() {
+		return _entDoc.isReq_accepted();
 	}
 
 	@Override
@@ -605,6 +632,16 @@ public class EntDocWrapper implements EntDoc, ModelWrapper<EntDoc> {
 	@Override
 	public void setPrimaryKeyObj(Serializable primaryKeyObj) {
 		_entDoc.setPrimaryKeyObj(primaryKeyObj);
+	}
+
+	/**
+	* Sets whether this ent doc is req_accepted.
+	*
+	* @param req_accepted the req_accepted of this ent doc
+	*/
+	@Override
+	public void setReq_accepted(boolean req_accepted) {
+		_entDoc.setReq_accepted(req_accepted);
 	}
 
 	/**

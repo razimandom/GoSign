@@ -52,6 +52,7 @@ public class EntDocSoap implements Serializable {
 		soapModel.setReq_dateModified(model.getReq_dateModified());
 		soapModel.setReq_timeCreated(model.getReq_timeCreated());
 		soapModel.setReq_timeModified(model.getReq_timeModified());
+		soapModel.setReq_accepted(model.getReq_accepted());
 
 		return soapModel;
 	}
@@ -256,6 +257,18 @@ public class EntDocSoap implements Serializable {
 		_req_timeModified = req_timeModified;
 	}
 
+	public boolean getReq_accepted() {
+		return _req_accepted;
+	}
+
+	public boolean isReq_accepted() {
+		return _req_accepted;
+	}
+
+	public void setReq_accepted(boolean req_accepted) {
+		_req_accepted = req_accepted;
+	}
+
 	private long _docId;
 	private long _fileId;
 	private long _userId;
@@ -275,4 +288,5 @@ public class EntDocSoap implements Serializable {
 	private String _req_dateModified;
 	private String _req_timeCreated;
 	private String _req_timeModified;
+	private boolean _req_accepted;
 }
