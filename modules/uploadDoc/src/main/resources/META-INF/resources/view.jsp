@@ -22,7 +22,13 @@
 	<portlet:param name="<%=Constants.CMD%>" value="get_users" />
 </portlet:resourceURL>
 
-<%Date defaultDate = new Date();%>
+<%
+Date nowDate = new Date();
+int startDay, startMonth, startYear;
+startDay = 1;
+startYear = nowDate.getYear()+1900; 
+startMonth = 0;
+%>
 
 <!--  
 
@@ -85,25 +91,38 @@ Submit Request
 	
 	<aui:input label="Title: " name="doc_title" helpMessage="In brief about this document/request.">
 	<aui:validator name="required"/>
+	<aui:validator name="maxLength">50</aui:validator>
 	</aui:input>
 	
 	<aui:input id="myInputNode" name="sign_email" label="Signer Email: " helpMessage="Email of the user that will sign this document">
 	<aui:validator name="required"/>
 	<aui:validator name="email"/>
+	<aui:validator name="maxLength">30</aui:validator>
 	</aui:input>
 	
 	<aui:input label="Upload File: " type="file" name="file" helpMessage="Upload document that need to be sign digitally">
 	<aui:validator name="required"/>
+	<aui:validator name="acceptFiles">'pdf,rar,zip,doc,docx,xlsx,xls'</aui:validator>
 	</aui:input>
 	
-	<aui:input label="Description: " type="textarea" name="doc_description" helpMessage="Justification or description of signature request"/>
-
-	<label>Deadline:</label><liferay-ui:input-date name="doc_deadline" firstEnabledDate="<%=defaultDate%>" required="true"/><br>
+	<aui:input label="Description: " type="textarea" name="doc_description" helpMessage="Justification or description of signature request">
+	<aui:validator name="maxLength">300</aui:validator>
+	</aui:input>
 	
+	 
+	<label>Deadline:</label><liferay-ui:input-date
+	name="doc_deadline" 
+	firstEnabledDate="<%=nowDate%>" 
+	dayValue="<%=startDay%>" 
+    monthValue="<%=startMonth%>"
+    yearValue="<%=startYear%>"
+	/><br>
+
 	<aui:select name="doc_type" label="Document Type: " inlineLabel="true">
-	<aui:option label="Offer Letter" value="Offer Letter" selected="true"></aui:option>
-	<aui:option label="Hardware/Software Request" value="Hardware/Software Request"></aui:option>
-	<aui:option label="Project Sign Off" value="Project Sign Off"></aui:option>
+	<aui:option label="Project Sign Off" value="Project Sign Off" selected="true"></aui:option>
+	<aui:option label="Offer Letter" value="Offer Letter"></aui:option>
+	<aui:option label="Hardware Request" value="Hardware Request"></aui:option>
+	<aui:option label="Software Request" value="Software Request"></aui:option>
 	<aui:option label="Others" value="Others"></aui:option>
 	</aui:select>
 	
@@ -113,3 +132,7 @@ Submit Request
 
 <liferay-ui:error key="error-submit"
 	message="Failed to submit request." />
+<liferay-ui:error key="error-file-size"
+	message="File size exceeded 10MB" />
+<liferay-ui:error key="error-deadline"
+	message="Deadline less than current date" />
