@@ -18,9 +18,7 @@
 	<portlet:param name="mvcPath" value="/view.jsp" />
 </liferay-portlet:renderURL>
 
-<div class="portlet-header">
-  List of Submitted Request
-</div>
+<div class="portlet-header">List of Submitted Request</div>
 
 <liferay-ui:search-container
 	emptyResultsMessage="No uploaded document found."
@@ -99,7 +97,7 @@
 				</liferay-ui:search-container-column-text>
 			</c:when>
 			<c:when test="<%=document.getDoc_status().equals("Justify")%>">
-				<liferay-ui:search-container-column-text cssClass="text-warning"
+				<liferay-ui:search-container-column-text cssClass="text-orange"
 					name="Status" property="doc_status">
 				</liferay-ui:search-container-column-text>
 			</c:when>
@@ -111,12 +109,13 @@
 		</c:choose>
 
 		<liferay-ui:search-container-column-text name="Action">
+
 			<a href="${viewDocURL}" data-toggle="tooltip" title="View request"><span
-				class="glyphicon glyphicon-folder-open"></span></a>
+				class="glyphicon glyphicon-folder-open text-green"></span></a>
 			    &nbsp;
-			    <a href="${doDelDoc}" data-toggle="tooltip" title="Delete"
+			<a href="${doDelDoc}" data-toggle="tooltip" title="Delete"
 				onclick="return confirm('Are you sure you want to delete this request?')"><span
-				class="glyphicon glyphicon-remove"></span></a>
+				class="glyphicon glyphicon-remove text-red"></span></a>
 		</liferay-ui:search-container-column-text>
 
 	</liferay-ui:search-container-row>

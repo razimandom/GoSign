@@ -62,11 +62,11 @@
 
 		<liferay-ui:search-container-column-text name="Action">
 			<a href="${viewKeyURL}" data-toggle="tooltip" title="View keys"><span
-				class="glyphicon glyphicon-briefcase"></span></a>
+				class="glyphicon glyphicon-lock text-orange"></span></a>
 			    &nbsp;
 			<a href="${doDelKey}" data-toggle="tooltip" title="Delete keys"
 				onclick="return confirm('WARNING! Are you sure you want remove this key? User need generate the key again!')"><span
-				class="glyphicon glyphicon-remove"></span></a>
+				class="glyphicon glyphicon-remove text-red"></span></a>
 		</liferay-ui:search-container-column-text>
 
 	</liferay-ui:search-container-row>

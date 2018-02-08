@@ -30,14 +30,12 @@ import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.portlet.ActionRequest;
@@ -133,9 +131,7 @@ public class UploadDocPortlet extends MVCPortlet {
 	public void addDoc(ActionRequest actionRequest, ActionResponse actionResponse) throws IOException {
 
 		_log.info("###################################################");
-		_log.info("#                                                 #");
 		_log.info("#              Upload Document log                #");
-		_log.info("#                                                 #");
 		_log.info("###################################################");
 		_log.info("START: Upload Document Portlet");
 		try {
@@ -345,7 +341,7 @@ public class UploadDocPortlet extends MVCPortlet {
 			/*
 			 * Call doSendEmail action method
 			 */
-
+			
 			doSendEmail(docId, doc_title, doc_type, req_name, req_email, sign_email, doc_deadline, req_dateCreated,
 					currentCompURL, currentHomeURL, actionRequest, actionResponse);
 

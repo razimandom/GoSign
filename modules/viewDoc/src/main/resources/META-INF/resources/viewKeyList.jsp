@@ -56,7 +56,7 @@
 
 		<liferay-ui:search-container-column-text name="Action">
 			<a href="${viewKeyURL}" data-toggle="tooltip" title="View keys"><span
-				class="glyphicon glyphicon-briefcase"></span></a>
+				class="glyphicon glyphicon-lock text-orange"></span></a>
 		</liferay-ui:search-container-column-text>
 
 	</liferay-ui:search-container-row>

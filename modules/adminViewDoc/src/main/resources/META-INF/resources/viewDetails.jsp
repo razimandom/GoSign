@@ -11,8 +11,10 @@
 <%@taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
 <%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
+<%@page import="java.time.LocalDate" %>
+<%@page import="java.time.format.DateTimeFormatter" %>
+<%@page import="java.time.temporal.ChronoUnit" %>
 
-<!--
 
 <style>
 
@@ -24,7 +26,17 @@
 	
 </style>
 
--->
+<%
+long docId = ParamUtil.getLong(request, "docId");
+EntDoc docData = EntDocLocalServiceUtil.getEntDoc(docId);
+request.setAttribute("docData", docData);
+
+LocalDate nowDate = LocalDate.now();
+String deadlineDate = docData.getDoc_deadline();
+DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+LocalDate deadlineDateFormat = LocalDate.parse(deadlineDate, formatterDate);
+long daysCount = nowDate.until(deadlineDateFormat, ChronoUnit.DAYS);
+%>
 
 <!-- Render Popup URL -->
 
@@ -54,7 +66,7 @@
 		Liferay.Util.openWindow({
 			dialog : {
 				centered : true,
-				height : 600,
+				height : 350,
 				modal : true,
 				width : 500
 			},
@@ -67,7 +79,7 @@
 		Liferay.Util.openWindow({
 			dialog : {
 				centered : true,
-				height : 600,
+				height : 350,
 				modal : true,
 				width : 500
 			},
@@ -78,16 +90,87 @@
 	});
 </aui:script>
 
-<%
-long docId = ParamUtil.getLong(request, "docId");
-EntDoc document = EntDocLocalServiceUtil.getEntDoc(docId);
-request.setAttribute("document", document);
-%>
-
 <portlet:actionURL name="doBack" var="doBack" />
-<portlet:actionURL name="doEdit" var="doEdit" />
 
 <div class="container">
+	<!-- Request Details Section -->
+
+	<h3>Status Completion:</h3>
+
+	<c:choose>
+		<c:when test="<%=docData.getDoc_status().equals("Pending")%>">
+			<div class="progress">
+				<div class="progress-bar progress-bar-striped active "
+					role="progressbar" aria-valuenow="40" aria-valuemin="0"
+					aria-valuemax="100" style="width: 40%">40% - Pending</div>
+			</div>
+			<div class="alert alert-info">
+				Your signature request is <strong>still in progress</strong>. You
+				will receive email after signer review your request.
+			</div>
+		</c:when>
+		<c:when test="<%=docData.getDoc_status().equals("Signed")%>">
+			<div class="progress">
+				<div
+					class="progress-bar progress-bar-striped active progress-bar-success"
+					role="progressbar" aria-valuenow="40" aria-valuemin="0"
+					aria-valuemax="100" style="width: 70%">70% - Signed</div>
+			</div>
+			<div class="alert alert-success">
+				Your document has been signed by <strong>${docData.sign_name}</strong>.
+				Please proceed to <a href="#verifyId">verify the signature.</a>
+			</div>
+		</c:when>
+		<c:when test="<%=docData.getDoc_status().equals("Verified")%>">
+			<div class="progress">
+				<div
+					class="progress-bar progress-bar-striped active progress-bar-info"
+					role="progressbar" aria-valuenow="40" aria-valuemin="0"
+					aria-valuemax="100" style="width: 100%">100% - Verified</div>
+			</div>
+			<div class="alert alert-info">
+				You have verified your document. This is valid signature signed by <strong>${docData.sign_name}</strong>.
+				Task completed!
+			</div>
+		</c:when>
+		<c:when test="<%=docData.getDoc_status().equals("Justify")%>">
+			<div class="progress">
+				<div
+					class="progress-bar progress-bar-striped active progress-bar-warning"
+					role="progressbar" aria-valuenow="40" aria-valuemin="0"
+					aria-valuemax="100" style="width: 50%">50% - Need
+					Justification</div>
+			</div>
+			<div class="alert alert-warning">
+				Signer need more <strong>justification</strong> on this request.
+				Please contact signer for more details.
+			</div>
+		</c:when>
+		<c:when test="<%=docData.getDoc_status().equals("Rejected")%>">
+			<div class="progress">
+				<div
+					class="progress-bar progress-bar-striped active progress-bar-danger"
+					role="progressbar" aria-valuenow="40" aria-valuemin="0"
+					aria-valuemax="100" style="width: 100%">100% - Rejected</div>
+			</div>
+			<div class="alert alert-danger">
+				Your signature request has been <strong>rejected</strong>. If this
+				is a mistake, you can recreate your request again.
+			</div>
+		</c:when>
+		<c:when test="<%=docData.getDoc_status().equals("Expired")%>">
+			<div class="progress">
+				<div
+					class="progress-bar progress-bar-striped active progress-bar-dark"
+					role="progressbar" aria-valuenow="40" aria-valuemin="0"
+					aria-valuemax="100" style="width: 100%">100% - Expired</div>
+			</div>
+			<div class="alert alert-dark">
+				Your signature request is <strong>expired</strong>. Signer does not respond to your request.
+			</div>
+		</c:when>
+	</c:choose>
+
 	<!-- Request Details Section -->
 
 	<h3>
@@ -97,32 +180,49 @@ request.setAttribute("document", document);
 	<table class="table table-hover">
 		<tbody>
 			<tr>
-				<td width="250">Request ID:</td>
-				<td>${document.docId}</td>
+				<td width="200">Request ID:</td>
+				<td>${docData.docId}</td>
 			</tr>
 			<tr>
 				<td>Request Title:</td>
-				<td>${document.doc_title}</td>
+				<td>${docData.doc_title}</td>
 			</tr>
 			<tr>
 				<td>Type:</td>
-				<td>${document.doc_type}</td>
+				<td>${docData.doc_type}</td>
 			</tr>
 			<tr>
 				<td>Date Created:</td>
-				<td>${document.req_dateCreated}</td>
+				<td>${docData.req_dateCreated}</td>
 			</tr>
 			<tr>
 				<td>Date Modified:</td>
-				<td>${document.req_dateModified}</td>
+				<td>${docData.req_dateModified}</td>
 			</tr>
 			<tr>
 				<td>Deadline:</td>
-				<td>${document.doc_deadline}</td>
+				<td>${docData.doc_deadline}</td>
+			</tr>
+			<tr>
+			<tr>
+				<td>Expired in: </td>
+				<td><div Class="text-danger">
+				<c:choose>
+				<c:when test="<%=daysCount < 0%>">
+				Expired
+				</c:when>
+				<c:when test="<%=daysCount == 0%>">
+				Today
+				</c:when>
+				<c:when test="<%=daysCount > 0%>">
+				<%=daysCount%> day(s)
+				</c:when>
+				</c:choose>
+				</div></td>
 			</tr>
 			<tr>
 				<td>Description/Justification:</td>
-				<td>${document.doc_description}</td>
+				<td>${docData.doc_description}</td>
 			</tr>
 		</tbody>
 	</table>
@@ -136,7 +236,7 @@ request.setAttribute("document", document);
 	<table class="table table-hover">
 		<tbody>
 			<tr>
-				<td width="250">Requester:</td>
+				<td width="200">Requester:</td>
 				<td>
 
 					<table>
@@ -144,59 +244,37 @@ request.setAttribute("document", document);
 							<td>
 								<button id="popup_userReqProfile"
 									class="btn btn-warning btn-icon" name="delDocument"
-									type="submit">
-									<span class="glyphicon glyphicon-user"></span>&nbsp;View
-									Profile
+									type="submit">View Profile
 								</button>
 							</td>
-							<td>${document.req_name}</td>
+							<td>${docData.req_name}</td>
 						</tr>
 					</table>
 				</td>
 			</tr>
 			<tr>
 				<td>Signer:<liferay-ui:icon-help
-						message="Signer profile will be display after review this request." />
+						message="Signer profile will be display after signer accept this request." />
 				</td>
 				<td><c:choose>
-						<c:when test="<%=document.getDoc_status().equals("Pending")%>">
-							<i>Pending action from signer</i>
-						</c:when>
-						<c:otherwise>
-
+						<c:when test="<%=docData.getReq_accepted() == true%>">
 							<table>
 								<tr>
 									<td>
 
 										<button id="popup_userSignProfile"
 											class="btn btn-warning btn-icon" name="delDocument"
-											type="submit">
-											<span class="glyphicon glyphicon-user"></span>&nbsp;View
-											Profile
-										</button>
+											type="submit">View Profile</button>
 									</td>
-									<td>${document.sign_name}</td>
+									<td>${docData.sign_name}</td>
 								</tr>
 							</table>
-
+						</c:when>
+						<c:otherwise>
+							<i>Signer has not accept this request yet</i>
 						</c:otherwise>
 
 					</c:choose></td>
-			</tr>
-		</tbody>
-	</table>
-
-	<!-- Uploaded Document Section -->
-
-	<h3>
-		<span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Uploaded
-		Document:
-	</h3>
-	<table class="table table-hover">
-		<tbody>
-			<tr>
-				<td width="250">File Name:</td>
-				<td>${fileup.file_name}</td>
 			</tr>
 		</tbody>
 	</table>
@@ -208,36 +286,28 @@ request.setAttribute("document", document);
 	<table class="table table-hover">
 		<tbody>
 			<tr>
-				<td width="250">Request MD5:</td>
-				<td>${document.doc_md5}</td>
+				<td width="200">Request MD5:</td>
+				<td>${docData.doc_md5}</td>
 			</tr>
 			<tr>
 				<td>Time Created:</td>
-				<td>${document.req_timeCreated}</td>
+				<td>${docData.req_timeCreated}</td>
 			</tr>
 			<tr>
 				<td>Time Modified:</td>
-				<td>${document.req_timeModified}</td>
+				<td>${docData.req_timeModified}</td>
 			</tr>
 		</tbody>
 	</table>
 
-<br>
+	<br>
 
 <table><tr><td>
 	<aui:form action="<%=doBack%>" method="post" name="name">
 		<aui:button name="back" type="submit" value="Back" last="true" />
 	</aui:form>
 </td>
-<!--  
-<td>
-	<aui:form action="<%=doEdit%>" method="post" name="name">
-	<aui:input label="Action: " name="doAction" type="hidden" value="update" readOnly="true"/>
-	<aui:input label="Doc Id: " name="docId" type="hidden" value="${document.docId}" readOnly="true"/>
-	<aui:button name="update" type="submit" value="Edit Request" last="true" />
-</aui:form>
-</td>
---></tr></table>
+</tr></table>
 
 	
 

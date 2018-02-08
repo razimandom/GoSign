@@ -1,20 +1,7 @@
-package schedulerDeadline.portlet;
+package adminCronJob.portlet;
 
-import java.io.FileOutputStream;
-import java.io.PrintStream;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.List;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Modified;
-import org.osgi.service.component.annotations.Reference;
+import adminCronJob.constants.AdminCronJobPortletKeys;
+
 import com._42Penguins.gosign.model.EntDoc;
 import com._42Penguins.gosign.service.EntDocLocalServiceUtil;
 import com.liferay.mail.kernel.model.MailMessage;
@@ -22,24 +9,47 @@ import com.liferay.mail.kernel.service.MailServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.messaging.BaseSchedulerEntryMessageListener;
-import com.liferay.portal.kernel.messaging.DestinationNames;
-import com.liferay.portal.kernel.messaging.Message;
-import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
-import com.liferay.portal.kernel.scheduler.SchedulerEngineHelper;
-import com.liferay.portal.kernel.scheduler.TimeUnit;
-import com.liferay.portal.kernel.scheduler.TriggerFactory;
-import com.liferay.portal.kernel.scheduler.TriggerFactoryUtil;
+import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 
-@Component(immediate = true, service = SchedulerDeadlinePortlet.class)
-public class SchedulerDeadlinePortlet extends BaseSchedulerEntryMessageListener {
-	
-	private static Log _log = LogFactoryUtil.getLog(SchedulerDeadlinePortlet.class);
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
-	@Override
-	protected void doReceive(Message message) throws Exception {
-		
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.Portlet;
+import javax.portlet.PortletException;
+
+import org.osgi.service.component.annotations.Component;
+
+/**
+ * @author razim
+ */
+@Component(
+	immediate = true,
+	property = {
+		"com.liferay.portlet.display-category=admin.goSign",
+		"com.liferay.portlet.instanceable=true",
+		"javax.portlet.display-name=adminCronJob Portlet",
+		"javax.portlet.init-param.template-path=/",
+		"javax.portlet.init-param.view-template=/view.jsp",
+		"javax.portlet.name=" + AdminCronJobPortletKeys.AdminCronJob,
+		"javax.portlet.resource-bundle=content.Language",
+		"javax.portlet.security-role-ref=power-user,user"
+	},
+	service = Portlet.class
+)
+public class AdminCronJobPortlet extends MVCPortlet {
+	
+	private static Log _log = LogFactoryUtil.getLog(AdminCronJobPortlet.class);
+
+	public void doAction(ActionRequest actionRequest, ActionResponse actionResponse)
+			throws IOException, PortletException, PortalException {
+
 		_log.info("###################################################");
 		_log.info("#                  Reminder log                   #");
 		_log.info("###################################################");
@@ -163,6 +173,8 @@ public class SchedulerDeadlinePortlet extends BaseSchedulerEntryMessageListener 
 
 			}
 			
+			SessionMessages.add(actionRequest, "request_processed", "Job completed!");
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -171,37 +183,5 @@ public class SchedulerDeadlinePortlet extends BaseSchedulerEntryMessageListener 
 		}
 
 	}
-
-	@Activate
-	@Modified
-	protected void activate() {
-		//schedulerEntryImpl.setTrigger(TriggerFactoryUtil.createTrigger(getEventListenerClass(), getEventListenerClass(), 5, TimeUnit.MINUTE));
-		schedulerEntryImpl.setTrigger(TriggerFactoryUtil.createTrigger(getEventListenerClass(), getEventListenerClass(), new Date(),  "00 00 * * * ?"));
-
-		_schedulerEngineHelper.register(this, schedulerEntryImpl, DestinationNames.SCHEDULER_DISPATCH);
-	}
-
-	@Deactivate
-	protected void deactivate() {
-		_schedulerEngineHelper.unregister(this);
-	}
-
-	@Reference(target = ModuleServiceLifecycle.PORTAL_INITIALIZED, unbind = "-")
-	protected void setModuleServiceLifecycle(
-		ModuleServiceLifecycle moduleServiceLifecycle) {
-	}
-
 	
-	@Reference(unbind = "-")
-	protected void setSchedulerEngineHelper(SchedulerEngineHelper schedulerEngineHelper) {
-
-		_schedulerEngineHelper = schedulerEngineHelper;
-	}
-
-	@Reference(unbind = "-")
-	protected void setTriggerFactory(TriggerFactory triggerFactory) {
-	}
-
-	private SchedulerEngineHelper _schedulerEngineHelper;
-
 }

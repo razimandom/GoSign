@@ -11,8 +11,6 @@
 <%@taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<!-- 
-
 <style>
 @media ( min-width : 1200px) {
 	.container {
@@ -20,8 +18,7 @@
 	}
 }
 
-
--->
+</style>
 
 <%
 	long userId = ParamUtil.getLong(request, "userId");

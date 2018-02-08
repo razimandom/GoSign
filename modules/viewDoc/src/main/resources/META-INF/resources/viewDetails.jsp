@@ -82,7 +82,7 @@
 		Liferay.Util.openWindow({
 			dialog : {
 				centered : true,
-				height : 600,
+				height : 550,
 				modal : true,
 				width : 500
 			},
@@ -95,7 +95,7 @@
 		Liferay.Util.openWindow({
 			dialog : {
 				centered : true,
-				height : 600,
+				height : 350,
 				modal : true,
 				width : 500
 			},
@@ -108,7 +108,7 @@
 		Liferay.Util.openWindow({
 			dialog : {
 				centered : true,
-				height : 600,
+				height : 350,
 				modal : true,
 				width : 500
 			},
@@ -123,7 +123,7 @@
 
 <!-- URL -->
 
-<portlet:actionURL name="doAction" var="doAction" />
+<portlet:actionURL name="doActionMethod" var="doActionMethod" />
 
 <liferay-portlet:renderURL varImpl="viewSignProfileURL">
 	<portlet:param name="userId" value="${docData.signId}" />
@@ -259,7 +259,7 @@
 			<tr>
 			<tr>
 				<td>Expired in: </td>
-				<td><div Class="text-warning">
+				<td><div Class="text-danger">
 				<c:choose>
 				<c:when test="<%=daysCount < 0%>">
 				Expired
@@ -384,7 +384,7 @@
 
 	<table>
 		<tr>
-			<td><aui:form action="<%=doAction%>" method="post" name="name">
+			<td><!--<aui:form action="<%=doActionMethod%>" method="post" name="name">
 					<aui:input label="Action: " name="doAction" type="hidden"
 						value="back" readOnly="true" />
 					<aui:input label="Doc Id: " name="docId" type="hidden"
@@ -392,9 +392,10 @@
 					<aui:input label="File Id: " name="fileId" type="hidden"
 						value="${fileData.fileId}" readOnly="true" />
 					<aui:button name="back" type="submit" value="Back" last="true" />
-				</aui:form> 
-				<!-- <input class="btn btn-primary" type=button value=" Back"
-				onClick="javascript: window.history.go(-1)"> -->
+				</aui:form> -->
+				 <input class="btn btn-primary" type=button value=" Back"
+				onClick="javascript: window.history.go(-1)"> 
+				</td>
 			<td>
 				<button type="button" class="btn btn-danger" data-toggle="collapse"
 					data-target="#delete">Delete</button>
@@ -423,7 +424,7 @@
 				<button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#updateDeadline">Change Deadline</button>
 			</td>
 			 -->
-			<td><aui:form action="<%=doAction%>" method="post" name="name">
+			<td><aui:form action="<%=doActionMethod%>" method="post" name="name">
 					<aui:input label="Action: " name="doAction" type="hidden"
 						value="showkey" readOnly="true" />
 					<aui:input label="Doc Id: " name="docId" type="hidden"
@@ -444,7 +445,7 @@
 			<span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;Are
 			you sure you want to delete this request?
 		</div>
-		<aui:form action="<%=doAction%>" method="post" name="name">
+		<aui:form action="<%=doActionMethod%>" method="post" name="name">
 			<aui:input label="Action: " name="doAction" type="hidden"
 				value="delete" readOnly="true" />
 			<aui:input label="Doc Id: " name="docId" type="hidden"
@@ -460,7 +461,7 @@
 		<br>
 		<h3>Change Deadline:</h3>
 
-		<aui:form action="<%=doAction%>" method="post" name="name">
+		<aui:form action="<%=doActionMethod%>" method="post" name="name">
 			<aui:input label="Action: " name="doAction" type="hidden"
 				value="update" readOnly="true" />
 			<aui:input label="Doc Id: " name="docId" type="hidden"
@@ -477,7 +478,7 @@
 		<br>
 		<h3>Send Email:</h3>
 
-		<aui:form action="<%=doAction%>" method="post" name="name">
+		<aui:form action="<%=doActionMethod%>" method="post" name="name">
 			<aui:input label="Action: " name="doAction" type="hidden"
 				value="email" readOnly="true" />
 			<aui:input label="Doc Id: " name="docId" type="hidden"
@@ -504,7 +505,7 @@
 
 	<h3 id="verifyId">Verify Signature:</h3>
 
-	<aui:form action="<%=doAction%>" method="post" name="name">
+	<aui:form action="<%=doActionMethod%>" method="post" name="name">
 		<aui:input label="Action: " name="doAction" type="hidden"
 			value="verify" readOnly="true" />
 		<aui:input label="Doc Id: " name="docId" type="hidden"
@@ -523,12 +524,20 @@
 <liferay-ui:error key="error-key"
 	message="Verification failed! Public key does not match with signature." />
 <liferay-ui:error key="error-key-invalidECCPubKey"
-	message="Error! This is invalid ECC public key format." />
+	message="This is invalid ECC public key format." />
 <liferay-ui:error key="error-key-null"
-	message="Error! Public key field cannot be empty" />
+	message="Public key field cannot be empty" />
 <liferay-ui:error key="error-key-nosign"
 	message="This document has not been signed or already rejected." />
 <liferay-ui:error key="error-key-nokey"
-	message="No key found! Signer has not generate the key yet." />
+	message="No key found. Signer has not generate the key yet." />
 <liferay-ui:error key="error-key-invalidAction"
 	message="Invalid action." />
+<liferay-ui:error key="error-verify-fail-verified"
+	message="Document already verified." />
+<liferay-ui:error key="error-verify-fail-no-sign"
+	message="Document need to be sign first before verify." />
+<liferay-ui:error key="error-verify-fail-rejected-expired"
+	message="Cannot verify document that was rejected/expired." />
+<liferay-ui:error key="error-verify-fail-no-action"
+	message="System unable to fetch document status" />

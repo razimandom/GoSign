@@ -16,15 +16,26 @@
 <%@taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://liferay.com/tld/aui" prefix="aui"%>
+<%@page import="java.time.LocalDate" %>
+<%@page import="java.time.format.DateTimeFormatter" %>
+<%@page import="java.time.temporal.ChronoUnit" %>
 
 <%
-	long docId = ParamUtil.getLong(request, "docId");
-	long fileId = ParamUtil.getLong(request, "fileId");
-	EntDoc docData = EntDocLocalServiceUtil.getEntDoc(docId);
-	EntFileUpload fileData = EntFileUploadLocalServiceUtil.getEntFileUpload(fileId);
-	request.setAttribute("docData", docData);
-	request.setAttribute("fileData", fileData);
-	String redirect = ParamUtil.getString(request, "backURL");
+long docId = ParamUtil.getLong(request, "docId");
+long fileId = ParamUtil.getLong(request, "fileId");
+long userId = ParamUtil.getLong(request, "signId");
+EntDoc docData = EntDocLocalServiceUtil.getEntDoc(docId);
+EntFileUpload fileData = EntFileUploadLocalServiceUtil.getEntFileUpload(fileId);
+request.setAttribute("docData", docData);
+request.setAttribute("fileData", fileData);
+
+LocalDate nowDate = LocalDate.now();
+String deadlineDate = docData.getDoc_deadline();
+
+DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+LocalDate deadlineDateFormat = LocalDate.parse(deadlineDate, formatterDate);
+
+long daysCount = nowDate.until(deadlineDateFormat, ChronoUnit.DAYS);
 %>
 
 <portlet:defineObjects />
@@ -48,7 +59,7 @@
 		Liferay.Util.openWindow({
 			dialog : {
 				centered : true,
-				height : 600,
+				height : 350,
 				modal : true,
 				width : 500
 			},
@@ -61,7 +72,7 @@
 		Liferay.Util.openWindow({
 			dialog : {
 				centered : true,
-				height : 600,
+				height : 350,
 				modal : true,
 				width : 500
 			},
@@ -225,6 +236,22 @@ td {
 			<tr>
 				<td>Deadline:</td>
 				<td>${docData.doc_deadline}</td>
+			</tr>
+						<tr>
+				<td>Expired in: </td>
+				<td><div Class="text-danger">
+				<c:choose>
+				<c:when test="<%=daysCount < 0%>">
+				Expired
+				</c:when>
+				<c:when test="<%=daysCount == 0%>">
+				Today
+				</c:when>
+				<c:when test="<%=daysCount > 0%>">
+				<%=daysCount%> day(s)
+				</c:when>
+				</c:choose>
+				</div></td>
 			</tr>
 			<tr>
 				<td>Description/Justification:</td>
@@ -429,11 +456,17 @@ td {
 <br>
 
 
-<liferay-ui:error key="error-key-signFail"
-	message="Invalid pin! Your 6 digits pin does not match with registered pin." />
-<liferay-ui:error key="error-key-invalidPinFormat"
-	message="Error! Please enter your 6 digits pin." />
-<liferay-ui:error key="error-key-statusFail"
+<liferay-ui:error key="error-sign-fail"
+	message="Your 6 digit pin does not match with registered pin." />
+<liferay-ui:error key="error-pin-invalid-format"
+	message="Please enter your 6 digit pin." />
+<liferay-ui:error key="error-status-fail"
 	message="Unable to process your request. This document has been rejected, signed, verified, or expired." />
-<liferay-ui:error key="error-key-statusInvalid"
-	message="Error! Action does not exist! Please contact system admin." />
+<liferay-ui:error key="error-status-invalid"
+	message="Action does not exist! Please contact system admin." />
+<liferay-ui:error key="error-sign-fail"
+	message="System unable to sign document" />
+<liferay-ui:error key="error-reject-fail"
+	message="System unable to reject document" />
+<liferay-ui:error key="error-justify-fail"
+	message="System unable to request justification" />

@@ -100,7 +100,7 @@
 				</liferay-ui:search-container-column-text>
 			</c:when>
 			<c:when test="<%=document.getDoc_status().equals("Justify")%>">
-				<liferay-ui:search-container-column-text cssClass="text-warning"
+				<liferay-ui:search-container-column-text cssClass="text-orange"
 					name="Status" property="doc_status">
 				</liferay-ui:search-container-column-text>
 			</c:when>
@@ -113,11 +113,10 @@
 
 		
 		<liferay-ui:search-container-column-text name="Action">
-			
 			<c:choose>
 			<c:when test="<%=document.getReq_accepted() == true %>">
 				<a href="${viewDocURL}" data-toggle="tooltip" title="View request"><span
-					class="glyphicon glyphicon-folder-open"></span></a>
+					class="glyphicon glyphicon-folder-open text-green"></span></a>
 			</c:when>
 			<c:when test="<%=document.getReq_accepted() == false %>">
 				<a href="${doAcceptAction}" data-toggle="tooltip" title="Accept request"><span

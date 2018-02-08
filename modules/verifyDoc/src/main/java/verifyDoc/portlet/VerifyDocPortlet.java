@@ -83,10 +83,16 @@ public class VerifyDocPortlet extends MVCPortlet {
 	public void doActionMethod(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, PortalException {
 		
+		_log.info("###################################################");
+		_log.info("#               doActionMethod log                #");
+		_log.info("###################################################");
+		_log.info("START: doActionMethod Function");
+		
 		/*
 		 *  Initiate variables
 		 */
 		
+		_log.info("Fetch current document data");
 		long docId = ParamUtil.getLong(actionRequest, "docId");
 		String doAction = ParamUtil.getString(actionRequest, "doAction");
 		EntDoc doc = EntDocLocalServiceUtil.getEntDoc(docId);
@@ -96,6 +102,7 @@ public class VerifyDocPortlet extends MVCPortlet {
 		 * Fetch current date and time
 		 */
 		
+		_log.info("Fetch current time data");
 		ZoneId zoneIdMYS = ZoneId.of("Asia/Kuala_Lumpur");
 		LocalDateTime localDateTime = LocalDateTime.now(zoneIdMYS);
 		DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("ddMMyyyy-HHmmss-A-N");
@@ -107,17 +114,10 @@ public class VerifyDocPortlet extends MVCPortlet {
 		 * Fetch current user data
 		 */
 		
+		_log.info("Fetch current user data");
 		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		User currentUser = themeDisplay.getUser();
 		String currentHomeURL = themeDisplay.getURLHome();
-		
-		/*
-		 * Retrive user 6 pins. Standard length for user pin is 6 digits only
-		 */
-		
-		String userPin = ParamUtil.getString(actionRequest, "userPin");
-		int userPinLength = 6;
-
 		
 		/*
 		 * List of status and action
@@ -138,42 +138,47 @@ public class VerifyDocPortlet extends MVCPortlet {
 		 * Validation before redirect to sign, verify and justify method
 		 */
 		
+		_log.info("Verify requested action: Sign/Reject/Justify");
 		if (doAction.equals(actionSign)) {
 			
 			_log.info("###################################################");
-			_log.info("#                                                 #");
 			_log.info("#                Sign Document log                #");
-			_log.info("#                                                 #");
 			_log.info("###################################################");
 			_log.info("START: Sign Document Function");
 			
 			if (doc_status.equals(statusPending) || doc_status.equals(statusJustify)) {
+				
+				/*
+				 * Retrive user 6 pins. Standard length for user pin is 6 digits only
+				 */
+				
+				_log.info("Retriving user's 6 pin");
+				String userPin = ParamUtil.getString(actionRequest, "userPin");
+				int userPinLength = 6;
 				
 				_log.info("Validating user's 6 pin");
 				if (userPin.length() == userPinLength) {
 					doSignDoc(userPin, currentUser, currentDate, currentTime, currentHomeURL, actionRequest, actionResponse);
 				} else {
 					_log.error("Invalid pin format");
-					SessionErrors.add(actionRequest, "error-key-invalidPinFormat");
+					SessionErrors.add(actionRequest, "error-pin-invalid-format");
 					actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 				}
 
 			} else if (doc_status.equals(statusSigned) || doc_status.equals(statusReject) || doc_status.equals(statusExpired) || doc_status.equals(statusVerified)) {
 				_log.warn("Cannot sign document that has been signed/rejected/expired/verified");
-				SessionErrors.add(actionRequest, "error-key-statusFail");
+				SessionErrors.add(actionRequest, "error-status-fail");
 				actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 
 			} else {
-				_log.error("Unable to identify requested action");
-				SessionErrors.add(actionRequest, "error-key-statusInvalid");
+				_log.error("System unable to run sign function");
+				SessionErrors.add(actionRequest, "error-sign-fail");
 				actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 			}
 
 		} else if (doAction.equals(actionReject)) {
 			_log.info("###################################################");
-			_log.info("#                                                 #");
 			_log.info("#              Reject Document log                #");
-			_log.info("#                                                 #");
 			_log.info("###################################################");
 			_log.info("START: Reject Document Function");
 			
@@ -182,20 +187,18 @@ public class VerifyDocPortlet extends MVCPortlet {
 
 			} else if (doc_status.equals(statusSigned) || doc_status.equals(statusReject) || doc_status.equals(statusExpired) || doc_status.equals(statusVerified)) {
 				_log.warn("Cannot reject document that has been signed/rejected/expired/verified");
-				SessionErrors.add(actionRequest, "error-key-statusFail");
+				SessionErrors.add(actionRequest, "error-status-fail");
 				actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 
 			} else {
-				_log.error("Unable to identify requested action");
-				SessionErrors.add(actionRequest, "error-key-statusInvalid");
+				_log.error("System unable to run reject function");
+				SessionErrors.add(actionRequest, "error-reject-fail");
 				actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 			}
 
 		} else if (doAction.equals(actionJustify)) {
 			_log.info("###################################################");
-			_log.info("#                                                 #");
 			_log.info("#       Request Justification Document log        #");
-			_log.info("#                                                 #");
 			_log.info("###################################################");
 			_log.info("START: Request Justification Document Function");
 			
@@ -204,18 +207,18 @@ public class VerifyDocPortlet extends MVCPortlet {
 				
 			} else if (doc_status.equals(statusSigned) || doc_status.equals(statusReject) || doc_status.equals(statusExpired) || doc_status.equals(statusVerified)) {
 				_log.warn("Cannot request justification for document that has been signed/rejected/expired/verified");
-				SessionErrors.add(actionRequest, "error-key-statusFail");
+				SessionErrors.add(actionRequest, "error-status-fail");
 				actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 
 			} else {
-				_log.error("Unable to identify requested action");
-				SessionErrors.add(actionRequest, "error-key-statusInvalid");
+				_log.error("System unable run request justification function");
+				SessionErrors.add(actionRequest, "error-justify-fail");
 				actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 			}
 
 		} else {
-			_log.error("Unknown action");
-			SessionErrors.add(actionRequest, "error-key-statusInvalid");
+			_log.error("System unable to identify requested action");
+			SessionErrors.add(actionRequest, "error-status-invalid");
 			actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 		}
 
@@ -314,8 +317,6 @@ public class VerifyDocPortlet extends MVCPortlet {
 			doc.setReq_timeModified(req_timeModified);
 			doc.setDoc_signature(encodedSignature);
 			doc.setDoc_status(doc_status);
-			doc.setSignId(signId);
-			doc.setSign_name(sign_name);
 			actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 			doc = EntDocLocalServiceUtil.updateEntDoc(doc);
 
@@ -359,7 +360,7 @@ public class VerifyDocPortlet extends MVCPortlet {
 		} catch (Exception e) {
 			_log.error("Unable to sign the document.");
 			e.printStackTrace();
-			SessionErrors.add(actionRequest, "error-key-signFail");
+			SessionErrors.add(actionRequest, "error-sign-fail");
 			actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 		}
 
@@ -390,8 +391,6 @@ public class VerifyDocPortlet extends MVCPortlet {
 			
 			_log.info("Rejecting document");
 			
-			doc.setSignId(signId);
-			doc.setSign_name(sign_name);
 			doc.setReq_dateModified(req_dateModified);
 			doc.setReq_timeModified(req_timeModified);
 			doc.setDoc_status(doc_status);
@@ -436,7 +435,7 @@ public class VerifyDocPortlet extends MVCPortlet {
 		} catch (Exception e) {
 			_log.error("Fail to reject document");
 			e.printStackTrace();
-			SessionErrors.add(actionRequest, "error-key-statusFail");
+			SessionErrors.add(actionRequest, "error-reject-fail");
 			actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 		}
 
@@ -465,10 +464,8 @@ public class VerifyDocPortlet extends MVCPortlet {
 			
 			_log.info("Requesting document justification");
 			
-			doc.setSignId(signId);
 			doc.setReq_timeModified(req_timeModified);
 			doc.setReq_dateModified(req_dateModified);
-			doc.setSign_name(sign_name);
 			doc.setDoc_status(doc_status);
 			actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 			_log.info("Inserting data to DB");
@@ -529,7 +526,7 @@ public class VerifyDocPortlet extends MVCPortlet {
 		} catch (Exception e) {
 			_log.error("Fail to request document justification");
 			e.printStackTrace();
-			SessionErrors.add(actionRequest, "error-key-statusFail");
+			SessionErrors.add(actionRequest, "error-justify-fail");
 			actionResponse.setRenderParameter("mvcPath", "/viewDetails.jsp");
 		}
 
@@ -544,9 +541,7 @@ public class VerifyDocPortlet extends MVCPortlet {
 			throws IOException, PortletException, PortalException {
 		
 		_log.info("###################################################");
-		_log.info("#                                                 #");
 		_log.info("#                Accept Document log              #");
-		_log.info("#                                                 #");
 		_log.info("###################################################");
 		_log.info("START: Accept Document Function");
 		
@@ -574,7 +569,6 @@ public class VerifyDocPortlet extends MVCPortlet {
 				} catch (Exception e) {
 					_log.error("Fail to accept document");
 					e.printStackTrace();
-					SessionErrors.add(actionRequest, "error-accept-fail");
 					actionResponse.setRenderParameter("mvcPath", "/view.jsp");
 				}
 

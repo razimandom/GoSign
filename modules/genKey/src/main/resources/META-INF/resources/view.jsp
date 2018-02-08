@@ -1,6 +1,6 @@
 <%@ include file="/init.jsp" %>
 
-<portlet:actionURL name="doAction" var="doAction" />
+<portlet:actionURL name="doActionMethod" var="doActionMethod" />
 
 <div class="portlet-header" align="center">
   Generate Key
@@ -10,7 +10,7 @@
 	<span class="glyphicon glyphicon-exclamation-sign"></span> You only can generate key once at a time.
 </div>
 
-<aui:form action="<%=doAction%>" method="post" name="name" enctype="multipart/form-data">
+<aui:form action="<%=doActionMethod%>" method="post" name="name" enctype="multipart/form-data">
 	<aui:input label="Input 6 alpha-numeric pin (0-9, a-z): " name="userPin" type="type" />
 	<aui:input label="Action: " name="doAction" type="hidden" value="genkey" readOnly="true"/>
 	<aui:button class="btn btn-primary" name="submit" type="submit" value="Generate Key" last="true" />
@@ -23,7 +23,7 @@
 	signed document can no longer be verify using new key.
 </div>
 
-<aui:form action="<%=doAction%>" method="post" name="name" enctype="multipart/form-data">
+<aui:form action="<%=doActionMethod%>" method="post" name="name" enctype="multipart/form-data">
 	<aui:input label="Action: " name="doAction" type="hidden" value="delkey" readOnly="true"/>
 	<aui:button cssClass="btn btn-danger" name="submit" type="submit" value="Continue" last="true" 
 	onClick= "return confirm('Are you sure you want to reset the key?')"/>

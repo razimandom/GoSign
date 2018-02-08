@@ -5,6 +5,8 @@ import com._42Penguins.gosign.model.EntKey;
 import com._42Penguins.gosign.service.EntKeyLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.servlet.SessionErrors;
@@ -58,8 +60,10 @@ import org.osgi.service.component.annotations.Component;
 )
 public class GenKeyPortlet extends MVCPortlet {
 	
+	private static Log _log = LogFactoryUtil.getLog(GenKeyPortlet.class);
+	
 	/**
-	 * doAction method validate if the 6 pin digits is valid. If valid, proceed to doGenKey method
+	 * doActionMethod method validate if the 6 pin digits is valid. If valid, proceed to doGenKey method
 	 * @param actionRequest
 	 * @param actionResponse
 	 * @throws IOException
@@ -67,36 +71,66 @@ public class GenKeyPortlet extends MVCPortlet {
 	 * @throws NoSuchAlgorithmException
 	 */
 	
-	@ProcessAction(name = "doAction")
-	public void doAction(ActionRequest actionRequest, ActionResponse actionResponse)
+	@ProcessAction(name = "doActionMethod")
+	public void doActionMethod(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, NoSuchAlgorithmException {
+		
+		_log.info("###################################################");
+		_log.info("#               doActionMethod log                #");
+		_log.info("###################################################");
+		_log.info("START: doActionMethod Function");
 		
     	ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		User currentUser = themeDisplay.getUser();
 		
-		//==> Retrieve action
+		/*
+		 *  Initiate variables
+		 */
+		
 		String doAction = ParamUtil.getString(actionRequest, "doAction");
 		String doGenKey = "genkey";
 		String doDelKey = "delkey";
 		
+		/*
+		 * Validation before redirect to generate key method
+		 */
+		
+		_log.info("Verify requested action: Generate key");
+		
 		if (doAction.equals(doGenKey)){
 			
-			//==> Retrieve user pin parameter
+			_log.info("Verify entered 6 pins");
+			/*
+			 *  Retrieve user pin parameter
+			 */
 			String userPin = ParamUtil.getString(actionRequest, "userPin");
 
-			//==> Standard length for user pin is 6 digits only
+			/*
+			 *  Standard length for user pin is 6 digits only
+			 */
 			int userPinLength = 6;
 			
+			_log.info("Check pin format");
+			
 			if (userPin.length() == userPinLength) {
+				
+				_log.info("###################################################");
+				_log.info("#                  doGenKey log                   #");
+				_log.info("###################################################");
+				_log.info("START: Generate Key Function");
 				doGenKey(currentUser, actionRequest, actionResponse);
+				
 			} else {
+				_log.error("Invalid pin format");
 				SessionErrors.add(actionRequest, "error-key-invalidPinFormat");
 			}
 			
 		} else if (doAction.equals(doDelKey)){
+				_log.info("Deleting public and private key");
 				doDelKey(currentUser, actionRequest, actionResponse);
 				
 		}	else{
+			_log.error("System unable to identify requested action");
 			SessionErrors.add(actionRequest, "error-key-actionError");
 		}
 		
@@ -117,120 +151,148 @@ public class GenKeyPortlet extends MVCPortlet {
 		
         try {
             
-        	/*
-        	 * Initialize to generate key ID & user ID
-        	 */
-	
-    		//==> Get current date & time
+			/*
+			 * Fetch current date and time
+			 */
+
+			_log.info("Fetching current date");
     		ZoneId zoneIdMYS = ZoneId.of("Asia/Kuala_Lumpur");
     		LocalDateTime localDateTime = LocalDateTime.now(zoneIdMYS);
     		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     		String currentDateTime = localDateTime.format(formatter);
     		
-    		//long keyId = CounterLocalServiceUtil.increment();
+			/*
+			 * Fetch current user data
+			 */
+
+			_log.info("Fetching data of current logged user");
     		long currentUserId = currentUser.getUserId();
     		
-    		System.out.println("\n========== START: Generate ECC Key ==========\n");
+    		/*
+    		 * Initiate ECC Algorithm to create key
+    		 */
+    		
+    		_log.info("Preparing ECC algorithm for key generation");
     		
             KeyPairGenerator kpg;
             kpg = KeyPairGenerator.getInstance("EC","SunEC");
-
             ECGenParameterSpec ecsp;
             ecsp = new ECGenParameterSpec("sect163k1");
             kpg.initialize(ecsp);
-
+            
+            /*
+             * Generate public and private key for ECC
+             */
+            
+            _log.info("Generating ECC Key");
             KeyPair kp = kpg.genKeyPair();
             PrivateKey privKey = kp.getPrivate();
             PublicKey pubKey = kp.getPublic();
-            //System.out.println("Raw private key: "+privKey.toString());
-            //System.out.println("Raw public key"+pubKey.toString());
             
-            //==> Get the key formats
-            //String formatPrivate = privKey.getFormat(); // PKCS#8
-            //String formatPublic = pubKey.getFormat(); // X.509  
-            //System.out.println("Format of private key: "+formatPrivate);
-            //System.out.println("Format of public key: "+formatPublic);
+            /*
+             * Encode private and public key
+             */
             
+            _log.info("Encoding private and public keys");
             byte[] privateKeyBytes = privKey.getEncoded();
             byte[] publicKeyBytes = pubKey.getEncoded(); 
     		
             String encodedECCprivateKeyBytes = Base64.getEncoder().encodeToString(privateKeyBytes);
             String encodedECCpublicKeyBytes = Base64.getEncoder().encodeToString(publicKeyBytes);
-            //System.out.println("Generated ECC private key: "+encodedECCprivateKeyBytes);
-            //System.out.println("Generated ECC public key: "+encodedECCpublicKeyBytes);
-            
-    		System.out.println("\n========== END: Generate ECC Key ==========\n");	
     		
+            _log.info("Generating key process completed");
+            
             /*
              * Encryption of private key
              */
-            
-            System.out.println("\n===== START: Encrypting private key using AES 128 bit (6 digits) =====\n");
+             
+            _log.info("Encrypting private key");
           
-            //Generate salt
+            /*
+             * Generate salt
+             */
+            
+            _log.info("Generating random salt with 32 bits");     
             Random r = new SecureRandom();
     		byte[] salt = new byte[32];
     		r.nextBytes(salt);
-    		//System.out.println("salt: "+salt);
     		
-    		//initialize iteration
+    		/*
+    		 * Initialize iteration
+    		 */
+
     		int iteration = 200000;
-    		System.out.println("Iteration: " + iteration);
+    		_log.info("Initialize iteration count: " + iteration);
     		
-    		//initialize bits
+    		/*
+    		 * Initialize bits
+    		 */
+    		
     		int bit = 128;
-    		System.out.println("Bit: " + 128);
+    		_log.info("Initialize bit count: " + bit);
     		
-    		//initialize vector
+    		/*
+    		 * Initialize vector
+    		 */
+    		
+    		_log.info("Generate random vector with " + bit + "bit");
     		byte[] vector = new byte[128/8];
     		r.nextBytes(vector);
     		IvParameterSpec ivspec = new IvParameterSpec(vector);
     		
-    		//initialize variables
+    		/*
+    		 * Initialize variables
+    		 */
     		String MsgToEncrypt = encodedECCprivateKeyBytes;
             String userPin = ParamUtil.getString(actionRequest, "userPin");
             Cipher ecipher;
     		
-            //Generating AES key
+            /*
+             * Generating AES key for encryption
+             */
+            
+            _log.info("Generating AES key for encryption");
             SecretKeyFactory factory =  SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
             KeySpec mykeySpec = new PBEKeySpec(userPin.toCharArray(), salt, iteration, bit);
             SecretKey tmp = factory.generateSecret(mykeySpec);
             SecretKeySpec mySecretkey = new SecretKeySpec(tmp.getEncoded(), "AES");
             
-            //==> Create and initiate encryption
-            System.out.println("Initiate encryption alogrithm...");
+            /*
+             *  Create and initiate encryption
+             */
+            
+            _log.info("Initiate encryption alogrithm");
             ecipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            //System.out.println("Algorithm to encrypt private key: " + ecipher);
             ecipher.init(Cipher.ENCRYPT_MODE, mySecretkey, ivspec);
-            //System.out.println("SecKey: "+mySecretkey);
             
-            //==> Encrypt the private key and get bytes
+            /*
+             * Encrypt the private key and get bytes
+             */
+            
+            _log.info("Encrypting private key");
             byte[] encryptedMsg = ecipher.doFinal(MsgToEncrypt.getBytes());
-            //System.out.println("Encrypted PrivateKey: "+encryptedMsg);
             
-            //==> Encode encrypted the private key
+            /*
+             * Encode encrypted the private key, salt, and vector
+             */
+            
+            _log.info("Encoding encrypted private key, salt and vector");
             String encodeECCEncryptedPrivateKey = Base64.getEncoder().encodeToString(encryptedMsg);
-            //System.out.println("Encoded Encrypted PrivateKey: "+encodeECCEncryptedPrivateKey);
-            
             String encodeSalt = Base64.getEncoder().encodeToString(salt);
             String encodeVector = Base64.getEncoder().encodeToString(vector);
             
-            //System.out.println("encodeSalt: "+encodeSalt);
-            //System.out.println("encodeVector: "+encodeVector);
-            
-            System.out.println("\n===== END: Encrypting private key using AES 128 bit (6 digits) =====\n");
+            _log.info("Encryption process completed");
             
             /*
              * Add data to database
              */
             
-            String sign_name = currentUser.getFullName();
+            _log.info("Insert key data to database");
             
-			System.out.println("Adding data to database...");
+            String sign_name = currentUser.getFullName();
 			EntKey genkey = EntKeyLocalServiceUtil.createEntKey(currentUserId);
 			genkey.setUserId(currentUserId);
 			genkey.setSign_name(sign_name);
-			//genkey.setKey_version(keyVersion);
 			genkey.setKey_dateCreated(currentDateTime);
 			genkey.setPrivatekey_Data(encodeECCEncryptedPrivateKey);
 			genkey.setPublickey_Data(encodedECCpublicKeyBytes);
@@ -238,13 +300,14 @@ public class GenKeyPortlet extends MVCPortlet {
 			genkey.setVector_Data(encodeVector);
 
 			genkey = EntKeyLocalServiceUtil.addEntKey(genkey);
-
-			System.out.println("Data added to database");
-			System.out.println("======================== End ======================");     
-			SessionMessages.add(actionRequest, "request_processed", "Generated new keys.");
+			
+			_log.info("Key data added to database");
+			_log.info("COMPLETED: Successfully generated key");
+			SessionMessages.add(actionRequest, "request_processed", "Generated new keys");
 			
         } catch (Exception e) {
             e.printStackTrace();
+            _log.error("Error on generating key");
             SessionErrors.add(actionRequest, "error-key-keyExist");
 			actionResponse.setRenderParameter("mvcPath", "/view.jsp");
         }
@@ -257,11 +320,19 @@ public class GenKeyPortlet extends MVCPortlet {
 	 */
 	
 	public void doDelKey(User currentUser, ActionRequest actionRequest, ActionResponse actionResponse) throws IOException, PortletException {
+		
+		_log.info("###################################################");
+		_log.info("#                  doDelKey log                   #");
+		_log.info("###################################################");
+		_log.info("START: Deleting Key Function");
+		
 		try {
+			_log.info("Deleting key");
 			EntKeyLocalServiceUtil.deleteEntKey(currentUser.getUserId());
-			System.out.println("Key has been deleted");
+			_log.info("COMPLETED: Successfully deleted key");
 			SessionMessages.add(actionRequest, "request_processed", "Keys have been deleted.");
 		} catch (PortalException | SystemException e) {
+			_log.error("Error deleting key");
 			SessionErrors.add(actionRequest, "error-key-keyNoExist");
 			actionResponse.setRenderParameter("mvcPath", "/view.jsp");
 			e.printStackTrace();
