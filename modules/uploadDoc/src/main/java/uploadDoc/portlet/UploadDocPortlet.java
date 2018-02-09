@@ -396,7 +396,7 @@ public class UploadDocPortlet extends MVCPortlet {
 			InternetAddress fromAddress = null;
 			InternetAddress toAddress = null;
 
-			fromAddress = new InternetAddress("noreply@42penguins.com");
+			fromAddress = new InternetAddress("noreply@myiexplorer.com");
 			toAddress = new InternetAddress(req_email);
 			MailMessage mailMessage = new MailMessage();
 
@@ -428,7 +428,7 @@ public class UploadDocPortlet extends MVCPortlet {
 			InternetAddress fromAddressSigner = null;
 			InternetAddress toAddressSigner = null;
 
-			fromAddressSigner = new InternetAddress("noreply@42penguins.com");
+			fromAddressSigner = new InternetAddress("noreply@myiexplorer.com");
 			toAddressSigner = new InternetAddress(sign_email);
 			MailMessage mailMessageSigner = new MailMessage();
 

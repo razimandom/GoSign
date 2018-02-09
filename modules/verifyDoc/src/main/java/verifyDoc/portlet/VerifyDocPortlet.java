@@ -328,7 +328,7 @@ public class VerifyDocPortlet extends MVCPortlet {
 			InternetAddress fromAddress = null;
 			InternetAddress toAddress = null;
 
-			fromAddress = new InternetAddress("noreply@42penguins.com");
+			fromAddress = new InternetAddress("noreply@myiexplorer.com");
 			toAddress = new InternetAddress(req_email);
 			MailMessage mailMessage = new MailMessage();
 
@@ -405,7 +405,7 @@ public class VerifyDocPortlet extends MVCPortlet {
 			InternetAddress fromAddress = null;
 			InternetAddress toAddress = null;
 
-			fromAddress = new InternetAddress("noreply@42penguins.com");
+			fromAddress = new InternetAddress("noreply@myiexplorer.com");
 			toAddress = new InternetAddress(req_email);
 			MailMessage mailMessage = new MailMessage();
 
@@ -483,7 +483,7 @@ public class VerifyDocPortlet extends MVCPortlet {
 
 			String justificationMsg = ParamUtil.getString(actionRequest, "justificationMsg");
 
-			fromAddress = new InternetAddress("noreply@42penguins.com");
+			fromAddress = new InternetAddress("noreply@myiexplorer.com");
 			toAddress = new InternetAddress(req_email);
 			MailMessage mailMessage = new MailMessage();
 

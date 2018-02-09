@@ -120,7 +120,7 @@ public class AdminCronJobPortlet extends MVCPortlet {
 							InternetAddress fromAddress = null;
 							InternetAddress toAddress = null;
 
-							fromAddress = new InternetAddress("noreply@42penguins.com");
+							fromAddress = new InternetAddress("noreply@myiexplorer.com");
 							toAddress = new InternetAddress(docData.getSign_email());
 							MailMessage mailMessage = new MailMessage();
 
@@ -134,7 +134,7 @@ public class AdminCronJobPortlet extends MVCPortlet {
 									+ "<p>You have pending signature request that need your immediate action (Request ID: "
 									+ docId + ")</p>" + "<p>This request was submitted by " + docData.getReq_name()
 									+ ". Today is last day to sign the document. "
-									+ "Please go t and review as soon as possible.</p>"
+									+ "Please login and review as soon as possible.</p>"
 									+ "If you need clarification on this request, please contact "
 									+ docData.getReq_name() + " (" + docData.getReq_email() + ") for more details."
 									+ "<br>" + "<p>Sincerely,<br>" + "GoSign Team<br>" + "</p>" + "</font>");
