@@ -1,0 +1,87 @@
+sudo -i
+
+adduser liferay
+passwd username
+groupadd liferaygrp
+usermod -g liferaygrp liferay
+id liferay
+
+yum -y update
+wget --no-cookies --no-check-certificate --header "Cookie:oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u162-b12/0da788060d494f5095bf8624735fa2f1/jdk-8u162-linux-x64.rpm"
+yum -y localinstall jdk-8u162-linux-x64.rpm
+java -version
+
+mkdir /opt && cd /opt wget https://sourceforge.net/projects/lportal/files/Liferay%20Portal/7.0.4%20GA5/liferay-ce-portal-tomcat-7.0-ga5-20171018150113838.zip -O liferay.zip
+unzip liferay.zip
+
+mv liferay-ce-portal-7.0-ga5 liferay
+
+chown -R liferay:liferaygrp liferay
+
+sudo rpm -Uvh http://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm
+
+yum -y install mysqld
+
+systemctl start mysqld
+systemctl enable mysqld
+
+mysql_secure_installation
+
+create database gosign character set utf8;
+grant all privileges on gosign.* to 'gosign'@'localhost' identified by 'Gosign123!';
+flush privileges;
+
+yum install nano
+nano /etc/systemd/system/liferay.service
+
+[Unit]
+Description=Liferay Tomcat service
+After=syslog.target network.target
+
+[Service]
+Type=forking
+ExecStart=/opt/liferay/tomcat-8.0.32/bin/startup.sh
+ExecStop=/opt/liferay/tomcat-8.0.32/bin/shutdown.sh
+Restart=always
+User=liferay
+Group=liferaygrp
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=liferay
+
+[Install]
+WantedBy=multi-user.target
+
+systemctl start liferay
+systemctl enable liferay
+362,029,056  416KB/s 
+
+
+systemctl status liferay
+
+log:
+
+tail -f /opt/liferay/tomcat-8.0.32/logs/catalina.out
+
+
+Change 
+vi /opt/liferay/tomcat-8.0.32/webapps/ROOT/html/taglib/ui/input_date/page.jsp
+String mask = _MASK_MDY; TO String mask = _MASK_DMY;
+
+Change DB
+
+alter table document_data modify column doc_description varchar (300);
+alter table fileupload_data modify column file_name varchar (120);
+alter table genkey_data modify column privatekey_Data varchar (120);
+alter table genkey_data modify column publickey_Data varchar (100);
+
+
+Issue with Captcha font:
+
+docker run --rm java:8-jre-alpine find / -name '*.ttf'
+docker run --rm java:8-jre find / -name '*.ttf'
+
+yum install dejavu-sans-mono-fonts
+
+cp /home/dom/deploy/*.* /opt/liferay/deploy
+chown liferay:liferaygrp /opt/liferay/deploy/*
