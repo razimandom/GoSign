@@ -85,3 +85,8 @@ yum install dejavu-sans-mono-fonts
 
 cp /home/dom/deploy/*.* /opt/liferay/deploy
 chown liferay:liferaygrp /opt/liferay/deploy/*
+
+Open firewall:
+
+sudo firewall-cmd --list-all
+sudo firewall-cmd --zone=public --add-port=5000/tcp
